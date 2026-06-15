@@ -1,0 +1,61 @@
+{
+  "domain": "grad_school_research",
+  "description": "Field-level evidence on the research / graduate-school path. Coverage is field-level; admissions and fit outcomes vary widely by sub-field and individual.",
+  "items": [
+    {
+      "id": "gs-research-fit",
+      "title": "Research aptitude is best tested before committing",
+      "category": "Fit signal",
+      "content": "Enjoying coursework is a weak predictor of enjoying open-ended research, which involves long feedback loops, ambiguity, and writing. A short, real research experience (lab, reading group, replication) is a cheaper fit test than committing to multi-year programs. Field-level guidance.",
+      "sourceType": "framework",
+      "keywords": ["research", "grad school", "phd", "fit", "lab", "advisor", "reading group", "replication", "ambiguity"],
+      "coverageLevel": "field-level",
+      "evidenceStrength": "medium",
+      "citation": "Graduate-research advising norms (field-level)"
+    },
+    {
+      "id": "gs-advisor-leverage",
+      "title": "Advisor and letters are high-leverage admission signals",
+      "category": "Admission signal",
+      "content": "For research-track graduate admissions, demonstrated research output and strong letters from researchers tend to carry more weight than grades alone. Building a relationship and a concrete contribution early is high-leverage. Field-level pattern.",
+      "sourceType": "framework",
+      "keywords": ["advisor", "letters", "recommendation", "admission", "phd", "research output", "publication", "grad school"],
+      "coverageLevel": "field-level",
+      "evidenceStrength": "medium",
+      "citation": "Graduate admissions norms (field-level)"
+    },
+    {
+      "id": "gs-funding-time",
+      "title": "Research paths trade near-term income for deferred optionality",
+      "category": "Tradeoff",
+      "content": "Funded research programs typically provide a stipend rather than market salary, trading near-term earnings for credentials and deferred optionality (research, specialized industry, academia). The opportunity cost is concentrated in early-career compounding years. Field-level framing.",
+      "sourceType": "labor_market",
+      "keywords": ["funding", "stipend", "salary", "opportunity cost", "income", "phd", "time horizon", "deferred"],
+      "coverageLevel": "field-level",
+      "evidenceStrength": "medium",
+      "citation": "Graduate funding structures (field-level)"
+    },
+    {
+      "id": "gs-reversibility",
+      "title": "Multi-year research commitments are less reversible mid-stream",
+      "category": "Reversibility",
+      "content": "Compared with a time-boxed experiment, multi-year research commitments are harder to reverse mid-stream without sunk-cost friction. The reversible window is largely before committing: trial research experiences are cheap; year-three exits are costly. Field-level.",
+      "sourceType": "framework",
+      "keywords": ["reversibility", "commitment", "sunk cost", "phd", "exit", "multi-year"],
+      "coverageLevel": "field-level",
+      "evidenceStrength": "low",
+      "citation": "Reversibility framing applied to multi-year programs"
+    },
+    {
+      "id": "gs-emotional-load",
+      "title": "Research carries an autonomy-vs-ambiguity emotional profile",
+      "category": "Emotional load",
+      "content": "Research offers high autonomy but a distinctive emotional load: long stretches without external validation, self-directed motivation, and tolerance for being stuck. People who are energized by open problems fit better than those who prefer fast, legible feedback. Field-level.",
+      "sourceType": "framework",
+      "keywords": ["emotional load", "autonomy", "ambiguity", "motivation", "validation", "research", "stuck"],
+      "coverageLevel": "field-level",
+      "evidenceStrength": "low",
+      "citation": "Research career well-being framing (field-level)"
+    }
+  ]
+}

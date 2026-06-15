@@ -1,0 +1,72 @@
+{
+  "domain": "decision_science",
+  "description": "Framework-level decision-making techniques used to structure reasoning, surface failure modes, and handle uncertainty responsibly.",
+  "items": [
+    {
+      "id": "ds-premortem",
+      "title": "Pre-mortem: imagine the failure, then work backward",
+      "category": "Technique",
+      "content": "A pre-mortem assumes the decision has already failed 12 months out and asks why. Prospective hindsight surfaces failure modes that optimistic forward planning hides, and it is socially easier to voice risks. Forked Futures runs a pre-mortem on every branch. Framework-level technique.",
+      "sourceType": "framework",
+      "keywords": ["premortem", "failure", "pre-mortem", "risk", "hindsight", "technique", "kill criteria"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "high",
+      "citation": "Gary Klein, 'Performing a Project Premortem', Harvard Business Review (2007)"
+    },
+    {
+      "id": "ds-reversibility-doors",
+      "title": "One-way vs two-way doors: match deliberation to reversibility",
+      "category": "Framework",
+      "content": "Decisions differ in reversibility. Reversible ('two-way door') choices reward fast, cheap experiments; irreversible ('one-way door') choices reward more deliberation. Mislabeling a reversible choice as permanent causes paralysis. The system tags each branch's reversibility explicitly.",
+      "sourceType": "framework",
+      "keywords": ["reversibility", "one-way door", "two-way door", "decision", "experiment", "commitment"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "high",
+      "citation": "One-way/two-way door decision framing"
+    },
+    {
+      "id": "ds-regret-minimization",
+      "title": "Regret minimization as a values-anchored lens",
+      "category": "Framework",
+      "content": "Projecting forward to which choice you would least regret centers long-horizon values over short-term fear. Regret has distinct flavors (action vs inaction, identity, relational, financial), which the Regret Radar separates rather than collapsing into one score. Framework-level lens.",
+      "sourceType": "framework",
+      "keywords": ["regret", "regret minimization", "values", "inaction", "identity", "lens", "long horizon"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "medium",
+      "citation": "Regret-minimization framing (Bezos heuristic; psychology of regret)"
+    },
+    {
+      "id": "ds-calibration",
+      "title": "Calibrate confidence; avoid false precision",
+      "category": "Uncertainty",
+      "content": "Good decision support expresses confidence in calibrated, qualitative terms and avoids inventing precise probabilities that data cannot support. Where evidence is field-level, claims should stay field-level. Forked Futures reports qualitative calibration (low/medium/high) plus an explicit data-coverage note.",
+      "sourceType": "framework",
+      "keywords": ["calibration", "uncertainty", "confidence", "precision", "probability", "overconfidence", "data coverage"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "high",
+      "citation": "Calibration / overconfidence literature (Tetlock; Kahneman)"
+    },
+    {
+      "id": "ds-base-rates",
+      "title": "Anchor on base rates before personalizing",
+      "category": "Uncertainty",
+      "content": "People overweight vivid inside-view stories and underweight base rates. Starting from the outside view (what usually happens for this class of decision) before adjusting for personal specifics produces more honest expectations. The system surfaces base-rate signals first, then adjusts.",
+      "sourceType": "framework",
+      "keywords": ["base rate", "outside view", "inside view", "planning fallacy", "anchor", "expectation"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "high",
+      "citation": "Outside view / base-rate reasoning (Kahneman & Tversky; Flyvbjerg)"
+    },
+    {
+      "id": "ds-smallest-test",
+      "title": "Reduce uncertainty with the cheapest decisive experiment",
+      "category": "Action",
+      "content": "When uncertain, the highest-value move is often the smallest experiment that could change your mind, run this week. A good experiment is cheap, time-boxed, and has a pre-committed signal for what counts as pass/fail. Every branch ends in a 7-day experiment with kill criteria.",
+      "sourceType": "framework",
+      "keywords": ["experiment", "test", "cheap", "time box", "smallest", "this week", "kill criteria", "action"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "high",
+      "citation": "Lean experimentation / value-of-information framing"
+    }
+  ]
+}

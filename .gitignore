@@ -1,0 +1,25 @@
+# dependencies
+/node_modules
+
+# next.js / build output
+/.next
+/out
+/build
+*.tsbuildinfo
+next-env.d.ts
+
+# env (never commit secrets)
+.env
+.env.local
+.env*.local
+
+# test / qa runners
+playwright-report
+test-results
+docs/qa/judge-readiness/_contact-sheet.html
+
+# os / editor / tooling
+.DS_Store
+npm-debug.log*
+.vercel
+.claude/

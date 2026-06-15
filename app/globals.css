@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-void text-soft antialiased;
+    background-image:
+      radial-gradient(70% 50% at 50% -10%, rgba(124, 140, 255, 0.14), transparent 70%),
+      radial-gradient(40% 30% at 90% 10%, rgba(192, 132, 252, 0.08), transparent 70%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: rgba(124, 140, 255, 0.3);
+    color: #fff;
+  }
+  /* thin custom scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #2a3157 transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #2a3157;
+    border-radius: 999px;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-panel/70 backdrop-blur-xl border border-line/80;
+  }
+  .glass-2 {
+    @apply bg-panel2/60 backdrop-blur-xl border border-line/70;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(120deg, #fff 10%, #aeb6d6 60%, #7c8cff 100%);
+  }
+  .grid-bg {
+    background-image: linear-gradient(to right, rgba(124, 140, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(124, 140, 255, 0.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(70% 60% at 50% 20%, black, transparent 90%);
+    mask-image: radial-gradient(70% 60% at 50% 20%, black, transparent 90%);
+  }
+  .hairline {
+    @apply border-line/70;
+  }
+}
+
+/* Used by the branch map SVG for an animated draw-in of fork lines */
+.branch-line {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: dash 1.6s ease-out forwards;
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "domain": "computing_careers",
+  "description": "Field-level and occupation-level signals about computing/quant career paths. Coverage is occupation- or field-level, never individual prediction.",
+  "items": [
+    {
+      "id": "cc-quant-signals",
+      "title": "Quant roles screen for demonstrated, legible skill signals",
+      "category": "Career signals",
+      "content": "Quantitative trading and research roles tend to recruit on legible, demonstrated signals: competitive programming, probability/statistics fluency, measurable project outcomes, and structured interview performance. The pipeline rewards depth in a narrow stack early. This is an occupation-level pattern, not a guarantee for any individual.",
+      "sourceType": "labor_market",
+      "keywords": ["quant", "trading", "recruiting", "internship", "signals", "probability", "competitive programming", "finance", "interview"],
+      "coverageLevel": "occupation-level",
+      "evidenceStrength": "medium",
+      "citation": "Industry hiring patterns; BLS Occupational Outlook Handbook (occupation-level framing)"
+    },
+    {
+      "id": "cc-internship-conversion",
+      "title": "Early internships function as the dominant on-ramp",
+      "category": "Career structure",
+      "content": "In computing and quant fields, sophomore/junior internships are the primary conversion path to full-time offers. Timing matters: recruiting cycles for many quant and big-tech roles open well before the role start date. Missing a cycle can shift an on-ramp by roughly a year. Field-level pattern.",
+      "sourceType": "labor_market",
+      "keywords": ["internship", "recruiting", "timing", "cycle", "sophomore", "junior", "conversion", "offer", "quant", "software"],
+      "coverageLevel": "field-level",
+      "evidenceStrength": "medium",
+      "citation": "Field hiring-cycle norms (field-level)"
+    },
+    {
+      "id": "cc-skill-compounding",
+      "title": "Narrow early specialization compounds but can reduce optionality",
+      "category": "Skill compounding",
+      "content": "Deep early specialization (e.g., low-latency systems, statistical modeling) compounds fast within a track and raises legibility to specialized employers. The tradeoff is reduced lateral optionality: skills tuned to one niche transfer less cleanly to adjacent paths. This is a structural tradeoff, not a value judgment.",
+      "sourceType": "framework",
+      "keywords": ["skill", "compounding", "specialization", "optionality", "transfer", "niche", "lateral"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "medium",
+      "citation": "Career-capital framing (So Good They Can't Ignore You; framework-level)"
+    },
+    {
+      "id": "cc-credential-vs-portfolio",
+      "title": "Credentials and portfolios trade off by sub-field",
+      "category": "Career signals",
+      "content": "Some computing sub-fields weight legible credentials (degrees, named internships) more heavily; others weight demonstrable artifacts (shipped projects, open-source, competition results). Knowing which currency a target track uses changes where effort should go. Occupation-level.",
+      "sourceType": "labor_market",
+      "keywords": ["credential", "portfolio", "projects", "open source", "degree", "signal", "software", "research"],
+      "coverageLevel": "occupation-level",
+      "evidenceStrength": "low",
+      "citation": "Sub-field hiring norms (occupation-level)"
+    },
+    {
+      "id": "cc-burnout-load",
+      "title": "High-intensity tracks carry a measurable emotional/time load",
+      "category": "Emotional load",
+      "content": "Recruiting-heavy and high-performance computing tracks concentrate stress into intense cycles (interview prep, on-call, deadlines). The load is real and front-loaded; sustainability depends on personal constraints the system cannot observe. Field-level pattern.",
+      "sourceType": "framework",
+      "keywords": ["burnout", "stress", "emotional load", "intensity", "sustainability", "time", "hours"],
+      "coverageLevel": "field-level",
+      "evidenceStrength": "low",
+      "citation": "Occupational well-being literature (field-level framing)"
+    }
+  ]
+}

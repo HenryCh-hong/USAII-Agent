@@ -1,0 +1,50 @@
+{
+  "domain": "labor_market_sources",
+  "description": "Pointers to the TYPES of public/aggregate sources used for base-rate framing. These describe coverage and limitations; they are not individual predictions and contain no fabricated exact statistics.",
+  "items": [
+    {
+      "id": "lm-bls",
+      "title": "Occupation-level outlook (BLS-style sources)",
+      "category": "Source pointer",
+      "content": "Government labor-statistics sources (e.g., the U.S. Bureau of Labor Statistics Occupational Outlook Handbook) describe occupation-level demand, typical entry requirements, and growth direction. Coverage is occupation-level and aggregate — useful for direction and base rates, not for predicting one person's outcome.",
+      "sourceType": "labor_market",
+      "keywords": ["bls", "labor market", "occupation", "demand", "growth", "salary", "outlook", "employment"],
+      "coverageLevel": "occupation-level",
+      "evidenceStrength": "medium",
+      "citation": "U.S. Bureau of Labor Statistics, Occupational Outlook Handbook (occupation-level)"
+    },
+    {
+      "id": "lm-field-surveys",
+      "title": "Field salary/placement surveys",
+      "category": "Source pointer",
+      "content": "Professional-association and university placement surveys report field-level salary ranges and placement patterns. They reflect who responded and when, so they carry selection and recency limitations. Treat ranges as field-level context, not personal forecasts.",
+      "sourceType": "labor_market",
+      "keywords": ["survey", "salary", "placement", "field", "range", "association", "outcomes"],
+      "coverageLevel": "field-level",
+      "evidenceStrength": "low",
+      "citation": "Professional-association / university placement surveys (field-level; selection bias)"
+    },
+    {
+      "id": "lm-recruiting-cycles",
+      "title": "Recruiting-cycle calendars",
+      "category": "Source pointer",
+      "content": "Many computing and finance tracks run on predictable recruiting calendars published by employers and campus career centers. These are reliable for timing decisions (when to apply) even though individual outcomes vary. Field-level and time-sensitive.",
+      "sourceType": "labor_market",
+      "keywords": ["recruiting", "cycle", "calendar", "timing", "apply", "deadline", "career center"],
+      "coverageLevel": "field-level",
+      "evidenceStrength": "medium",
+      "citation": "Employer / campus recruiting calendars (field-level, time-sensitive)"
+    },
+    {
+      "id": "lm-limitations",
+      "title": "Why we keep this layer aggregate on purpose",
+      "category": "Responsible AI",
+      "content": "Forked Futures deliberately keeps labor-market claims at occupation/field level. Personalizing aggregate statistics into an individual probability would be false precision. We surface the source type, coverage level, and limitations so users can judge how much weight a signal deserves.",
+      "sourceType": "framework",
+      "keywords": ["limitations", "aggregate", "individual", "false precision", "responsible", "coverage", "transparency"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "high",
+      "citation": "Responsible-AI design choice (Forked Futures)"
+    }
+  ]
+}

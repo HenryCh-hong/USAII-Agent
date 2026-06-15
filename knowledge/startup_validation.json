@@ -1,0 +1,61 @@
+{
+  "domain": "startup_validation",
+  "description": "Framework-level evidence on validating an early idea before building. Coverage is framework-level; outcomes for any individual founder are highly variable.",
+  "items": [
+    {
+      "id": "sv-talk-to-users",
+      "title": "Validate demand before building the product",
+      "category": "Validation",
+      "content": "A recurring failure mode for early founders is building before confirming that a specific person has a painful, frequent problem they will pay to solve. Customer-discovery practice recommends problem interviews and a falsifiable demand test before writing significant code. Framework-level guidance.",
+      "sourceType": "framework",
+      "keywords": ["startup", "validation", "customer", "interview", "demand", "problem", "users", "build", "idea", "mvp"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "high",
+      "citation": "Customer Development (Steve Blank); The Mom Test (Rob Fitzpatrick); YC startup guidance"
+    },
+    {
+      "id": "sv-mom-test",
+      "title": "Ask about past behavior, not hypothetical enthusiasm",
+      "category": "Validation",
+      "content": "Interview signals are noisy: people are polite and overstate hypothetical interest. The reliable signal is concrete past behavior — what they currently do, pay for, and work around — rather than 'would you use this?' Framework-level technique.",
+      "sourceType": "framework",
+      "keywords": ["interview", "mom test", "behavior", "signal", "validation", "users", "bias", "demand"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "high",
+      "citation": "The Mom Test (Rob Fitzpatrick)"
+    },
+    {
+      "id": "sv-base-rate",
+      "title": "Startup outcomes have a wide, heavy-tailed distribution",
+      "category": "Base rate",
+      "content": "Outcomes for new ventures are highly variable and heavy-tailed: most return little, a few return a lot. This is a base-rate framing, not a prediction about a specific idea or founder. The useful move is cheap experiments that update your odds, not estimating a personal probability.",
+      "sourceType": "framework",
+      "keywords": ["startup", "base rate", "odds", "risk", "failure", "outcome", "distribution", "probability"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "medium",
+      "citation": "Venture outcome distributions (framework-level; aggregate, not individual)"
+    },
+    {
+      "id": "sv-reversibility",
+      "title": "Student-stage founding is often more reversible than it feels",
+      "category": "Reversibility",
+      "content": "For a student, a time-boxed validation sprint is frequently reversible: skills, network, and narrative often transfer back to employment tracks. The irreversible costs are usually opportunity cost (a missed recruiting cycle) and runway, not permanent lock-in. Framework-level.",
+      "sourceType": "framework",
+      "keywords": ["reversibility", "opportunity cost", "student", "founder", "time box", "runway", "transfer"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "medium",
+      "citation": "Reversible vs irreversible decision framing (one-way/two-way doors)"
+    },
+    {
+      "id": "sv-cofounder-distribution",
+      "title": "Co-founder fit and distribution are common bottlenecks",
+      "category": "Bottleneck",
+      "content": "Beyond the idea, two frequent early bottlenecks are co-founder alignment and a repeatable way to reach users (distribution). Teams that can build but cannot reliably reach demand stall. Framework-level pattern.",
+      "sourceType": "framework",
+      "keywords": ["cofounder", "distribution", "bottleneck", "team", "growth", "channel", "users", "startup"],
+      "coverageLevel": "framework-level",
+      "evidenceStrength": "medium",
+      "citation": "Startup operating guidance (framework-level)"
+    }
+  ]
+}
