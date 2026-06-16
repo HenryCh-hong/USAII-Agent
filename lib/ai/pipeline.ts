@@ -22,6 +22,12 @@ import {
 } from "../schemas";
 import { z } from "zod";
 import { DOMAIN_HINTS, retrieve, type KnowledgeItem } from "../knowledge";
+import { retrieveSourceCards } from "../knowledge/sources";
+import {
+  BRANCH_GRAPH_NODE_IDS,
+  branchKeyFor,
+  graphSnapshotForBranch,
+} from "../knowledge/graph";
 import { generateJSON, generateText, hasApiKey } from "./client";
 import {
   BRIEF_SYSTEM,
@@ -41,19 +47,32 @@ import {
 
 /* ----------------------------- SafetyAgent -------------------------------- */
 
-const DETERMINISTIC_REPLACEMENTS: [RegExp, string][] = [
-  [/\byou will\b/gi, "you may"],
-  [/\byou'll\b/gi, "you may"],
-  [/\bwill definitely\b/gi, "may"],
-  [/\bguaranteed\b/gi, "possible"],
-  [/\bguarantee\b/gi, "possibility"],
-  [/\bthis is the best choice\b/gi, "this could be a strong option"],
-  [/\bthe best choice\b/gi, "a strong option"],
-  [/\byou should choose\b/gi, "one option could be"],
-  [/\byou should pick\b/gi, "one option could be"],
-  [/\bis certain to\b/gi, "may"],
-  [/\bwill certainly\b/gi, "may"],
-  [/\bdefinitely\b/gi, "possibly"],
+/**
+ * The SafetyAgent's substitution table. Each entry is [pattern, replacement,
+ * category] — `category` is a CLEAN description of the rewrite (it never
+ * contains a banned phrase itself) so it is safe to surface in the audit trail
+ * as a rejectedOverclaim. The eval harness imports this as its source of truth.
+ */
+export const DETERMINISTIC_REPLACEMENTS: [RegExp, string, string][] = [
+  [/\byou will\b/gi, "you may", "Softened a deterministic outcome claim into hedged language."],
+  [/\byou'll\b/gi, "you may", "Softened a deterministic outcome claim into hedged language."],
+  [/\bwill definitely\b/gi, "may", "Removed an overconfident certainty claim."],
+  [/\bguaranteed\b/gi, "possible", "Replaced an absolute promise with a possibility."],
+  [/\bguarantee\b/gi, "possibility", "Replaced an absolute promise with a possibility."],
+  [/\bthis is the best choice\b/gi, "this could be a strong option", "Reframed a single-best-option assertion as one option to weigh."],
+  [/\bthe best choice\b/gi, "a strong option", "Reframed a single-best-option assertion as one option to weigh."],
+  [/\byou should choose\b/gi, "one option could be", "Removed prescriptive advice; the choice stays with you."],
+  [/\byou should pick\b/gi, "one option could be", "Removed prescriptive advice; the choice stays with you."],
+  [/\bis certain to\b/gi, "may", "Removed an overconfident certainty claim."],
+  [/\bwill certainly\b/gi, "may", "Removed an overconfident certainty claim."],
+  [/\bdefinitely\b/gi, "possibly", "Softened an overconfident qualifier."],
+  [/\balmost certainly\b/gi, "plausibly", "Removed near-certainty phrasing."],
+  [/\bwithout (a )?doubt\b/gi, "possibly", "Removed near-certainty phrasing."],
+  [/\bno doubt\b/gi, "possibly", "Removed near-certainty phrasing."],
+  [/\bclearly the (right|best) (move|choice|path)\b/gi, "one option worth weighing", "Reframed a 'clearly right' assertion as one option to weigh."],
+  [/\bsuccess rate\b/gi, "base-rate pattern", "Removed a fabricated likelihood framing."],
+  [/\b(probability|chance) of success\b/gi, "range of possible outcomes", "Removed a fabricated likelihood framing."],
+  [/\bsuccess probability\b/gi, "range of possible outcomes", "Removed a fabricated likelihood framing."],
 ];
 
 function scrubString(s: string): string {
@@ -70,6 +89,38 @@ export function safetyScrub<T>(value: T): T {
     return out as T;
   }
   return value;
+}
+
+/** Scrub a string, recording (in `hits`) the clean category of any rewrite. */
+function scrubStringLogged(s: string, hits: Set<string>): string {
+  let out = s;
+  for (const [re, rep, category] of DETERMINISTIC_REPLACEMENTS) {
+    const next = out.replace(re, rep);
+    if (next !== out) hits.add(category);
+    out = next;
+  }
+  return out;
+}
+
+/**
+ * Like safetyScrub, but also returns the set of overclaim categories that were
+ * actually rewritten — so the SafetyAgent can populate `rejectedOverclaims`
+ * with what it changed (the category, never the raw banned phrase).
+ */
+export function scrubWithLog<T>(value: T): { value: T; rejected: string[] } {
+  const hits = new Set<string>();
+  const walk = (v: unknown): unknown => {
+    if (typeof v === "string") return scrubStringLogged(v, hits);
+    if (Array.isArray(v)) return v.map(walk);
+    if (v && typeof v === "object") {
+      const out: Record<string, unknown> = {};
+      for (const [k, val] of Object.entries(v)) out[k] = walk(val);
+      return out;
+    }
+    return v;
+  };
+  const scrubbed = walk(value) as T;
+  return { value: scrubbed, rejected: Array.from(hits) };
 }
 
 /* ---------------------------- RetrievalAgent ------------------------------ */
@@ -134,23 +185,49 @@ export async function runSimulation(
   if (!hasApiKey()) return buildMockSimulation(ctx);
   try {
     const evidence = retrieveForContext(ctx);
+    const sourceCards = retrieveSourceCards(
+      ctx.options.length ? ctx.options : [ctx.decision],
+    );
     const out = await generateJSON(
       branchesOnlySchema,
       SIMULATE_SYSTEM,
-      buildSimulateUser(ctx, answers, evidence),
-      { maxTokens: 8000, temperature: 0.6 },
+      buildSimulateUser(ctx, answers, evidence, sourceCards),
+      // Larger budget: the 9-role debate + agentReview + audit trail are emitted
+      // inside the single validated object, so the payload is bigger than v1.
+      { maxTokens: 12000, temperature: 0.6 },
     );
-    const branches = safetyScrub(out.branches) as FutureBranch[];
+    const branches = out.branches.map((raw) => enrichLiveBranch(raw as FutureBranch));
     return {
       context: ctx,
       branches,
       mocked: false,
       generatedNote:
-        "Generated live from your context and curated evidence via the multi-agent pipeline. These are plausible scenarios, not predictions.",
+        "Generated live from your context, curated + official-source evidence, and the local evidence graph via the multi-agent debate pipeline. These are plausible scenarios, not predictions.",
     };
   } catch {
     return buildMockSimulation(ctx);
   }
+}
+
+/**
+ * Post-process one live branch: SafetyAgent scrub (recording any rejected
+ * overclaims), then attach the evidence-graph snapshot for its track if the
+ * model didn't already provide one. Keeps the single-call contract intact.
+ */
+function enrichLiveBranch(raw: FutureBranch): FutureBranch {
+  const { value, rejected } = scrubWithLog(raw);
+  const b = value as FutureBranch;
+  const key = branchKeyFor(`${b.track} ${b.title} ${b.id}`);
+  const mergedRejected = Array.from(
+    new Set([...(b.rejectedOverclaims ?? []), ...rejected]),
+  );
+  return {
+    ...b,
+    rejectedOverclaims: mergedRejected.length ? mergedRejected : undefined,
+    graphNodeIds: b.graphNodeIds ?? (key ? BRANCH_GRAPH_NODE_IDS[key] : undefined),
+    evidenceGraphSnapshot:
+      b.evidenceGraphSnapshot ?? (key ? graphSnapshotForBranch(key) : undefined),
+  };
 }
 
 /* --------------------------------- Brief ---------------------------------- */

@@ -1,0 +1,63 @@
+{
+  "domain": "bls_ooh",
+  "description": "Official-source evidence pack for the Occupational Outlook Handbook (OOH). Cards describe what the source covers at the occupation level (role descriptions, typical wage framing, job outlook direction, projected openings, and education/training requirements) with limitations. These are aggregate/occupation-level framings, never individual predictions, and contain no fabricated exact statistics.",
+  "items": [
+    {
+      "id": "bls-quant-outlook",
+      "title": "Quantitative and finance analyst occupations: roles, wage framing, and outlook",
+      "sourceName": "Occupational Outlook Handbook",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "sourceUrl": "https://www.bls.gov/ooh/",
+      "sourceType": "labor_market",
+      "category": "Occupation outlook",
+      "coverageLevel": "occupation",
+      "claim": "At the occupation level, the OOH describes quantitative and finance analyst roles, including typical day-to-day duties, the general wage range such roles tend to be associated with, and the direction of projected demand. It also frames the education and training that these occupations typically expect rather than what any one person could earn or expect to do.",
+      "limitations": "These are occupation-level summaries built from aggregate labor data and projections with a reporting lag, so wage and outlook figures describe the typical pattern for the role across the workforce and are not an individual career or earnings prediction.",
+      "usedFor": [
+        "occupation-level wage framing",
+        "job outlook direction",
+        "education and training requirements"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "bls-software-outlook",
+      "title": "Software developer occupations: roles, wage framing, and outlook",
+      "sourceName": "Occupational Outlook Handbook",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "sourceUrl": "https://www.bls.gov/ooh/",
+      "sourceType": "labor_market",
+      "category": "Occupation outlook",
+      "coverageLevel": "occupation",
+      "claim": "At the occupation level, the OOH describes software developer roles, including common responsibilities, the general wage range these roles tend to be associated with, the direction of projected employment change, and the scale of projected openings. It also frames the education and training pathways that the occupation typically expects.",
+      "limitations": "These are occupation-level summaries drawn from aggregate employment data and multi-year projections with a reporting lag, so they describe typical and projected patterns for the role overall and cannot be read as an individual hiring, wage, or path prediction.",
+      "usedFor": [
+        "occupation-level wage framing",
+        "projected openings and outlook direction",
+        "education and training requirements"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "bls-postsec-outlook",
+      "title": "Postsecondary teacher and research-track occupations: roles, wage framing, and outlook",
+      "sourceName": "Occupational Outlook Handbook",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "sourceUrl": "https://www.bls.gov/ooh/",
+      "sourceType": "labor_market",
+      "category": "Occupation outlook",
+      "coverageLevel": "occupation",
+      "claim": "At the occupation level, the OOH describes postsecondary teacher and research-track roles, including typical teaching and research duties, the general wage range such roles tend to be associated with, and the direction of projected demand. It also frames the advanced education and credentials these occupations typically expect rather than the path or pay any one person could expect.",
+      "limitations": "These are occupation-level summaries based on aggregate labor data and projections with a reporting lag, and they group varied disciplines and institution types, so they describe the typical pattern for the role overall and are not an individual career or earnings prediction.",
+      "usedFor": [
+        "occupation-level wage framing",
+        "job outlook direction",
+        "education and credential requirements"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    }
+  ]
+}

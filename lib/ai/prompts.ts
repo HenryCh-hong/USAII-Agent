@@ -3,16 +3,23 @@
  * here so every generation inherits them. Retrieved evidence (from the keyword
  * RetrievalAgent) is injected so branches are grounded, not free-associated.
  */
-import type { ClarifyingQuestion, FutureBranch, UserContext } from "../types";
+import type {
+  ClarifyingQuestion,
+  FutureBranch,
+  SourcedEvidenceCard,
+  UserContext,
+} from "../types";
 import type { KnowledgeItem } from "../knowledge";
 
 export const RESPONSIBLE_AI_RULES = `
 RESPONSIBLE-AI RULES (non-negotiable):
 - These are PLAUSIBLE SCENARIOS, never predictions. Never say "you will", "this is the best choice", "you should choose", or "guaranteed".
+- Never use deterministic or overconfident phrasing: avoid "certainly", "definitely", "without doubt", "almost certainly", "9 in 10", "clearly the right move", "success rate", "success probability", "probability of success", or "predicts your future".
 - Use hedged language: "may", "could", "tends to", "one possible outcome", "based on current assumptions".
-- Never invent precise probabilities or fake statistics. Keep claims at their true coverage level (occupation-level, field-level, framework-level). If exact data is unavailable, say so.
+- Never invent precise probabilities or fake statistics, and never write an exact percentage in a claim. Keep claims at their true coverage level (program-, occupation-, field-, cohort-, population-, or framework-level). If exact data is unavailable, say so.
 - Separate claim provenance honestly: user_provided (the user told us), source_supported (a curated source backs it), ai_inferred (a reasonable inference, flagged as such, usually lower confidence).
 - The AI must NOT make the final decision. Surface tradeoffs and uncertainty; leave the choice to the human.
+- Do NOT expose raw chain-of-thought. Any reasoning you surface must be a concise, structured SUMMARY of a conclusion — never a verbatim trace of your deliberation.
 `.trim();
 
 function contextBlock(ctx: UserContext): string {
@@ -41,6 +48,16 @@ function evidenceBlock(items: KnowledgeItem[]): string {
     .join("\n");
 }
 
+function sourceBlock(cards: SourcedEvidenceCard[]): string {
+  if (!cards.length) return "(no official-source cards retrieved for this context)";
+  return cards
+    .map(
+      (c) =>
+        `- [${c.id}] ${c.title} — ${c.sourceName} (${c.publisher}, ${c.sourceUrl}); ${c.sourceType}, ${c.coverageLevel}, reliability=${c.reliabilityLevel}. Claim: ${c.claim} Limitations: ${c.limitations}`,
+    )
+    .join("\n");
+}
+
 /* ------------------------------- Questions -------------------------------- */
 
 export const QUESTIONS_SYSTEM = `
@@ -61,16 +78,22 @@ export function buildQuestionsUser(ctx: UserContext): string {
 /* ------------------------------- Simulation ------------------------------- */
 
 export const SIMULATE_SYSTEM = `
-You are the reasoning core of Forked Futures, running a multi-agent pipeline that produces EXACTLY 3 plausible future branches — one per user option (in order).
+You are the reasoning core of Forked Futures, running a 9-role multi-agent debate pipeline that produces EXACTLY 3 plausible future branches — one per user option (in order).
 
-Act as these agents in sequence, then synthesize:
-- ScenarioAgent: build a coherent 12-month scenario per option from context + evidence.
-- TradeoffAgent: surface hidden tradeoffs, opportunity costs, reversibility, skill compounding, emotional load, bottlenecks.
-- CriticAgent: run a pre-mortem — "imagine this path failed 12 months out; what are the most likely reasons?" Derive kill criteria.
-- CalibrationAgent: assign qualitative evidenceStrength/userFit/constraintRisk/uncertaintyLevel (low|medium|high) + a dataCoverageNote. NEVER output fake precise probabilities.
-- SafetyAgent: enforce hedged, non-deterministic, scenario framing throughout.
+Run these roles in a single pass and record each one's contribution per branch:
+1. ContextAgent: restate the decision, options, skills, values, constraints, fears, and time horizon you are reasoning from.
+2. RetrievalAgent: note which provided evidence cards / sources are relevant to this branch and why.
+3. ScenarioAgent: build a coherent, hedged 12-month scenario from context + evidence.
+4. EvidenceAgent: attach evidence cards, carrying source provenance, and state coverage limitations honestly.
+5. OptimistAgent: the strongest HEDGED case for why this branch could work.
+6. SkepticAgent: the strongest HEDGED case for how this branch could fail (feeds the pre-mortem + kill criteria).
+7. CalibrationAgent: assign qualitative evidenceStrength/userFit/constraintRisk/uncertaintyLevel (low|medium|high) + a dataCoverageNote + a short calibrationRationale. NEVER output fake precise probabilities.
+8. SafetyAgent: remove overclaims/deterministic language; record what categories of overclaim were rejected.
+9. SynthesisAgent: reconcile the optimist/skeptic views into the final branch and the reasoning audit trail.
 
-Ground baseRateSignals and evidenceCards in the PROVIDED EVIDENCE; keep each claim at the evidence's coverage level. Mark inferences as ai_inferred with low/medium confidence and give a concrete howToTest. Each branch must end in a concrete 7-day experiment (one step per day, days 1-7) whose purpose is to replace an assumption with real signal.
+Ground baseRateSignals and evidenceCards in the PROVIDED EVIDENCE; keep each claim at the evidence's coverage level. When an evidence card comes from an official source, copy its sourceName/publisher/sourceUrl/coverageLevel/limitations and set sourceType to official_data|labor_market|education_outcomes|decision_framework as appropriate. Mark inferences as ai_inferred with low/medium confidence and give a concrete howToTest. Each branch must end in a concrete 7-day experiment (one step per day, days 1-7) whose purpose is to replace an assumption with real signal.
+
+agentReview and reasoningAuditTrail are JUDGE-SAFE SUMMARIES, not chain-of-thought: one concise sentence per role, structured lists only. rejectedOverclaims must describe the CATEGORY of overclaim removed (e.g. "rewrote a deterministic 'you will get an offer' into a hedged 'you may'"), never leaving a raw banned phrase.
 ${RESPONSIBLE_AI_RULES}
 
 Return ONLY JSON of shape:
@@ -81,7 +104,7 @@ Return ONLY JSON of shape:
  "title": string (the option),
  "thesis": string (hedged),
  "baseRateSignals":[{"claim","source","coverageLevel","confidence":low|medium|high,"limitations"}],
- "evidenceCards":[{"id","title","category","content","sourceType":curated_research|framework|labor_market|user_provided|ai_inferred,"usedFor","evidenceStrength":low|medium|high}],
+ "evidenceCards":[{"id","title","category","content","sourceType":curated_research|framework|labor_market|user_provided|ai_inferred|official_data|education_outcomes|decision_framework,"usedFor","evidenceStrength":low|medium|high,"sourceName"?,"publisher"?,"sourceUrl"?,"coverageLevel"?,"claim"?,"limitations"?,"reliabilityLevel"?:medium|high,"sourceCardId"?}],
  "twelveMonthTrajectory":[{"time","description","uncertaintyNote"}],
  "hiddenTradeoffs":[string],
  "opportunityCosts":[string],
@@ -94,15 +117,21 @@ Return ONLY JSON of shape:
  "regretRadar":[{"regretType":action|inaction|identity|financial|relational|opportunity,"level":low|medium|high,"description"}],
  "sevenDayExperiment":[{"day":1..7,"action","purpose"}],
  "killCriteria":[string],
- "calibration":{"evidenceStrength","userFit","constraintRisk","uncertaintyLevel","dataCoverageNote"}
+ "calibration":{"evidenceStrength","userFit","constraintRisk","uncertaintyLevel","dataCoverageNote","calibrationRationale"},
+ "agentReview":{"branchId","contextAgentSummary","retrievalAgentSummary","evidenceAgentSummary","optimistView","skepticView","calibrationSummary","safetySummary","synthesisSummary"},
+ "reasoningAuditTrail":{"branchId","whyThisBranchExists","evidenceUsed":[string],"assumptionsUsed":[string],"uncertaintyDrivers":[string],"optimistView","skepticView","rejectedOverclaims":[string],"whatWouldChangeThisAssessment":[string],"nextValidationStep"},
+ "graphNodeIds":[string],
+ "rejectedOverclaims":[string],
+ "evaluationSignals":[{"name","level":low|medium|high,"note"}]
 }
-Exactly 3 branches, in the same order as the user's options.
+Set branchId on agentReview/reasoningAuditTrail to the branch's id. Exactly 3 branches, in the same order as the user's options.
 `.trim();
 
 export function buildSimulateUser(
   ctx: UserContext,
   answers: ClarifyingQuestion[] | undefined,
   evidence: KnowledgeItem[],
+  sourceCards: SourcedEvidenceCard[] = [],
 ): string {
   const answered = (answers ?? [])
     .filter((q) => q.answer)
@@ -113,8 +142,11 @@ export function buildSimulateUser(
 CLARIFYING ANSWERS
 ${answered || "(none provided)"}
 
-RETRIEVED EVIDENCE (ground branches in these; keep coverage levels honest)
+RETRIEVED EVIDENCE (curated; ground branches in these; keep coverage levels honest)
 ${evidenceBlock(evidence)}
+
+OFFICIAL-SOURCE EVIDENCE PACK (copy provenance into evidenceCards where used; never invent exact statistics)
+${sourceBlock(sourceCards)}
 
 Produce exactly 3 branches (one per option, in order) as specified.`;
 }

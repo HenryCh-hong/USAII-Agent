@@ -1,0 +1,44 @@
+{
+  "domain": "nces_baccalaureate_beyond",
+  "description": "Official-source evidence pack for the Baccalaureate and Beyond Longitudinal Study (B&B). Cards describe what the source covers at the cohort level for post-bachelor outcomes (earnings trajectories, loan debt and repayment, employment, graduate enrollment, and job characteristics) with limitations. These are aggregate/cohort-level framings, never individual predictions, and contain no fabricated exact statistics.",
+  "items": [
+    {
+      "id": "nces-earnings-debt",
+      "title": "Post-bachelor earnings trajectories and loan debt and repayment by cohort",
+      "sourceName": "Baccalaureate and Beyond Longitudinal Study (B&B)",
+      "publisher": "National Center for Education Statistics (NCES)",
+      "sourceUrl": "https://nces.ed.gov/surveys/b&b/",
+      "sourceType": "education_outcomes",
+      "category": "Earnings trajectories and student debt",
+      "coverageLevel": "cohort",
+      "claim": "At the cohort level, the Baccalaureate and Beyond Longitudinal Study follows groups of bachelor's degree recipients over the years after graduation, which can frame how earnings tend to develop over time and how borrowing levels and loan repayment patterns typically unfold for a graduating cohort. These trajectories summarize a tracked cohort and may differ by field of study, degree timing, and follow-up period.",
+      "limitations": "Earnings and debt figures are cohort-level aggregates from a longitudinal sample of graduates surveyed over time with self-reported elements and a follow-up lag, so sampling, recency, and cohort differences mean they describe a group's general pattern rather than what any one graduate could earn or owe.",
+      "usedFor": [
+        "cohort-level earnings trajectory framing",
+        "loan debt and repayment context",
+        "constraint-risk sizing"
+      ],
+      "reliabilityLevel": "medium",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "nces-employment-enrollment",
+      "title": "Post-bachelor employment, graduate enrollment, and job characteristics by cohort",
+      "sourceName": "Baccalaureate and Beyond Longitudinal Study (B&B)",
+      "publisher": "National Center for Education Statistics (NCES)",
+      "sourceUrl": "https://nces.ed.gov/surveys/b&b/",
+      "sourceType": "education_outcomes",
+      "category": "Employment and graduate enrollment",
+      "coverageLevel": "cohort",
+      "claim": "At the cohort level, the Baccalaureate and Beyond Longitudinal Study tracks how bachelor's degree recipients move into employment and further graduate study after graduating, which can frame how often a cohort tends to be working or enrolled and what job characteristics commonly accompany those paths. These patterns summarize a tracked cohort and may vary by field, labor conditions, and the follow-up window.",
+      "limitations": "Employment and enrollment figures are cohort-level aggregates from a longitudinal survey of graduates with self-reported responses over defined follow-up windows, so sampling, recency, and cohort mix differences mean they describe a group's general tendencies rather than an individual employment or enrollment prediction.",
+      "usedFor": [
+        "cohort-level employment and enrollment framing",
+        "graduate-school pathway context",
+        "job-characteristics framing"
+      ],
+      "reliabilityLevel": "medium",
+      "lastReviewed": "2026-06-15"
+    }
+  ]
+}

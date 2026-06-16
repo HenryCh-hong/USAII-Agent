@@ -1,0 +1,61 @@
+{
+  "items": [
+    {
+      "id": "scorecard-earnings",
+      "title": "Post-attendance earnings context by school and field of study",
+      "sourceName": "College Scorecard",
+      "publisher": "U.S. Department of Education",
+      "sourceUrl": "https://collegescorecard.ed.gov/",
+      "sourceType": "education_outcomes",
+      "category": "Post-attendance earnings",
+      "coverageLevel": "program",
+      "claim": "College Scorecard reports aggregate post-attendance earnings context for students grouped by institution and field of study, which can frame the typical earnings range a program tends to be associated with. These figures describe cohorts of past students, so they may indicate direction rather than what any one person could earn.",
+      "limitations": "Earnings are program- or school-level aggregates drawn from past cohorts of federally aided students with a reporting lag, so selection, timing, and coverage differences mean they are not an individual earnings prediction.",
+      "usedFor": [
+        "program-level earnings framing",
+        "field-of-study comparison context",
+        "constraint-risk sizing"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "scorecard-completion",
+      "title": "Completion and graduation context by institution",
+      "sourceName": "College Scorecard",
+      "publisher": "U.S. Department of Education",
+      "sourceUrl": "https://collegescorecard.ed.gov/",
+      "sourceType": "education_outcomes",
+      "category": "Completion and graduation",
+      "coverageLevel": "school",
+      "claim": "College Scorecard summarizes school-level completion and graduation patterns, which can help frame how often students who enroll at a given institution tend to finish within tracked windows. These are institution-wide aggregates, so they may signal the general pattern rather than one student's likelihood of completing.",
+      "limitations": "Completion figures are school-level aggregates over tracked time windows and student populations, so differences in student mix, program, and enrollment intensity mean they are not an individual completion prediction.",
+      "usedFor": [
+        "school-level completion framing",
+        "path-feasibility context",
+        "constraint-risk sizing"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "scorecard-cost",
+      "title": "Cost, net price, and admissions context by institution",
+      "sourceName": "College Scorecard",
+      "publisher": "U.S. Department of Education",
+      "sourceUrl": "https://collegescorecard.ed.gov/",
+      "sourceType": "education_outcomes",
+      "category": "Cost and admissions",
+      "coverageLevel": "school",
+      "claim": "College Scorecard reports school-level cost, average net price, and admissions context that can frame the typical financial commitment and selectivity associated with attending a given institution. These are institution-wide aggregates, so actual net price may vary by family circumstances and aid.",
+      "limitations": "Cost and admissions figures are school-level averages that depend on a student's aid eligibility and the reporting year, so they describe typical context rather than the price or admissions outcome for any individual.",
+      "usedFor": [
+        "school-level cost framing",
+        "affordability and financing context",
+        "constraint-risk sizing"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    }
+  ]
+}

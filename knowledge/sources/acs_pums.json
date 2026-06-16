@@ -1,0 +1,44 @@
+{
+  "domain": "acs_pums",
+  "description": "Official-source evidence pack for the American Community Survey Public Use Microdata Sample (PUMS). Cards describe what the source covers at the population level (field-of-degree to occupation flows and income distributions by occupation/field) with limitations. These are aggregate/population-level framings, never individual predictions, and contain no fabricated exact statistics.",
+  "items": [
+    {
+      "id": "acs-field-to-occupation",
+      "title": "Field-of-degree to occupation flows across the workforce",
+      "sourceName": "American Community Survey — Public Use Microdata Sample (PUMS)",
+      "publisher": "U.S. Census Bureau",
+      "sourceUrl": "https://www.census.gov/programs-surveys/acs/microdata.html",
+      "sourceType": "official_data",
+      "category": "Field-to-occupation flows",
+      "coverageLevel": "population",
+      "claim": "At the population level, ACS PUMS microdata can be tabulated to show how people who hold a given field of degree are distributed across occupations, which tends to indicate the range of roles a field commonly leads into rather than a single expected path. The flows describe the surveyed working-age population and can vary by geography, age, and survey period.",
+      "limitations": "These are population-level aggregates from a large sample of respondents over a defined period, so sampling, self-report, and changing labor conditions mean they describe where a field's holders tend to work in general and cannot be read as an individual career prediction.",
+      "usedFor": [
+        "field-of-degree to occupation mapping",
+        "career-path option framing",
+        "constraint-risk sizing"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "acs-income-distribution",
+      "title": "Income distributions by occupation and field of degree",
+      "sourceName": "American Community Survey — Public Use Microdata Sample (PUMS)",
+      "publisher": "U.S. Census Bureau",
+      "sourceUrl": "https://www.census.gov/programs-surveys/acs/microdata.html",
+      "sourceType": "official_data",
+      "category": "Income distributions",
+      "coverageLevel": "population",
+      "claim": "At the population level, ACS PUMS microdata can be tabulated into earnings and income distributions for people grouped by occupation and field of degree, which can frame the typical range and spread of earnings a role or field tends to be associated with. These distributions summarize the surveyed population and may differ by geography, experience, and hours worked.",
+      "limitations": "Income figures are population-level distributions built from self-reported responses over a defined survey window, so sampling, reporting, and recency differences mean they describe a group's spread of earnings rather than what any one person could earn.",
+      "usedFor": [
+        "occupation-level wage framing",
+        "field-level earnings comparison",
+        "constraint-risk sizing"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    }
+  ]
+}

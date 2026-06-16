@@ -21,7 +21,12 @@ export const sourceTypeSchema = z.enum([
   "labor_market",
   "user_provided",
   "ai_inferred",
+  // v2 additive
+  "official_data",
+  "education_outcomes",
+  "decision_framework",
 ]);
+export const reliabilityLevelSchema = z.enum(["medium", "high"]);
 export const regretTypeSchema = z.enum([
   "action",
   "inaction",
@@ -60,6 +65,105 @@ export const evidenceCardSchema = z.object({
   sourceType: sourceTypeSchema,
   usedFor: z.string(),
   evidenceStrength: levelSchema,
+  // v2 optional provenance (additive — older cards omit these)
+  sourceName: z.string().optional(),
+  publisher: z.string().optional(),
+  sourceUrl: z.string().optional(),
+  coverageLevel: z.string().optional(),
+  claim: z.string().optional(),
+  limitations: z.string().optional(),
+  reliabilityLevel: reliabilityLevelSchema.optional(),
+  lastReviewed: z.string().optional(),
+  sourceCardId: z.string().optional(),
+});
+
+export const sourcedEvidenceCardSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  sourceName: z.string(),
+  publisher: z.string(),
+  sourceUrl: z.string(),
+  sourceType: sourceTypeSchema,
+  category: z.string(),
+  coverageLevel: z.string(),
+  claim: z.string(),
+  limitations: z.string(),
+  usedFor: z.array(z.string()),
+  reliabilityLevel: reliabilityLevelSchema,
+  lastReviewed: z.string(),
+});
+
+/* ------------------------------ Evidence graph ---------------------------- */
+
+export const evidenceNodeTypeSchema = z.enum([
+  "source",
+  "career_path",
+  "skill",
+  "constraint",
+  "decision_framework",
+  "risk",
+  "experiment",
+]);
+
+export const evidenceNodeSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  nodeType: evidenceNodeTypeSchema,
+  evidenceCardIds: z.array(z.string()),
+});
+
+export const evidenceRelationSchema = z.enum([
+  "supports",
+  "requires",
+  "creates_risk",
+  "can_be_tested_by",
+  "informs",
+  "limits",
+]);
+
+export const evidenceEdgeSchema = z.object({
+  from: z.string(),
+  to: z.string(),
+  relation: evidenceRelationSchema,
+  explanation: z.string(),
+});
+
+export const evidenceGraphSnapshotSchema = z.object({
+  nodes: z.array(evidenceNodeSchema),
+  edges: z.array(evidenceEdgeSchema),
+});
+
+/* ----------------------- Agent review / audit / eval ---------------------- */
+
+export const agentReviewSchema = z.object({
+  branchId: z.string(),
+  contextAgentSummary: z.string(),
+  retrievalAgentSummary: z.string(),
+  evidenceAgentSummary: z.string(),
+  optimistView: z.string(),
+  skepticView: z.string(),
+  calibrationSummary: z.string(),
+  safetySummary: z.string(),
+  synthesisSummary: z.string(),
+});
+
+export const reasoningAuditTrailSchema = z.object({
+  branchId: z.string(),
+  whyThisBranchExists: z.string(),
+  evidenceUsed: z.array(z.string()),
+  assumptionsUsed: z.array(z.string()),
+  uncertaintyDrivers: z.array(z.string()),
+  optimistView: z.string(),
+  skepticView: z.string(),
+  rejectedOverclaims: z.array(z.string()),
+  whatWouldChangeThisAssessment: z.array(z.string()),
+  nextValidationStep: z.string(),
+});
+
+export const evaluationSignalSchema = z.object({
+  name: z.string(),
+  level: levelSchema,
+  note: z.string(),
 });
 
 export const baseRateSignalSchema = z.object({
@@ -101,6 +205,7 @@ export const calibrationResultSchema = z.object({
   constraintRisk: levelSchema,
   uncertaintyLevel: levelSchema,
   dataCoverageNote: z.string(),
+  calibrationRationale: z.string().optional(),
 });
 
 export const futureBranchSchema = z.object({
@@ -123,6 +228,13 @@ export const futureBranchSchema = z.object({
   sevenDayExperiment: z.array(experimentStepSchema),
   killCriteria: z.array(z.string()),
   calibration: calibrationResultSchema,
+  // v2 optional, additive — live output without these still validates.
+  agentReview: agentReviewSchema.optional(),
+  reasoningAuditTrail: reasoningAuditTrailSchema.optional(),
+  graphNodeIds: z.array(z.string()).optional(),
+  evidenceGraphSnapshot: evidenceGraphSnapshotSchema.optional(),
+  rejectedOverclaims: z.array(z.string()).optional(),
+  evaluationSignals: z.array(evaluationSignalSchema).optional(),
 });
 
 export const decisionBriefSchema = z.object({

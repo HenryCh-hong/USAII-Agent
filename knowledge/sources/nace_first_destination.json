@@ -1,0 +1,44 @@
+{
+  "domain": "nace_first_destination",
+  "description": "Official-source evidence pack for the NACE First-Destination Survey. Cards describe what the source covers at the graduating-cohort level (outcome categories and continuing-education framing) with limitations. These are aggregate/cohort-level framings, never individual predictions, and contain no fabricated exact statistics.",
+  "items": [
+    {
+      "id": "nace-first-destination",
+      "title": "Graduate first-destination outcome categories",
+      "sourceName": "First-Destination Survey",
+      "publisher": "National Association of Colleges and Employers (NACE)",
+      "sourceUrl": "https://www.naceweb.org/job-market/graduate-outcomes/first-destination/",
+      "sourceType": "education_outcomes",
+      "category": "Graduate outcomes",
+      "coverageLevel": "cohort",
+      "claim": "At the graduating-cohort level, this survey reports where new graduates land shortly after completing a credential, sorted into outcome categories such as employed, continuing education, and still seeking. It tends to describe the mix of post-graduation paths a cohort follows rather than what any one graduate may do.",
+      "limitations": "Coverage is cohort-level and reflects a snapshot taken at a defined point after graduation, so response rates, the institutions that report, and timing can shift the picture; it cannot be read as an individual prediction.",
+      "usedFor": [
+        "post-graduation outcome framing",
+        "outcome-category base rates",
+        "next-step option mapping"
+      ],
+      "reliabilityLevel": "medium",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "nace-continuing-education",
+      "title": "Continuing-education share of a graduating cohort",
+      "sourceName": "First-Destination Survey",
+      "publisher": "National Association of Colleges and Employers (NACE)",
+      "sourceUrl": "https://www.naceweb.org/job-market/graduate-outcomes/first-destination/",
+      "sourceType": "education_outcomes",
+      "category": "Continuing education",
+      "coverageLevel": "cohort",
+      "claim": "At the graduating-cohort level, this survey captures the portion of new graduates who report continuing into further education rather than entering the workforce right away. It tends to indicate how common a further-study path is within a cohort, which can vary by field and credential.",
+      "limitations": "Continuing-education figures are aggregate cohort shares shaped by who responded and which programs are represented, so they describe typical patterns for a group and are not a forecast for any single graduate.",
+      "usedFor": [
+        "further-study path framing",
+        "grad-school base-rate context",
+        "education-vs-work option weighting"
+      ],
+      "reliabilityLevel": "medium",
+      "lastReviewed": "2026-06-15"
+    }
+  ]
+}

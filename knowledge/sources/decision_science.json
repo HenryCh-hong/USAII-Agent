@@ -1,0 +1,80 @@
+{
+  "items": [
+    {
+      "id": "dsci-premortem",
+      "title": "Pre-mortem: prospective hindsight to surface failure modes",
+      "sourceName": "Pre-mortem (Gary Klein)",
+      "publisher": "Gary Klein, Harvard Business Review (2007)",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Decision_theory",
+      "sourceType": "decision_framework",
+      "category": "Assumptions and pre-mortem",
+      "coverageLevel": "framework",
+      "claim": "The pre-mortem framework covers a structured way to imagine that a decision has already failed and then work backward to name the reasons, using prospective hindsight to surface failure modes and assumptions that forward planning tends to hide. It describes a general reasoning technique for a class of decisions, not what may happen in any one person's situation.",
+      "limitations": "This is a framework-level technique drawn from curated decision-science literature, so it structures how risks and assumptions are surfaced rather than measuring outcomes or predicting an individual's result.",
+      "usedFor": [
+        "surfacing failure modes",
+        "assumption checking",
+        "constraint-risk sizing"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "dsci-reversibility",
+      "title": "Reversibility: one-way vs two-way door decisions",
+      "sourceName": "Decision Science (curated frameworks)",
+      "publisher": "Curated research frameworks",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Decision_theory",
+      "sourceType": "decision_framework",
+      "category": "Decision framing and commitment",
+      "coverageLevel": "framework",
+      "claim": "The reversibility framework covers how to classify a choice as a reversible two-way door or a hard-to-undo one-way door, and how the degree of reversibility tends to shape how much deliberation and commitment a decision may warrant. It offers a way to frame a class of decisions rather than a forecast for any individual choice.",
+      "limitations": "This is a framework-level lens from curated decision-science material, so it helps frame commitment and reversibility but does not measure or predict outcomes for a specific person.",
+      "usedFor": [
+        "decision framing",
+        "commitment-to-action sizing",
+        "reversibility tagging"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "dsci-values-tradeoffs",
+      "title": "Values and tradeoffs: separating values, alternatives, and tradeoffs",
+      "sourceName": "Decision Science (curated frameworks)",
+      "publisher": "Curated research frameworks",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Decision_theory",
+      "sourceType": "decision_framework",
+      "category": "Values, alternatives, and tradeoffs",
+      "coverageLevel": "framework",
+      "claim": "This framework covers structured ways to separate what someone values from the alternatives available and the tradeoffs between them, so that competing objectives can be made explicit rather than collapsed into a single score. It describes how to organize reasoning about a class of decisions, not which option may suit any individual.",
+      "limitations": "This is a framework-level approach from curated decision-science literature, so it clarifies values and tradeoffs without measuring outcomes or recommending a choice for any individual.",
+      "usedFor": [
+        "values clarification",
+        "alternatives and tradeoffs framing",
+        "decision framing"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "dsci-smallest-test",
+      "title": "Smallest decisive experiment: value-of-information framing",
+      "sourceName": "Decision Science (curated frameworks)",
+      "publisher": "Curated research frameworks",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Decision_theory",
+      "sourceType": "decision_framework",
+      "category": "Commitment to action",
+      "coverageLevel": "framework",
+      "claim": "This framework covers value-of-information reasoning and the idea of choosing the smallest, cheapest, time-boxed experiment that could meaningfully change a decision, paired with a pre-committed signal for what counts as a pass or fail. It describes a general way to reduce uncertainty for a class of decisions rather than a prediction about any individual's result.",
+      "limitations": "This is a framework-level technique from curated decision-science material, so it guides how to test assumptions cheaply rather than measuring or forecasting outcomes for a specific person.",
+      "usedFor": [
+        "smallest decisive experiment design",
+        "value-of-information framing",
+        "commitment-to-action"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    }
+  ]
+}

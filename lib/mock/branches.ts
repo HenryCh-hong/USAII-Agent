@@ -1,4 +1,5 @@
 import type { FutureBranch } from "../types";
+import { BRANCH_GRAPH_NODE_IDS, graphSnapshotForBranch } from "../knowledge/graph";
 
 /**
  * Canonical 3-branch simulation for the Alex persona. Every page reads these.
@@ -62,6 +63,48 @@ const quant: FutureBranch = {
       sourceType: "framework",
       usedFor: "Naming the hidden optionality cost",
       evidenceStrength: "medium",
+    },
+    {
+      id: "bls-quant-outlook",
+      title: "Quant/analyst occupations: outlook & requirements",
+      category: "Occupation outlook",
+      content:
+        "At the occupation level, the BLS Occupational Outlook Handbook describes quant/analyst roles — typical duties, general wage framing, demand direction, and the education the occupation expects.",
+      sourceType: "labor_market",
+      usedFor: "Occupation-level wage/outlook framing for the quant track",
+      evidenceStrength: "medium",
+      sourceName: "Occupational Outlook Handbook",
+      publisher: "U.S. Bureau of Labor Statistics",
+      sourceUrl: "https://www.bls.gov/ooh/",
+      coverageLevel: "occupation",
+      claim:
+        "The OOH frames quant/analyst roles, typical wage ranges, and demand direction at the occupation level — not what any one person could earn.",
+      limitations:
+        "Occupation-level aggregates with a reporting lag; the typical pattern for the role, never an individual prediction.",
+      reliabilityLevel: "high",
+      lastReviewed: "2026-06-15",
+      sourceCardId: "bls-quant-outlook",
+    },
+    {
+      id: "onet-quant-skills",
+      title: "Quant/analyst occupations: skills & worker characteristics",
+      category: "Occupation skills profile",
+      content:
+        "O*NET catalogs the analytical and technical skills quant/analyst roles tend to draw on at the occupation level — useful for mapping which signals to build.",
+      sourceType: "official_data",
+      usedFor: "Mapping which legible skills the quant track screens for",
+      evidenceStrength: "medium",
+      sourceName: "O*NET OnLine",
+      publisher: "U.S. Department of Labor (O*NET)",
+      sourceUrl: "https://www.onetonline.org/",
+      coverageLevel: "occupation",
+      claim:
+        "O*NET describes the skills and worker characteristics the occupation is commonly associated with, across the workforce.",
+      limitations:
+        "Occupation-level descriptions from analyst ratings/surveys; the typical role pattern, not an individual skill assessment.",
+      reliabilityLevel: "high",
+      lastReviewed: "2026-06-15",
+      sourceCardId: "onet-quant-skills",
     },
   ],
   twelveMonthTrajectory: [
@@ -218,7 +261,98 @@ const quant: FutureBranch = {
     uncertaintyLevel: "medium",
     dataCoverageNote:
       "Built from occupation/field-level hiring patterns plus your stated skills and constraints. No individual-level prediction is possible or implied.",
+    calibrationRationale:
+      "EvidenceStrength and userFit are medium because the supporting sources sit at occupation, field, and cohort coverage (BLS, O*NET, ACS, Scorecard, conversion/compounding cards) rather than confirming this individual's interview-ready base, which is only inferred. ConstraintRisk is low because the paid-summer constraint is user-stated and high-confidence, while uncertaintyLevel stays medium given the open questions about timing and actual readiness.",
   },
+  graphNodeIds: BRANCH_GRAPH_NODE_IDS["quant-signal"],
+  evidenceGraphSnapshot: graphSnapshotForBranch("quant-signal"),
+  agentReview: {
+    branchId: "quant-signal",
+    contextAgentSummary:
+      "Anchored the branch in the user's stated non-negotiable (a paid internship next summer) and an inferred algorithms/probability base, framing quant recruiting as one legible path among several.",
+    retrievalAgentSummary:
+      "Pulled occupation- and field-level sources (BLS quant outlook, O*NET quant skills, ACS field-to-occupation, Scorecard earnings) plus internal cards on quant signals, internship conversion, and skill compounding to populate the branch.",
+    evidenceAgentSummary:
+      "Mapped each claim to its honest coverage level, noting BLS/O*NET describe the occupation generally and conversion/compounding cards describe cohort tendencies, not this individual.",
+    optimistView:
+      "If the probability and coding base is genuinely interview-ready, leaning into legible quant signals could align well with how this niche tends to recruit, and an early internship may compound into stronger later positioning.",
+    skepticView:
+      "The branch could fail on timing rather than ability if prep starts too late to be competitive this cycle, and narrowing to quant-legible signals may cut optionality if the base turns out thinner than assumed.",
+    calibrationSummary:
+      "Set evidenceStrength and userFit to medium, constraintRisk to low, and uncertaintyLevel to medium, reflecting decent occupation-level sourcing against an unverified individual skill base.",
+    safetySummary:
+      "Stripped any deterministic offer/outcome language and exact figures, rephrasing claims into hedged, coverage-honest framings that describe what sources cover rather than what may happen to the user.",
+    synthesisSummary:
+      "Combined the agents into a hedged, judge-safe profile of quant recruiting as a real but timing-sensitive option whose viability hinges on a cheap near-term test of the user's actual interview readiness.",
+  },
+  reasoningAuditTrail: {
+    branchId: "quant-signal",
+    whyThisBranchExists:
+      "The user's non-negotiable paid-summer-internship constraint (constraint-paid-summer) plus an inferred algorithms/probability base (skill-probability, skill-coding) make the quant path (path-quant) a plausible option, supported by occupation-level sourcing on quant roles (src-bls, src-onet) and the recognized role of legible quant signals in this niche's recruiting.",
+    evidenceUsed: [
+      "cc-quant-signals: how legible signals tend to matter in quant recruiting",
+      "cc-internship-conversion: cohort-level patterns in internship-to-offer conversion",
+      "cc-skill-compounding: how early skill investment tends to compound",
+      "bls-quant-outlook + onet-quant-skills: occupation-level outlook and skill profile",
+      "scorecard-earnings + acs-field-to-occupation: field/program-level earnings and field-to-occupation flows",
+    ],
+    assumptionsUsed: [
+      "Algorithms/probability base is interview-strong [ai_inferred, low]",
+      "Paid internship next summer is non-negotiable [user_provided, high]",
+      "Missing this cycle delays the on-ramp by roughly a year [source_supported, medium]",
+    ],
+    uncertaintyDrivers: [
+      "Whether the probability/coding base is actually interview-ready (inferred, unverified)",
+      "Whether prep started early enough to be competitive this cycle (timing risk, risk-timing)",
+      "Exact recruiting timelines and application windows for this cycle",
+      "Loss of optionality from narrowing to quant-legible signals",
+    ],
+    optimistView:
+      "If the probability and coding base is genuinely interview-ready, leaning into legible quant signals could align with how this niche tends to recruit, and an early internship may compound into stronger later positioning.",
+    skepticView:
+      "The branch could fail on timing rather than ability if prep starts too late to be competitive, and narrowing to quant-legible signals may reduce optionality if the underlying base proves thinner than assumed.",
+    rejectedOverclaims: [
+      "Deterministic offer-landing language (rewritten as hedged, factor-dependent framing)",
+      "Exact percentage conversion/success figures (replaced with coverage-honest descriptions of what cohort sources cover)",
+      "Individual-level prediction from occupation/field data (re-scoped to occupation- and cohort-level tendencies)",
+    ],
+    whatWouldChangeThisAssessment: [
+      "Results of a mock interview / timed problem set showing the base is or is not interview-ready",
+      "Confirmed recruiting dates showing the cycle window is still open or already closed",
+      "Evidence the user can sustain prep volume alongside current commitments",
+      "Signal that comparable-stage candidates are still entering this cycle's pipeline",
+    ],
+    nextValidationStep:
+      "Run the 7-day experiment (exp-quant-7day) this week: a timed probability/coding mock interview to gauge actual readiness, paired with confirming this cycle's recruiting dates.",
+  },
+  rejectedOverclaims: [
+    "Softened a deterministic offer-landing claim into hedged, factor-dependent language the model cannot observe.",
+    "Removed invented exact conversion/success figures; replaced with coverage-honest descriptions of what cohort-level sources actually cover.",
+    "Re-scoped occupation- and field-level data (BLS, O*NET, ACS, Scorecard) away from individual prediction toward aggregate tendencies.",
+    "Reframed an all-in 'single best option' assertion as one plausible path whose tradeoff is reduced optionality.",
+  ],
+  evaluationSignals: [
+    {
+      name: "Groundedness",
+      level: "medium",
+      note: "Claims tie to named occupation- and cohort-level evidence ids, though the core skill assumption is inferred not verified.",
+    },
+    {
+      name: "Hedging compliance",
+      level: "high",
+      note: "No deterministic or banned phrasing; consistent use of may/could/tends-to throughout.",
+    },
+    {
+      name: "Provenance coverage",
+      level: "high",
+      note: "Each key assumption carries a provenance tag and each claim is kept at its honest coverage level.",
+    },
+    {
+      name: "Calibration honesty",
+      level: "medium",
+      note: "Medium evidence/fit and uncertainty reflect a real but unverified individual base against decent occupation-level sourcing.",
+    },
+  ],
 };
 
 const startup: FutureBranch = {
@@ -287,6 +421,48 @@ const startup: FutureBranch = {
       sourceType: "framework",
       usedFor: "Naming the real bottlenecks beyond the idea",
       evidenceStrength: "medium",
+    },
+    {
+      id: "nace-first-destination",
+      title: "Graduate first-destination outcome categories",
+      category: "Graduate outcomes",
+      content:
+        "At the graduating-cohort level, NACE sorts new graduates into outcome categories (employed, continuing education, still seeking) — context that a clean wind-down into employment is a normal post-graduation path.",
+      sourceType: "education_outcomes",
+      usedFor: "Framing reversibility — a wind-down still lands in a normal outcome category",
+      evidenceStrength: "low",
+      sourceName: "First-Destination Survey",
+      publisher: "National Association of Colleges and Employers (NACE)",
+      sourceUrl: "https://www.naceweb.org/job-market/graduate-outcomes/first-destination/",
+      coverageLevel: "cohort",
+      claim:
+        "Describes the mix of post-graduation paths a cohort follows, not what any one graduate will do.",
+      limitations:
+        "Cohort-level snapshot shaped by response rates and timing; not an individual prediction.",
+      reliabilityLevel: "medium",
+      lastReviewed: "2026-06-15",
+      sourceCardId: "nace-first-destination",
+    },
+    {
+      id: "acs-income-distribution",
+      title: "Income distributions by occupation and field",
+      category: "Income distributions",
+      content:
+        "At the population level, ACS PUMS can be tabulated into earnings distributions by occupation/field — useful for framing the spread (not a point estimate) of fallback income if a venture winds down.",
+      sourceType: "official_data",
+      usedFor: "Framing the income spread / opportunity cost of the sprint",
+      evidenceStrength: "low",
+      sourceName: "American Community Survey — PUMS",
+      publisher: "U.S. Census Bureau",
+      sourceUrl: "https://www.census.gov/programs-surveys/acs/microdata.html",
+      coverageLevel: "population",
+      claim:
+        "Population-level earnings spreads for a role or field, summarizing the surveyed population — not one person's earnings.",
+      limitations:
+        "Self-reported population aggregates that vary by geography, experience, and hours; not an individual prediction.",
+      reliabilityLevel: "high",
+      lastReviewed: "2026-06-15",
+      sourceCardId: "acs-income-distribution",
     },
   ],
   twelveMonthTrajectory: [
@@ -443,7 +619,99 @@ const startup: FutureBranch = {
     uncertaintyLevel: "high",
     dataCoverageNote:
       "Backed by strong framework-level evidence on validation, but outcomes are heavy-tailed and this branch directly tensions your stated financial constraint. No individual outcome is predicted.",
+    calibrationRationale:
+      "EvidenceStrength is high because the validation playbook (customer discovery, the Mom Test, smallest-test framing) is well established at the framework level, but userFit is only medium and constraintRisk and uncertaintyLevel are high because founder fit and real demand are unobserved and the sprint directly tensions the non-negotiable paid-summer income. These levels are pegged at framework/branch coverage, not as any individual prediction or odds.",
   },
+  graphNodeIds: BRANCH_GRAPH_NODE_IDS["startup-validation"],
+  evidenceGraphSnapshot: graphSnapshotForBranch("startup-validation"),
+  agentReview: {
+    branchId: "startup-validation",
+    contextAgentSummary:
+      "Framed this branch against the user's non-negotiable paid-summer constraint, flagging that a founding sprint tensions financial stability most of the three paths.",
+    retrievalAgentSummary:
+      "Pulled framework-level customer-discovery and reversibility evidence (talk-to-users, Mom Test, student-stage reversibility, distribution bottleneck) keyed to the build-before-validate risk.",
+    evidenceAgentSummary:
+      "Anchored claims to framework-level sources (The Mom Test, Steve Blank customer development, YC guidance) and kept startup-outcome framing as a heavy-tailed base rate, never a personal odds estimate.",
+    optimistView:
+      "A time-boxed validation sprint could test demand cheaply and tends to be reversible at the student stage, since skills, network, and narrative often transfer back to employment tracks.",
+    skepticView:
+      "A validation sprint may quietly drift into a build sprint, and the path could fail by shipping a polished product nobody urgently needed while eroding the paid-summer runway.",
+    calibrationSummary:
+      "Assigned evidenceStrength high (validation frameworks are well established) but userFit medium and constraintRisk/uncertaintyLevel high, reflecting unverified founder fit and the live tension with paid-summer income.",
+    safetySummary:
+      "Scrubbed deterministic and odds-style phrasings, rewriting outcome language as hedged, framework-level scenarios that never imply an assured outcome for this individual.",
+    synthesisSummary:
+      "Composed the branch as a falsifiable 7-day experiment (Mom-Test interviews + a demand test + a budget stress-test) so the user, not the model, decides whether to proceed.",
+  },
+  reasoningAuditTrail: {
+    branchId: "startup-validation",
+    whyThisBranchExists:
+      "The user treats a founding attempt as reversible (constraint and reversibility framing), and framework-level customer-discovery evidence (the talk-to-users and Mom-Test cards, the build-before-validate risk node, the smallest-test framework, and the startup path node) makes a cheap validation sprint a real, low-burn option rather than a leap into building.",
+    evidenceUsed: [
+      "sv-talk-to-users: validate demand before building (framework-level)",
+      "sv-mom-test: ask about past behavior, not hypothetical enthusiasm (framework-level)",
+      "sv-reversibility: student-stage founding is often more reversible than it feels (framework-level)",
+      "sv-cofounder-distribution: co-founder fit and distribution as common early bottlenecks",
+      "exp-startup-7day + fw-smallest-test: the smallest falsifiable test framing driving the 7-day plan",
+    ],
+    assumptionsUsed: [
+      "Can run a validation sprint without sacrificing the paid summer [ai_inferred, low]",
+      "Has an unfair insight into a problem space [ai_inferred, low]",
+      "Startup path feels reversible to the user [user_provided, high]",
+      "Building before validating is the main avoidable risk [source_supported, high]",
+    ],
+    uncertaintyDrivers: [
+      "Whether genuine, paid-for problem demand exists (unobserved until tested)",
+      "Whether the sprint stays validation-only or drifts into building",
+      "Whether founder fit and any unfair insight actually hold",
+      "Whether the paid-summer runway can absorb the time and budget cost",
+    ],
+    optimistView:
+      "A small, falsifiable demand test plus Mom-Test interviews could surface real pull cheaply, and at the student stage the attempt tends to be reversible if it transfers skills and network back.",
+    skepticView:
+      "The sprint may drift into a polished build before demand is confirmed, so the path could fail by producing something nobody urgently needs while consuming non-negotiable summer income.",
+    rejectedOverclaims: [
+      "Removed a fabricated venture success-likelihood figure; reframed as a heavy-tailed, framework-level base rate that cheap experiments only update.",
+      "Reframed a single-best-option / prescriptive framing as one reversible option the user evaluates.",
+      "Reframed a stated 'unique edge' as an [ai_inferred, low] assumption to be tested.",
+    ],
+    whatWouldChangeThisAssessment: [
+      "Multiple interviewees describe a painful, frequent problem they already pay or hack around to solve (raises confidence)",
+      "A falsifiable demand test draws concrete commitment (sign-ups, pre-pay, waitlist) rather than polite interest (raises)",
+      "The budget stress-test shows the sprint would dip into non-negotiable paid-summer income (lowers)",
+      "Interviews surface only hypothetical enthusiasm with no past behavior (lowers)",
+    ],
+    nextValidationStep:
+      "This week, run 5 Mom-Test problem interviews asking only about current behavior and existing spend, paired with one falsifiable demand signal (e.g., a landing page or pre-commitment ask), before writing any product code.",
+  },
+  rejectedOverclaims: [
+    "Softened a deterministic traction/outcome claim into hedged, framework-level language.",
+    "Removed a fabricated venture-likelihood figure; reframed as a qualitative heavy-tailed base rate that cheap experiments update.",
+    "Removed prescriptive 'should-build' / single-best-option framing; reframed as one reversible option to evaluate.",
+    "Reframed the user's 'unfair insight' from stated fact to an [ai_inferred, low] assumption to be falsified.",
+  ],
+  evaluationSignals: [
+    {
+      name: "Groundedness",
+      level: "high",
+      note: "Every claim maps to a known framework-level evidence card (Mom Test, customer development) or graph node; no invented sources.",
+    },
+    {
+      name: "Hedging compliance",
+      level: "high",
+      note: "Outcome language uses may/could/tends-to; no deterministic, absolute, or fabricated-likelihood phrasing remains.",
+    },
+    {
+      name: "Provenance coverage",
+      level: "high",
+      note: "Each assumption carries a provenance tag and confidence; evidence kept at honest framework-level coverage.",
+    },
+    {
+      name: "Calibration honesty",
+      level: "medium",
+      note: "Levels reflect strong validation frameworks but genuinely unobserved founder fit and demand, so high uncertainty is stated, not minimized.",
+    },
+  ],
 };
 
 const research: FutureBranch = {
@@ -502,6 +770,48 @@ const research: FutureBranch = {
       sourceType: "labor_market",
       usedFor: "Naming the opportunity cost and constraint risk",
       evidenceStrength: "medium",
+    },
+    {
+      id: "bls-postsec-outlook",
+      title: "Postsecondary / research-track occupations: outlook",
+      category: "Occupation outlook",
+      content:
+        "At the occupation level, the BLS Occupational Outlook Handbook describes postsecondary/research-track roles — duties, general wage framing, demand direction, and the advanced credentials these occupations expect.",
+      sourceType: "labor_market",
+      usedFor: "Occupation-level outlook/credential framing for the research track",
+      evidenceStrength: "medium",
+      sourceName: "Occupational Outlook Handbook",
+      publisher: "U.S. Bureau of Labor Statistics",
+      sourceUrl: "https://www.bls.gov/ooh/",
+      coverageLevel: "occupation",
+      claim:
+        "Frames research-track roles, wage ranges, and demand direction at the occupation level — useful for direction, not personal outcome.",
+      limitations:
+        "Occupation-level aggregates grouping varied disciplines/institutions; a reporting lag; not an individual prediction.",
+      reliabilityLevel: "high",
+      lastReviewed: "2026-06-15",
+      sourceCardId: "bls-postsec-outlook",
+    },
+    {
+      id: "nces-earnings-debt",
+      title: "Post-bachelor earnings trajectories & loan debt (cohort)",
+      category: "Earnings trajectories and student debt",
+      content:
+        "At the cohort level, the NCES Baccalaureate & Beyond study follows bachelor's recipients over time — context for how earnings tend to develop and how borrowing/repayment typically unfold, framing the deferred-income tradeoff.",
+      sourceType: "education_outcomes",
+      usedFor: "Framing the deferred-income vs family-stability tradeoff",
+      evidenceStrength: "medium",
+      sourceName: "Baccalaureate and Beyond Longitudinal Study (B&B)",
+      publisher: "National Center for Education Statistics (NCES)",
+      sourceUrl: "https://nces.ed.gov/surveys/b&b/",
+      coverageLevel: "cohort",
+      claim:
+        "Describes a tracked cohort's general earnings/debt pattern over time — not what any one graduate could earn or owe.",
+      limitations:
+        "Cohort-level longitudinal aggregates with self-reported elements and a follow-up lag; not an individual prediction.",
+      reliabilityLevel: "medium",
+      lastReviewed: "2026-06-15",
+      sourceCardId: "nces-earnings-debt",
     },
   ],
   twelveMonthTrajectory: [
@@ -659,7 +969,99 @@ const research: FutureBranch = {
     uncertaintyLevel: "high",
     dataCoverageNote:
       "Built from field-level research/admissions norms plus your stated (untested) interest. Fit is the dominant unknown and is inherently personal — not something the simulation can resolve.",
+    calibrationRationale:
+      "EvidenceStrength is medium because the supporting cards are field-level frameworks and aggregate source pointers, not individual data; userFit is low and uncertaintyLevel high because research fit is personal and entirely untested (the user has never done real research), while constraintRisk is medium since deferred income against the family-stability value is plausible but unverified.",
   },
+  graphNodeIds: BRANCH_GRAPH_NODE_IDS["research-depth"],
+  evidenceGraphSnapshot: graphSnapshotForBranch("research-depth"),
+  agentReview: {
+    branchId: "research-depth",
+    contextAgentSummary:
+      "Restated the decision as a research/grad-school track for a student who likes hard classes but has never done real research, weighing autonomy and deferred income against a stated family-stability value.",
+    retrievalAgentSummary:
+      "Surfaced the research-fit, advisor-leverage, and funding-time cards plus the BLS-style occupation outlook and NCES-style earnings/debt pointers as the most relevant, all at field- or occupation-level coverage.",
+    evidenceAgentSummary:
+      "Attached the grad-school cards and labor-market source pointers, carrying their field-level coverage and selection/recency limitations rather than personalizing any aggregate into an individual figure.",
+    optimistView:
+      "If open-ended research turns out to fit, this branch may offer high autonomy and compounding research/writing skills, and early output plus a strong letter could become high-leverage admission signals at the field level.",
+    skepticView:
+      "Research fit is personal and untested, so enthusiasm for coursework may not transfer to long ambiguous feedback loops; the path also tends to defer income in high-compounding years and grows harder to reverse mid-stream.",
+    calibrationSummary:
+      "Assigned evidenceStrength medium, userFit low, constraintRisk medium, uncertaintyLevel high, noting coverage is field-level and the dominant unknown is untested research fit.",
+    safetySummary:
+      "Scrubbed deterministic admission/earnings phrasing and any exact percentages, rewriting them as hedged, coverage-honest statements that leave the choice to the user.",
+    synthesisSummary:
+      "Reconciled the optimist and skeptic views into a hedged branch whose crux is research fit, recommending a cheap 7-day fit test before any multi-year commitment.",
+  },
+  reasoningAuditTrail: {
+    branchId: "research-depth",
+    whyThisBranchExists:
+      "The user enjoys hard classes and values autonomy, and the research-path node plus the research-writing skill node make a research/grad-school track a real option; the research-fit, advisor-leverage, and funding-time cards give it field-level grounding rather than free association.",
+    evidenceUsed: [
+      "gs-research-fit: enjoying coursework is a weak predictor of enjoying open-ended research; a short real research trial is a cheaper fit test (field-level)",
+      "gs-advisor-leverage: demonstrated research output and strong letters tend to outweigh grades alone for research-track admissions (field-level)",
+      "gs-funding-time: funded programs typically provide a stipend rather than market salary, deferring near-term income (field-level)",
+      "bls-postsec-outlook: occupation-level outlook for postsecondary/research-adjacent roles, useful for direction not personal outcome",
+      "nces-earnings-debt: earnings/debt pointers describing what the source covers and its aggregate limitations",
+    ],
+    assumptionsUsed: [
+      "Would enjoy open-ended research because likes hard classes [ai_inferred, low]",
+      "Has never done real research yet [user_provided, high]",
+      "Letters and research output tend to matter more than grades alone [source_supported, medium]",
+      "Deferred income may be compatible with the family-stability value [ai_inferred, low]",
+    ],
+    uncertaintyDrivers: [
+      "Research FIT is personal and untested — the dominant unknown",
+      "Whether deferred income can coexist with the stated family-stability value",
+      "Variation in admissions and funding across sub-fields, which field-level evidence cannot resolve for one person",
+      "Tolerance for long stretches without external validation, which coursework does not test",
+    ],
+    optimistView:
+      "If research fit holds, this branch may combine high autonomy with compounding research and writing skills, and early output plus a strong letter could act as high-leverage admission signals at the field level.",
+    skepticView:
+      "Liking hard classes may not transfer to ambiguous, long-feedback-loop research; the path tends to defer income during high-compounding years and becomes costlier to reverse the deeper one goes.",
+    rejectedOverclaims: [
+      "Reframed a deterministic admissions claim into a hedged, field-level statement (output and letters tend to carry more weight than grades alone)",
+      "Removed any exact earnings or stipend percentage; described instead what the source covers and its aggregate limitations",
+      "Reframed research enjoyment from fact to an ai_inferred (low) assumption routed to a cheap fit test",
+    ],
+    whatWouldChangeThisAssessment: [
+      "A short real research trial (reading group or tiny replication) that the user finds energizing rather than draining would raise userFit",
+      "A grad-student conversation revealing the day-to-day ambiguity feels intolerable would lower userFit",
+      "A family conversation showing deferred income is or is not workable would shift constraintRisk",
+      "Concrete early output or advisor interest would strengthen the field-level admission-signal evidence",
+    ],
+    nextValidationStep:
+      "This week, attempt a tiny replication of one paper and talk to one grad student about the daily reality, then have a short family conversation about deferred income — a cheap test of the dominant fit and constraint unknowns.",
+  },
+  rejectedOverclaims: [
+    "Softened a deterministic admissions claim into a hedged, field-level statement (output and letters tend to outweigh grades alone, varying by sub-field).",
+    "Removed exact earnings/stipend/admission-odds figures; described what aggregate sources cover and their limitations.",
+    "Reframed 'will enjoy research' from fact to an [ai_inferred, low] assumption routed to a cheap fit test.",
+    "Reframed a superlative path claim as one plausible branch whose value depends on personal research fit the model cannot observe.",
+  ],
+  evaluationSignals: [
+    {
+      name: "Groundedness",
+      level: "high",
+      note: "Every claim ties to a named field-level grad-school card or labor-market source pointer; no fabricated numbers.",
+    },
+    {
+      name: "Hedging compliance",
+      level: "high",
+      note: "Uses may/could/tends-to throughout; no deterministic verbs, absolute promises, or exact percentages.",
+    },
+    {
+      name: "Provenance coverage",
+      level: "medium",
+      note: "Assumptions are tagged user_provided/source_supported/ai_inferred, though two key drivers rest on low-confidence inferences.",
+    },
+    {
+      name: "Calibration honesty",
+      level: "high",
+      note: "userFit low and uncertaintyLevel high openly flag untested research fit as the dominant unknown.",
+    },
+  ],
 };
 
 export const DEMO_BRANCHES: FutureBranch[] = [quant, startup, research];

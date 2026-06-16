@@ -1,0 +1,63 @@
+{
+  "domain": "onet",
+  "description": "Official-source evidence pack for O*NET OnLine. Cards describe what the source covers at the occupation level (skills, tasks, work activities, worker characteristics, and tools/technologies for quant/analyst, software developer, and research/science roles) with limitations. These are aggregate/occupation-level framings, never individual predictions, and contain no fabricated exact statistics.",
+  "items": [
+    {
+      "id": "onet-quant-skills",
+      "title": "Quantitative and analyst occupations: skills and worker characteristics",
+      "sourceName": "O*NET OnLine",
+      "publisher": "U.S. Department of Labor (O*NET)",
+      "sourceUrl": "https://www.onetonline.org/",
+      "sourceType": "official_data",
+      "category": "Occupation skills profile",
+      "coverageLevel": "occupation",
+      "claim": "At the occupation level, O*NET catalogs the skills, knowledge areas, and worker characteristics that quantitative and analyst roles tend to draw on, describing the kinds of analytical and technical competencies the occupation is commonly associated with. It frames what such roles typically involve across the workforce rather than what any one person holds or needs.",
+      "limitations": "These skill profiles are occupation-level descriptions compiled from analyst ratings and worker surveys that are updated on a rolling cycle, so they summarize the typical pattern for the role overall and cannot be read as an individual's skill assessment or career prediction.",
+      "usedFor": [
+        "occupation-level skill framing",
+        "skill-to-role fit exploration",
+        "constraint-risk sizing"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "onet-software-tasks",
+      "title": "Software developer occupations: tasks and tools and technologies",
+      "sourceName": "O*NET OnLine",
+      "publisher": "U.S. Department of Labor (O*NET)",
+      "sourceUrl": "https://www.onetonline.org/",
+      "sourceType": "official_data",
+      "category": "Occupation tasks and tools",
+      "coverageLevel": "occupation",
+      "claim": "At the occupation level, O*NET lists the day-to-day tasks software developer roles tend to perform along with the tools and technologies the occupation commonly uses, framing the kind of work and toolsets such roles are typically associated with. It describes the role across the workforce rather than the specific duties or stack any one person would have.",
+      "limitations": "These task and technology lists are occupation-level descriptions drawn from analyst ratings and worker reports updated on a rolling cycle, so they reflect typical and recently observed patterns for the role and are not an individual job, tooling, or path prediction.",
+      "usedFor": [
+        "occupation-level task framing",
+        "tools and technologies exposure",
+        "day-to-day work expectations"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    },
+    {
+      "id": "onet-research-activities",
+      "title": "Research and science occupations: work activities and worker characteristics",
+      "sourceName": "O*NET OnLine",
+      "publisher": "U.S. Department of Labor (O*NET)",
+      "sourceUrl": "https://www.onetonline.org/",
+      "sourceType": "official_data",
+      "category": "Occupation work activities",
+      "coverageLevel": "occupation",
+      "claim": "At the occupation level, O*NET describes the generalized work activities and worker characteristics that research and science roles tend to involve, such as analyzing information, conducting investigations, and applying domain knowledge. It frames what these occupations typically entail across the workforce rather than the activities any one researcher would undertake.",
+      "limitations": "These work-activity descriptions are occupation-level summaries compiled from analyst ratings and worker surveys updated on a rolling cycle and span varied disciplines, so they describe the typical pattern for the role overall and cannot be read as an individual research path or outcome prediction.",
+      "usedFor": [
+        "occupation-level work-activity framing",
+        "research-role fit exploration",
+        "education and preparation expectations"
+      ],
+      "reliabilityLevel": "high",
+      "lastReviewed": "2026-06-15"
+    }
+  ]
+}

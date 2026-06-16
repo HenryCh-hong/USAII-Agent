@@ -96,7 +96,10 @@ export const useForkedStore = create<ForkedState>()(
         }),
     }),
     {
-      name: "forked-futures-v1",
+      // Bumped v1 -> v2: branches now carry optional agentReview / audit-trail /
+      // evidence-graph fields. A fresh key forces clean re-hydration so cached
+      // sessions never render half-populated v2 panels.
+      name: "forked-futures-v2",
       partialize: (s) => ({
         context: s.context,
         questions: s.questions,

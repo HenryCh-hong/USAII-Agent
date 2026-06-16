@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BookOpen, BarChart3 } from "lucide-react";
+import { BookOpen, BarChart3, ExternalLink } from "lucide-react";
 import type { EvidenceCard, BaseRateSignal, SourceType } from "@/lib/types";
 import { Card, CardBody, CardTitle } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -15,6 +15,9 @@ const SOURCE_LABELS: Record<SourceType, string> = {
   labor_market: "Labor-market data",
   user_provided: "You told us",
   ai_inferred: "AI-inferred",
+  official_data: "Official data",
+  education_outcomes: "Education outcomes",
+  decision_framework: "Decision framework",
 };
 
 /**
@@ -61,6 +64,45 @@ export function EvidenceCards({
                     </span>
                     {card.usedFor}
                   </p>
+                  {(card.sourceName || card.limitations) && (
+                    <div className="space-y-1 rounded-lg border border-line/50 bg-white/[0.02] px-3 py-2">
+                      {card.sourceName && (
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-mute/90">
+                          <span className="font-semibold uppercase tracking-wider text-mute/70">
+                            Source
+                          </span>
+                          <span className="text-soft/85">
+                            {card.sourceName}
+                            {card.publisher ? ` · ${card.publisher}` : ""}
+                          </span>
+                          {card.coverageLevel && (
+                            <Pill className="text-[10px]">{card.coverageLevel}</Pill>
+                          )}
+                          {card.reliabilityLevel && (
+                            <Pill className="text-[10px]">{card.reliabilityLevel} reliability</Pill>
+                          )}
+                          {card.sourceUrl && (
+                            <a
+                              href={card.sourceUrl}
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              className="inline-flex items-center gap-1 text-brand-glow hover:underline"
+                            >
+                              source <ExternalLink className="h-3 w-3" />
+                            </a>
+                          )}
+                        </div>
+                      )}
+                      {card.limitations && (
+                        <p className="text-[11px] italic leading-relaxed text-mute/90">
+                          <span className="not-italic font-semibold uppercase tracking-wider text-mute/70">
+                            Limits ·{" "}
+                          </span>
+                          {card.limitations}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </CardBody>
               </Card>
             </motion.div>
