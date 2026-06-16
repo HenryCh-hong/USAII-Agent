@@ -7,7 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "eval:overclaim": "tsx scripts/eval-overclaim-safety.ts",
+    "eval:rag": "tsx scripts/eval-rag-coverage.ts",
+    "eval:schema": "tsx scripts/eval-agent-output-schema.ts",
+    "eval:journey": "tsx scripts/eval-demo-journey.ts",
+    "eval": "npm run eval:overclaim && npm run eval:rag && npm run eval:schema && npm run eval:journey",
+    "validate": "npm run typecheck && npm run eval && npm run build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.3",
@@ -28,6 +34,7 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
+    "tsx": "^4.22.4",
     "typescript": "^5.5.4"
   }
 }
