@@ -22,6 +22,7 @@ import { TopNav, ProgressSteps } from "@/components/shared/Nav";
 import { AmbientBackground } from "@/components/shared/AmbientBackground";
 import { Section, SectionTitle } from "@/components/ui/Section";
 import { ResponsibleAIBanner } from "@/components/shared/ResponsibleAIBanner";
+import { DecisionDelta } from "@/components/shared/DecisionDelta";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -167,6 +168,18 @@ export default function BriefPage() {
             </div>
           </Card>
         </motion.div>
+      </Section>
+
+      {/* Decision Delta — before/after impact (derived from real branch data). */}
+      <Section className="pt-10">
+        <SectionTitle
+          eyebrow="Decision Delta"
+          title="From uncertainty to action"
+          subtitle="What changed by running this decision through Forked Futures. Every figure on the right is a real count of what the system produced — not a claim about your outcome."
+        />
+        <div className="mt-6">
+          <DecisionDelta context={simulation.context} branches={branches} />
+        </div>
       </Section>
 
       {/* Branches at a glance. */}

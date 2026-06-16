@@ -33,6 +33,8 @@ import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { Pill, Divider } from "@/components/ui/Primitives";
 import { PipelineDiagram } from "@/components/architecture/PipelineDiagram";
+import { EvalSummary } from "@/components/architecture/EvalSummary";
+import { DecisionDelta } from "@/components/shared/DecisionDelta";
 import { ALL_SOURCE_CARDS } from "@/lib/knowledge/sources";
 import { EVIDENCE_NODES, EVIDENCE_EDGES } from "@/lib/knowledge/graph";
 import { DEMO_CONTEXT, DEMO_BRANCHES, DEMO_BRIEF } from "@/lib/mock";
@@ -409,6 +411,18 @@ export default function ArchitecturePage() {
         </div>
       </Section>
 
+      {/* 5d) Decision Delta — impact of running the decision through the system */}
+      <Section className="pt-16">
+        <SectionTitle
+          eyebrow="Impact · Decision Delta"
+          title="From uncertainty to action"
+          subtitle="What the Alex decision looks like before vs. after Forked Futures. Every figure on the right is a real count of what the system produced — not a claim about any outcome."
+        />
+        <div className="mt-8">
+          <DecisionDelta context={DEMO_CONTEXT} branches={DEMO_BRANCHES} compact />
+        </div>
+      </Section>
+
       {/* 6) Responsible AI + human-in-the-loop */}
       <Section className="pt-16">
         <SectionTitle
@@ -478,6 +492,18 @@ export default function ArchitecturePage() {
           </Card>
         </div>
         <ResponsibleAIBanner className="mt-4" />
+      </Section>
+
+      {/* 6b) System evaluation — in-app eval results */}
+      <Section className="pt-16">
+        <SectionTitle
+          eyebrow="System evaluation"
+          title="The safeguards are tested, not just asserted"
+          subtitle="A framework-free evaluation harness guards overclaim safety, evidence coverage, the output schema, and the keyless demo journey. The last local run, reproducible in one command:"
+        />
+        <div className="mt-8">
+          <EvalSummary lastRun="2026-06-17" />
+        </div>
       </Section>
 
       {/* 7) Tech */}

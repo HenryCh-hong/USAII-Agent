@@ -8,6 +8,26 @@ Built for the **USAII Global AI Hackathon 2026** — Undergraduate Track, *Chall
 
 ---
 
+## Submission / Judge Guide
+
+Start here if you're evaluating this project:
+
+- **Live transparency dashboard** — run the app, then open **`/architecture`** (Judge Mode): the 9-role pipeline, official-source RAG pack, local evidence graph, safety scrubber, and a live, end-to-end **Alex decision trace**.
+- **Contact sheet (every screen, mock path)** — [`docs/qa/judge-readiness/contact-sheet.png`](docs/qa/judge-readiness/contact-sheet.png)
+- **Write-ups** (`docs/submission/`):
+  - [Project description](docs/submission/project-description.md)
+  - [AI architecture](docs/submission/ai-architecture.md)
+  - [Responsible AI](docs/submission/responsible-ai.md)
+  - [Human-in-the-loop](docs/submission/human-in-loop.md)
+  - [Tools & data](docs/submission/tools-and-data.md)
+  - [Demo script](docs/submission/demo-script.md)
+
+**Verify in one command:** `npm run validate` — typecheck + 4 evaluation scripts + production build. The full demo runs with **no `ANTHROPIC_API_KEY`**; the live model path is optional and falls back to a curated mock dataset.
+
+> The original pipeline is described below. The current **v2** system (9-role debate, official-source evidence pack, local evidence graph, reasoning audit trail, and evaluation harness) is documented in `docs/submission/` and shown live on `/architecture`.
+
+---
+
 ## The 60-second story (for judges)
 
 1. **Who / what** — Alex, a CS sophomore, is choosing between quant recruiting, building a startup, and a research / grad-school path.

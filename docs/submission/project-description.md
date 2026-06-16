@@ -60,6 +60,8 @@ validation) as deterministic code, so the model is grounded and constrained.
   the categories it rejected.
 - **Evaluation harness** — four framework-free eval scripts (overclaim safety, RAG
   coverage, output schema, demo journey).
+- **Decision Delta** — a before/after impact surface showing the move from vague
+  options to evidenced, testable branches (counts derived from real output).
 - **Mock-first fallback** — the entire experience runs with **no API key**; the
   live model path is optional and degrades to a curated mock dataset on any error.
 

@@ -30,7 +30,8 @@ building a startup, and preparing for research / grad school.
 4. **Decision Brief (0:55–1:10).** "A final mission brief: what you're really
    deciding, strongest signals, biggest uncertainties, **what the AI will not
    decide**, what would change the assessment, the evidence-coverage note, and the
-   next experiments. The choice stays with Alex."
+   next experiments. The **Decision Delta** panel makes the impact concrete — vague
+   options before, evidenced and testable branches after. The choice stays with Alex."
 
 5. **Judge Mode / Architecture (1:10–1:30).** "Why this is not a chatbot wrapper:
    the official-source RAG pack, the local evidence graph, the 9-role pipeline, the
