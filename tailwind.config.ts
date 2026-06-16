@@ -59,10 +59,30 @@ const config: Config = {
         "dash": {
           to: { strokeDashoffset: "0" },
         },
+        // Cockpit atmosphere
+        "starfield-drift": {
+          "0%": { transform: "translate3d(0,0,0)" },
+          "100%": { transform: "translate3d(-40px,-30px,0)" },
+        },
+        "trail-flow": {
+          "0%": { backgroundPosition: "0% 0%" },
+          "100%": { backgroundPosition: "0% -200%" },
+        },
+        "scan": {
+          "0%, 100%": { opacity: "0.15", transform: "translateY(0)" },
+          "50%": { opacity: "0.4" },
+        },
+        "led": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.35" },
+        },
       },
       animation: {
         "pulse-glow": "pulse-glow 3s ease-in-out infinite",
         "fade-up": "fade-up 0.5s ease-out both",
+        "starfield-drift": "starfield-drift 60s linear infinite alternate",
+        "trail-flow": "trail-flow 8s linear infinite",
+        led: "led 2.4s ease-in-out infinite",
       },
     },
   },

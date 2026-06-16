@@ -27,6 +27,11 @@ import { Premortem } from "@/components/branch/Premortem";
 import { RegretRadar } from "@/components/branch/RegretRadar";
 import { ExperimentPlan } from "@/components/branch/ExperimentPlan";
 import { CalibrationPanel } from "@/components/branch/CalibrationPanel";
+import { AgentReview } from "@/components/branch/AgentReview";
+import { EvidenceGraph } from "@/components/branch/EvidenceGraph";
+import { ReasoningAuditTrail } from "@/components/branch/ReasoningAuditTrail";
+import { EvaluationSignals } from "@/components/branch/EvaluationSignals";
+import { RejectedOverclaims } from "@/components/branch/RejectedOverclaims";
 import { useForkedStore } from "@/lib/store";
 import { useEnsureSimulation, useHydrated } from "@/lib/hooks";
 import { accentClasses, accentForBranch, cn } from "@/lib/utils";
@@ -144,6 +149,20 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         </motion.div>
       </Section>
 
+      {/* Agent Review — the multi-agent debate behind this branch */}
+      {branch.agentReview && (
+        <Section className="pt-14">
+          <SectionTitle
+            eyebrow="Agent review"
+            title="How the system reasoned about this branch"
+            subtitle="Forked Futures runs a multi-agent debate, not a single answer. Here is a judge-safe summary of what each agent contributed — never raw chain-of-thought."
+          />
+          <div className="mt-6">
+            <AgentReview review={branch.agentReview} />
+          </div>
+        </Section>
+      )}
+
       {/* Trajectory */}
       <Section className="pt-14">
         <SectionTitle
@@ -197,12 +216,12 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         </div>
       </Section>
 
-      {/* Evidence + base rates */}
+      {/* Evidence console + base rates */}
       <Section className="pt-14">
         <SectionTitle
-          eyebrow="Evidence base"
+          eyebrow="Evidence console"
           title="What this scenario is built on"
-          subtitle="The curated evidence behind the branch and the aggregate base-rate patterns that frame it — kept at their true coverage level."
+          subtitle="The curated and official-source evidence behind the branch, with provenance, plus the aggregate base-rate patterns that frame it — kept at their true coverage level."
         />
         <div className="mt-6">
           <EvidenceCards
@@ -211,6 +230,20 @@ export default function BranchPage({ params }: { params: { id: string } }) {
           />
         </div>
       </Section>
+
+      {/* Evidence graph snapshot */}
+      {branch.evidenceGraphSnapshot && branch.evidenceGraphSnapshot.nodes.length > 0 && (
+        <Section className="pt-14">
+          <SectionTitle
+            eyebrow="Evidence graph"
+            title="How the evidence connects"
+            subtitle="A local node-and-edge view of why this branch exists: how sources, skills, constraints, risks and frameworks link to the path and the experiment that can test it."
+          />
+          <div className="mt-6">
+            <EvidenceGraph snapshot={branch.evidenceGraphSnapshot} />
+          </div>
+        </Section>
+      )}
 
       {/* Premortem */}
       <Section className="pt-14">
@@ -254,17 +287,65 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         </div>
       </Section>
 
-      {/* Calibration */}
+      {/* Calibration cockpit */}
       <Section className="pt-14">
         <SectionTitle
-          eyebrow="Calibration"
+          eyebrow="Calibration cockpit"
           title="How confident is this scenario?"
           subtitle="A qualitative readout — honest levels rather than false precision, with no individual-level prediction."
         />
         <div className="mt-6">
           <CalibrationPanel calibration={branch.calibration} />
         </div>
+        {branch.calibration.calibrationRationale && (
+          <p className="mt-4 rounded-xl border border-line/60 bg-white/[0.02] px-4 py-3 text-sm leading-relaxed text-soft/85">
+            <span className="mono-label">Why these levels · </span>
+            {branch.calibration.calibrationRationale}
+          </p>
+        )}
       </Section>
+
+      {/* Evaluation signals */}
+      {branch.evaluationSignals && branch.evaluationSignals.length > 0 && (
+        <Section className="pt-14">
+          <SectionTitle
+            eyebrow="Evaluation"
+            title="The system's own self-checks"
+            subtitle="Qualitative signals on how grounded, hedged, and provenance-backed this branch is — shown, not hidden."
+          />
+          <div className="mt-6">
+            <EvaluationSignals signals={branch.evaluationSignals} />
+          </div>
+        </Section>
+      )}
+
+      {/* Reasoning audit trail */}
+      {branch.reasoningAuditTrail && (
+        <Section className="pt-14">
+          <SectionTitle
+            eyebrow="Reasoning audit trail"
+            title="The reasoning, made auditable"
+            subtitle="A structured, judge-safe trail shown in place of raw chain-of-thought — what this rests on, what's uncertain, and what would change the call."
+          />
+          <div className="mt-6">
+            <ReasoningAuditTrail trail={branch.reasoningAuditTrail} />
+          </div>
+        </Section>
+      )}
+
+      {/* Rejected overclaims */}
+      {branch.rejectedOverclaims && branch.rejectedOverclaims.length > 0 && (
+        <Section className="pt-14">
+          <SectionTitle
+            eyebrow="Safety layer"
+            title="What the system refused to overclaim"
+            subtitle="The deterministic and over-confident language the Safety agent rewrote before this branch reached you."
+          />
+          <div className="mt-6">
+            <RejectedOverclaims items={branch.rejectedOverclaims} />
+          </div>
+        </Section>
+      )}
 
       {/* Responsible AI + nav */}
       <Section className="pt-14">

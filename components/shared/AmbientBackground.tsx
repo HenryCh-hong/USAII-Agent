@@ -1,7 +1,12 @@
-/** Fixed cinematic backdrop: faint grid + drifting glow orbs. Decorative only. */
+/**
+ * Fixed cinematic cockpit backdrop: a drifting starfield, a faint future-grid,
+ * slow glow orbs, and a top hairline. Purely decorative (pointer-events-none),
+ * and the starfield drift is disabled under prefers-reduced-motion via CSS.
+ */
 export function AmbientBackground() {
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      <div className="starfield absolute inset-0 opacity-70" />
       <div className="absolute inset-0 grid-bg opacity-60" />
       <div className="absolute -top-40 left-1/2 h-[40rem] w-[40rem] -translate-x-1/2 rounded-full bg-brand/10 blur-[120px]" />
       <div className="absolute top-1/3 -left-32 h-[28rem] w-[28rem] rounded-full bg-research/10 blur-[120px]" />

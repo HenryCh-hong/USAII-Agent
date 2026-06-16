@@ -58,6 +58,29 @@
   .hairline {
     @apply border-line/70;
   }
+  /* Mono instrument label used across cockpit panels. */
+  .mono-label {
+    font-family: var(--font-mono);
+    @apply text-[10px] uppercase tracking-[0.22em] text-mute/80;
+  }
+  /* Glassy cockpit panel chrome (corner brackets added via <CockpitPanel/>). */
+  .cockpit {
+    @apply relative rounded-2xl border border-line/70 bg-panel/55 backdrop-blur-xl shadow-panel;
+  }
+}
+
+/* Decorative starfield + future-grid layer for the cockpit backdrop. Two faint
+   radial-dot layers drift slowly; disabled under prefers-reduced-motion below. */
+.starfield {
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(174, 182, 214, 0.5), transparent),
+    radial-gradient(1px 1px at 75% 44%, rgba(124, 140, 255, 0.45), transparent),
+    radial-gradient(1px 1px at 46% 72%, rgba(174, 182, 214, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 88% 18%, rgba(192, 132, 252, 0.4), transparent),
+    radial-gradient(1px 1px at 12% 82%, rgba(94, 234, 212, 0.4), transparent),
+    radial-gradient(1px 1px at 62% 12%, rgba(174, 182, 214, 0.35), transparent);
+  background-size: 320px 320px;
+  animation: starfield-drift 60s linear infinite alternate;
 }
 
 /* Used by the branch map SVG for an animated draw-in of fork lines */
@@ -69,5 +92,20 @@
 @keyframes dash {
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+/* Respect reduced-motion: kill looping/decorative animation + smooth scroll. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .starfield {
+    animation: none !important;
   }
 }

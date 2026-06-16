@@ -3,15 +3,28 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import type { FutureBranch } from "@/lib/types";
-import { accentClasses, accentForBranch, cn } from "@/lib/utils";
-import { Dot } from "@/components/ui/Primitives";
+import type { FutureBranch, Level } from "@/lib/types";
+import { accentClasses, accentForBranch, cn, levelClasses } from "@/lib/utils";
 
 /**
  * The Future Map hero: a single decision origin forking into three glowing
- * branch lines, each ending in a clickable destination pod. Custom SVG (no
- * React Flow) for full control of the cinematic look.
+ * branch timelines, each with milestone ticks (now → ~12 months) and a clickable
+ * destination pod carrying a compact calibration strip. Custom SVG (no React
+ * Flow) for full control of the cinematic look.
  */
+
+/** Sample the cubic Bezier used for each branch line, for milestone placement. */
+function bezierPoint(t: number, tx: number): { x: number; y: number } {
+  const mt = 1 - t;
+  const x =
+    mt * mt * mt * 500 + 3 * mt * mt * t * 500 + 3 * mt * t * t * tx + t * t * t * tx;
+  const y =
+    mt * mt * mt * 26 + 3 * mt * mt * t * 150 + 3 * mt * t * t * 150 + t * t * t * 300;
+  return { x, y };
+}
+
+const MILESTONES = [0.4, 0.66, 0.9];
+
 export function BranchMap({ branches }: { branches: FutureBranch[] }) {
   // Endpoint x-centers (as % of width) aligned to the SVG path targets below.
   const cols = [16.5, 50, 83.5];
@@ -19,8 +32,14 @@ export function BranchMap({ branches }: { branches: FutureBranch[] }) {
 
   return (
     <div className="relative w-full">
-      <div className="relative h-[300px] w-full sm:h-[340px]">
-        {/* Glowing connector lines */}
+      {/* Vertical time axis cue */}
+      <div className="pointer-events-none absolute left-0 top-2 bottom-12 hidden flex-col justify-between sm:flex">
+        <span className="mono-label">now</span>
+        <span className="mono-label">+12 mo</span>
+      </div>
+
+      <div className="relative h-[320px] w-full sm:h-[360px]">
+        {/* Glowing connector lines + milestone ticks */}
         <svg
           viewBox="0 0 1000 340"
           preserveAspectRatio="none"
@@ -51,6 +70,19 @@ export function BranchMap({ branches }: { branches: FutureBranch[] }) {
                   className="branch-line"
                   style={{ animationDelay: `${i * 0.18}s`, opacity: 0.85 }}
                 />
+                {MILESTONES.map((t, mi) => {
+                  const p = bezierPoint(t, tx);
+                  return (
+                    <circle
+                      key={mi}
+                      cx={p.x}
+                      cy={p.y}
+                      r={2.2}
+                      fill={accent.stroke}
+                      opacity={0.9}
+                    />
+                  );
+                })}
               </g>
             );
           })}
@@ -71,7 +103,8 @@ export function BranchMap({ branches }: { branches: FutureBranch[] }) {
 
         {/* Destination pods */}
         {branches.map((b, i) => {
-          const accent = accentClasses(accentForBranch(b.id, i));
+          const accentKey = accentForBranch(b.id, i);
+          const accent = accentClasses(accentKey);
           return (
             <motion.div
               key={b.id}
@@ -86,8 +119,8 @@ export function BranchMap({ branches }: { branches: FutureBranch[] }) {
                   className={cn(
                     "rounded-xl border bg-panel/80 p-3 text-center backdrop-blur-xl transition-all duration-300 group-hover:-translate-y-1",
                     accent.border,
-                    `group-hover:${accent.glow}`,
                     accent.glow,
+                    accent.glowHover,
                   )}
                 >
                   <div className={cn("text-[11px] font-semibold uppercase tracking-wider", accent.text)}>
@@ -96,10 +129,14 @@ export function BranchMap({ branches }: { branches: FutureBranch[] }) {
                   <div className="mt-1 line-clamp-2 text-sm font-medium text-white">
                     {b.title}
                   </div>
-                  <div className="mt-2 flex items-center justify-center gap-2 text-[11px] text-mute">
-                    <Dot level={b.calibration.uncertaintyLevel} />
-                    <span className="capitalize">{b.calibration.uncertaintyLevel} uncertainty</span>
-                  </div>
+                  <CalibStrip
+                    levels={[
+                      ["E", b.calibration.evidenceStrength],
+                      ["F", b.calibration.userFit],
+                      ["C", b.calibration.constraintRisk],
+                      ["U", b.calibration.uncertaintyLevel],
+                    ]}
+                  />
                   <div className={cn("mt-2 inline-flex items-center gap-1 text-xs font-medium opacity-0 transition-opacity group-hover:opacity-100", accent.text)}>
                     Open branch <ArrowRight className="h-3 w-3" />
                   </div>
@@ -109,6 +146,29 @@ export function BranchMap({ branches }: { branches: FutureBranch[] }) {
           );
         })}
       </div>
+
+      <p className="mt-3 text-center text-[11px] text-mute/80">
+        Branches are plausible rehearsals, not predictions. E·F·C·U = evidence ·
+        fit · constraint-risk · uncertainty.
+      </p>
+    </div>
+  );
+}
+
+/** Compact 4-letter calibration strip (evidence / fit / constraint / uncertainty). */
+function CalibStrip({ levels }: { levels: [string, Level][] }) {
+  return (
+    <div className="mt-2 flex items-center justify-center gap-2.5">
+      {levels.map(([letter, level]) => (
+        <span
+          key={letter}
+          className="inline-flex items-center gap-1"
+          title={`${letter} · ${level}`}
+        >
+          <span className={cn("h-1.5 w-1.5 rounded-full", levelClasses(level).dot)} />
+          <span className="mono-label !tracking-normal">{letter}</span>
+        </span>
+      ))}
     </div>
   );
 }

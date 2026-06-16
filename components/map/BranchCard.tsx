@@ -47,12 +47,14 @@ export function BranchCard({ branch, index }: { branch: FutureBranch; index: num
             <LevelBadge label="Uncertainty" level={branch.calibration.uncertaintyLevel} />
           </div>
 
+          <p className="mono-label">Not a prediction · a structured rehearsal</p>
+
           <div className="space-y-2.5 rounded-xl border border-line/60 bg-white/[0.02] p-3.5">
             <Row icon={EyeOff} label="Hidden cost" text={branch.hiddenTradeoffs[0]} />
             <Row icon={AlertTriangle} label="Main bottleneck" text={branch.bottlenecks[0]} />
             <Row
               icon={FlaskConical}
-              label="Test this week"
+              label="First validation experiment"
               text={branch.sevenDayExperiment[0]?.action ?? ""}
               accent={accent.text}
             />

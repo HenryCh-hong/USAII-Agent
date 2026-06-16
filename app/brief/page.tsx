@@ -15,6 +15,8 @@ import {
   ShieldCheck,
   HeartHandshake,
   Cpu,
+  Database,
+  RefreshCw,
 } from "lucide-react";
 import { TopNav, ProgressSteps } from "@/components/shared/Nav";
 import { AmbientBackground } from "@/components/shared/AmbientBackground";
@@ -103,6 +105,18 @@ export default function BriefPage() {
   const active = brief ?? DEMO_BRIEF;
   const isLoadingBrief = loading && !brief;
 
+  // Sections 6 & 10 are derived from branch data (no change to the brief contract):
+  // what would move the assessment, and the honest evidence-coverage note.
+  const whatWouldChange = branches.flatMap((b) =>
+    (b.reasoningAuditTrail?.whatWouldChangeThisAssessment ?? [])
+      .slice(0, 2)
+      .map((x) => `${b.track}: ${x}`),
+  );
+  const coverageNotes = branches.map((b) => ({
+    track: b.track,
+    note: b.calibration.dataCoverageNote,
+  }));
+
   return (
     <main className="min-h-screen pb-24">
       <AmbientBackground />
@@ -115,7 +129,7 @@ export default function BriefPage() {
       <Section className="pt-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionTitle
-            eyebrow="Decision Brief"
+            eyebrow="Decision Brief · final mission brief"
             title="What you're really deciding"
             subtitle={simulation.context.decision}
           />
@@ -278,6 +292,51 @@ export default function BriefPage() {
             </div>
           </Card>
         </motion.div>
+      </Section>
+
+      {/* What would change the assessment + evidence coverage note. */}
+      <Section className="pt-10">
+        <div className="grid gap-5 lg:grid-cols-2">
+          <Card>
+            <div className="space-y-4 p-6">
+              <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-glow/80">
+                <RefreshCw className="h-3.5 w-3.5" />
+                What would change this assessment
+              </div>
+              <p className="text-xs leading-relaxed text-mute">
+                This brief is provisional and meant to update. These are the signals
+                that would raise or lower confidence across the branches.
+              </p>
+              <Divider />
+              <BulletList
+                items={
+                  whatWouldChange.length ? whatWouldChange : active.biggestUncertainties
+                }
+              />
+            </div>
+          </Card>
+          <Card>
+            <div className="space-y-4 p-6">
+              <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-glow/80">
+                <Database className="h-3.5 w-3.5" />
+                Evidence coverage note
+              </div>
+              <p className="text-xs leading-relaxed text-mute">
+                What the evidence does and doesn&apos;t cover — kept at aggregate
+                (program, occupation, cohort, population, framework) levels, never an
+                individual prediction.
+              </p>
+              <Divider />
+              <ul className="space-y-2.5">
+                {coverageNotes.map((c) => (
+                  <li key={c.track} className="text-sm leading-relaxed text-soft/85">
+                    <span className="font-medium text-white">{c.track}:</span> {c.note}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Card>
+        </div>
       </Section>
 
       {/* Closing commitment statements. */}

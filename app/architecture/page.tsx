@@ -6,15 +6,20 @@ import {
   Layers,
   Search,
   GitFork,
-  Scale,
-  ShieldAlert,
+  BookOpen,
+  TrendingUp,
+  TriangleAlert,
   Gauge,
   ShieldCheck,
+  ShieldX,
   Network,
+  Share2,
   Database,
   Brain,
   ArrowRight,
   Sparkles,
+  ClipboardList,
+  FlaskConical,
   type LucideIcon,
 } from "lucide-react";
 import { TopNav } from "@/components/shared/Nav";
@@ -23,10 +28,14 @@ import { ResponsibleAIBanner } from "@/components/shared/ResponsibleAIBanner";
 import { ClaimLegend } from "@/components/shared/ClaimTag";
 import { Section, SectionTitle } from "@/components/ui/Section";
 import { Card, CardBody, CardTitle } from "@/components/ui/Card";
+import { CockpitPanel } from "@/components/ui/CockpitPanel";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { Pill, Divider } from "@/components/ui/Primitives";
 import { PipelineDiagram } from "@/components/architecture/PipelineDiagram";
+import { ALL_SOURCE_CARDS } from "@/lib/knowledge/sources";
+import { EVIDENCE_NODES, EVIDENCE_EDGES } from "@/lib/knowledge/graph";
+import { DEMO_CONTEXT, DEMO_BRANCHES, DEMO_BRIEF } from "@/lib/mock";
 import { cn } from "@/lib/utils";
 
 type Agent = {
@@ -39,13 +48,13 @@ type Agent = {
 const AGENTS: Agent[] = [
   {
     name: "ContextAgent",
-    role: "Structures messy intake into a clean decision frame the rest of the pipeline can reason over.",
+    role: "Structures messy intake — decision, options, values, constraints, fears — into a clean frame the rest of the pipeline reasons over.",
     icon: Layers,
     tone: "quant",
   },
   {
     name: "RetrievalAgent",
-    role: "Runs keyword retrieval over the local /knowledge base to pull only relevant, coverage-honest evidence.",
+    role: "Pulls relevant cards from the curated knowledge base + official-source pack, then traverses the local evidence graph.",
     icon: Search,
     tone: "brand",
   },
@@ -56,32 +65,38 @@ const AGENTS: Agent[] = [
     tone: "research",
   },
   {
-    name: "TradeoffAgent",
-    role: "Surfaces hidden tradeoffs, opportunity cost, reversibility, skill compounding, emotional load and bottlenecks.",
-    icon: Scale,
-    tone: "startup",
+    name: "EvidenceAgent",
+    role: "Attaches evidence to each branch with full provenance and states each source's coverage limitations honestly.",
+    icon: BookOpen,
+    tone: "quant",
   },
   {
-    name: "CriticAgent",
-    role: "Runs a pre-mortem on each branch — assuming it failed, what most likely caused it.",
-    icon: ShieldAlert,
-    tone: "neutral",
+    name: "OptimistAgent",
+    role: "Argues the strongest hedged case for why a branch could work — one side of an explicit debate.",
+    icon: TrendingUp,
+    tone: "quant",
+  },
+  {
+    name: "SkepticAgent",
+    role: "Argues how a branch could fail, feeding the pre-mortem and kill criteria — the other side of the debate.",
+    icon: TriangleAlert,
+    tone: "startup",
   },
   {
     name: "CalibrationAgent",
     role: "Rates evidence, fit, constraint risk and uncertainty qualitatively — no invented probabilities.",
     icon: Gauge,
-    tone: "quant",
+    tone: "brand",
   },
   {
     name: "SafetyAgent",
-    role: "Strips deterministic language and enforces scenario framing, so output stays hedged, not predictive.",
+    role: "Rewrites deterministic/overconfident language and records the categories of overclaim it rejected.",
     icon: ShieldCheck,
     tone: "brand",
   },
   {
     name: "SynthesisAgent",
-    role: "Assembles the Future Map, Branch Detail, Future Self and Decision Brief into one coherent surface.",
+    role: "Reconciles the debate into the Future Map, Branch Detail, Audit Trail and Decision Brief.",
     icon: Network,
     tone: "research",
   },
@@ -118,6 +133,25 @@ const KNOWLEDGE_FILES = [
 
 const HUMAN_FACTORS = ["Values", "Risk tolerance", "Family", "Identity", "Lived experience"];
 
+// Real data powering the judge-facing dashboard (deduped by source).
+const OFFICIAL_SOURCES = Array.from(
+  new Map(ALL_SOURCE_CARDS.map((c) => [c.sourceName, c.publisher])).entries(),
+).map(([sourceName, publisher]) => ({ sourceName, publisher }));
+
+const NODE_TYPES = [
+  "source",
+  "career_path",
+  "skill",
+  "constraint",
+  "decision_framework",
+  "risk",
+  "experiment",
+];
+
+// The canonical Alex trace (quant-signal branch) — driven by the real mock data.
+const ALEX = DEMO_BRANCHES[0];
+const ALEX_SOURCED = ALEX.evidenceCards.filter((c) => c.sourceName);
+
 export default function ArchitecturePage() {
   return (
     <main className="min-h-screen pb-24">
@@ -133,17 +167,18 @@ export default function ArchitecturePage() {
           className="space-y-5"
         >
           <SectionTitle
-            eyebrow="How it works"
-            title="An AI decision operating system, not a chatbot"
-            subtitle="Forked Futures does not predict your future and it does not choose for you. It helps you understand the futures you're choosing between — turning a single anxious question into three evidence-grounded, testable scenarios, each with its costs, assumptions and uncertainties made explicit so the final call can stay yours."
+            eyebrow="How it works · Judge Mode"
+            title="An agentic RAG decision cockpit, not a chatbot"
+            subtitle="Forked Futures does not predict your future and it does not choose for you. It runs a major decision through evidence retrieval, a local evidence graph, a multi-agent debate, calibration, a safety layer, and an auditable reasoning trail — turning a single anxious question into three testable scenarios with their costs, assumptions and uncertainties made explicit, so the final call stays yours."
           />
           <div className="flex flex-wrap gap-2">
             <Badge tone="brand">
-              <Sparkles className="h-3 w-3" /> Scenario engine
+              <Sparkles className="h-3 w-3" /> Agentic RAG
             </Badge>
-            <Badge tone="quant">8-agent pipeline</Badge>
-            <Badge tone="research">Evidence-grounded</Badge>
+            <Badge tone="quant">9-role pipeline</Badge>
+            <Badge tone="research">Evidence graph</Badge>
             <Badge tone="startup">Human-in-the-loop</Badge>
+            <Badge tone="neutral">Mock-first · no API key needed</Badge>
           </div>
         </motion.div>
       </Section>
@@ -164,8 +199,8 @@ export default function ArchitecturePage() {
       <Section className="pt-16">
         <SectionTitle
           eyebrow="The agents"
-          title="Eight specialists, one handoff chain"
-          subtitle="Each agent does one job well and passes its output forward. Separating reasoning from retrieval, critique and safety is what keeps the system honest about what it does and doesn't know."
+          title="Nine specialised roles, one debate"
+          subtitle="Each role does one job and passes its output forward — including an explicit Optimist vs Skeptic debate before calibration. Separating reasoning from retrieval, critique and safety is what keeps the system honest about what it does and doesn't know. In a single live call these roles are run in one pass; the mock fallback emits the same structured record."
         />
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {AGENTS.map((agent, i) => {
@@ -271,6 +306,106 @@ export default function ArchitecturePage() {
               <ClaimLegend />
             </CardBody>
           </Card>
+        </div>
+      </Section>
+
+      {/* 5b) Official-source RAG pack + evidence graph */}
+      <Section className="pt-16">
+        <SectionTitle
+          eyebrow="Evidence pack & graph"
+          title="An official-source RAG pack, wired into a local graph"
+          subtitle="Beyond the curated knowledge base, branches cite a pack of official public sources — each card carrying its publisher, coverage level and limitations, with no invented exact statistics. A local evidence graph connects them to paths, skills, risks and experiments."
+        />
+        <div className="mt-8 grid gap-4 lg:grid-cols-2">
+          <CockpitPanel
+            label={`RAG pack · ${ALL_SOURCE_CARDS.length} cards`}
+            icon={Database}
+            accent="brand"
+            status="local JSON"
+          >
+            <ul className="space-y-2">
+              {OFFICIAL_SOURCES.map((s) => (
+                <li
+                  key={s.sourceName}
+                  className="flex items-start justify-between gap-3 rounded-lg border border-line/60 bg-white/[0.02] px-3 py-2"
+                >
+                  <span className="text-sm text-white">{s.sourceName}</span>
+                  <span className="text-right text-xs text-mute">{s.publisher}</span>
+                </li>
+              ))}
+            </ul>
+          </CockpitPanel>
+          <CockpitPanel
+            label="Local evidence graph"
+            icon={Share2}
+            accent="quant"
+            status={`${EVIDENCE_NODES.length} nodes · ${EVIDENCE_EDGES.length} edges`}
+          >
+            <p className="text-sm leading-relaxed text-soft/85">
+              A dependency-free node/edge model (no graph database) links the CS
+              foundation to each path, the skills it requires, the constraints and
+              risks that bound it, the decision frameworks that inform it, the
+              official sources that support it, and the 7-day experiment that can
+              test it. Retrieval traverses it to widen evidence beyond a keyword hit.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {NODE_TYPES.map((t) => (
+                <Pill key={t}>{t.replace(/_/g, " ")}</Pill>
+              ))}
+            </div>
+          </CockpitPanel>
+        </div>
+      </Section>
+
+      {/* 5c) Sample Alex trace — the 30-second judge centerpiece */}
+      <Section className="pt-16">
+        <SectionTitle
+          eyebrow="Sample trace · Alex"
+          title="One decision, end to end"
+          subtitle="The exact path the Alex demo takes through the system — from input to a human-controlled brief — so the whole pipeline is auditable in about 30 seconds. Pulled live from the running mock data, not a screenshot."
+        />
+        <div className="mt-8">
+          <CockpitPanel
+            label="Decision trace · quant-signal branch"
+            icon={GitFork}
+            accent="research"
+            status="judge mode"
+          >
+            <ol className="space-y-4">
+              <TraceStep n={1} icon={ClipboardList} label="Input · context">
+                {DEMO_CONTEXT.decision}
+              </TraceStep>
+              <TraceStep n={2} icon={Search} label="Retrieval · agentic RAG">
+                {`${ALEX.evidenceCards.length} evidence cards attached, ${ALEX_SOURCED.length} from official sources` +
+                  (ALEX_SOURCED.length
+                    ? ` (${ALEX_SOURCED.map((c) => c.sourceName).join(", ")}).`
+                    : ".")}
+              </TraceStep>
+              <TraceStep n={3} icon={Share2} label="Evidence graph">
+                {`${ALEX.evidenceGraphSnapshot?.nodes.length ?? 0} nodes and ${
+                  ALEX.evidenceGraphSnapshot?.edges.length ?? 0
+                } links explain why this branch exists.`}
+              </TraceStep>
+              <TraceStep n={4} icon={TrendingUp} label="Debate · optimist">
+                {ALEX.agentReview?.optimistView}
+              </TraceStep>
+              <TraceStep n={5} icon={TriangleAlert} label="Debate · skeptic">
+                {ALEX.agentReview?.skepticView}
+              </TraceStep>
+              <TraceStep n={6} icon={Gauge} label="Calibration · qualitative">
+                {`Evidence ${ALEX.calibration.evidenceStrength} · fit ${ALEX.calibration.userFit} · constraint-risk ${ALEX.calibration.constraintRisk} · uncertainty ${ALEX.calibration.uncertaintyLevel} — no fabricated probabilities.`}
+              </TraceStep>
+              <TraceStep n={7} icon={ShieldX} label="Safety · overclaims rejected">
+                {ALEX.rejectedOverclaims?.[0]}
+              </TraceStep>
+              <TraceStep n={8} icon={FlaskConical} label="Action · first experiment">
+                {ALEX.sevenDayExperiment[0]?.action}
+              </TraceStep>
+              <TraceStep n={9} icon={ShieldCheck} label="Human-controlled brief">
+                {`The AI explicitly will not decide: ${DEMO_BRIEF.whatAIWillNotDecide[0]}`}
+              </TraceStep>
+            </ol>
+          </CockpitPanel>
         </div>
       </Section>
 
@@ -395,5 +530,33 @@ export default function ArchitecturePage() {
         </motion.div>
       </Section>
     </main>
+  );
+}
+
+/** One step in the judge-facing Alex decision trace. */
+function TraceStep({
+  n,
+  icon: Icon,
+  label,
+  children,
+}: {
+  n: number;
+  icon: LucideIcon;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <li className="flex gap-4">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-brand/40 bg-brand/10 text-xs font-semibold text-brand-glow">
+        {n}
+      </span>
+      <div className="space-y-1 pb-1">
+        <div className="flex items-center gap-2">
+          <Icon className="h-3.5 w-3.5 text-brand-glow/80" />
+          <span className="mono-label">{label}</span>
+        </div>
+        <p className="text-sm leading-relaxed text-soft/90">{children}</p>
+      </div>
+    </li>
   );
 }

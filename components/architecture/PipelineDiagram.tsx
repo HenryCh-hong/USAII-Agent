@@ -44,10 +44,10 @@ const STAGES: Stage[] = [
   {
     step: 2,
     kicker: "Reasoning",
-    title: "Multi-agent pipeline",
+    title: "Multi-agent debate",
     icon: Cpu,
-    body: "Eight specialised agents structure, retrieve, scenario-build, stress-test, calibrate, and safety-check — each handing off to the next.",
-    items: ["Context → Retrieval", "Scenario → Tradeoff → Critic", "Calibration → Safety"],
+    body: "Nine specialised roles retrieve evidence, traverse the graph, build scenarios, debate optimist vs skeptic, calibrate, and safety-check — emitted as one structured, auditable record.",
+    items: ["Context → Retrieval → Evidence", "Scenario → Optimist ⇄ Skeptic", "Calibration → Safety → Synthesis"],
     accent: {
       text: "text-brand-glow",
       border: "border-brand/40",

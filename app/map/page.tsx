@@ -42,7 +42,7 @@ export default function MapPage() {
       <Section className="pt-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionTitle
-            eyebrow="Future Map"
+            eyebrow="Future Map · branching timelines"
             title="Three futures, opened side by side"
             subtitle={context.decision}
           />

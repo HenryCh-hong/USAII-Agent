@@ -117,7 +117,11 @@ export default function LandingPage() {
             transition={{ duration: 0.6 }}
             className="space-y-7"
           >
-            <Eyebrow>AI Future Simulator for real life</Eyebrow>
+            <Eyebrow>Decision Intelligence Cockpit</Eyebrow>
+
+            <p className="mono-label">
+              Not a prediction · not a recommendation · a structured future rehearsal
+            </p>
 
             <h1 className="text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
               Rehearse your future{" "}
