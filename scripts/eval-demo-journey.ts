@@ -74,7 +74,7 @@ async function reachable(): Promise<boolean> {
 
 async function main(): Promise<void> {
   if (await reachable()) {
-    const pages = ["/", "/intake", "/questions", "/map", "/brief", "/architecture", "/branch/quant-signal", "/chat/quant-signal"];
+    const pages = ["/", "/intake", "/questions", "/map", "/brief", "/architecture", "/research", "/branch/quant-signal", "/chat/quant-signal"];
     for (const p of pages) {
       const r = await fetch(BASE + p);
       ok(r.status === 200, `GET ${p} -> 200`);
@@ -90,6 +90,11 @@ async function main(): Promise<void> {
     ok(simRes.status === 200, "POST /api/simulate -> 200");
     const simJson = await simRes.json();
     ok(simJson.mocked === true, "POST /api/simulate returns mocked:true without a key");
+
+    const researchRes = await post("/api/research", { context: DEMO_CONTEXT });
+    ok(researchRes.status === 200, "POST /api/research -> 200");
+    const researchJson = await researchRes.json();
+    ok(researchJson?.dossier && researchJson.mocked === true, "POST /api/research returns a mocked dossier without a key");
     console.log(`PASS  eval-demo-journey — ${checks} checks (in-process mock + live HTTP smoke @ ${BASE})`);
   } else {
     console.log(`PASS  eval-demo-journey — ${checks} checks (in-process mock path; HTTP smoke skipped, no server at ${BASE})`);

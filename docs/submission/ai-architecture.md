@@ -65,6 +65,35 @@ graph snapshot, rejected overclaims, evaluation signals, source provenance on
 evidence cards) is **optional and additive**, so live output that omits a field
 still validates and the mock dataset stays backward-compatible.
 
+## Autonomous web research agent
+
+Beyond the curated knowledge base, Forked Futures includes an autonomous research
+agent (`lib/research/*`) behind a search-provider abstraction (`lib/web/*`):
+
+1. **Query planner** — turns the decision and options into safe public queries
+   about roles, fields, programs, and frameworks. A guard skips person-lookup
+   patterns; queries never target a private individual.
+2. **Search provider** — runs live web search when a key is configured (Google
+   Programmable Search by default; pluggable to Tavily / SerpAPI / Exa via native
+   `fetch`, no SDK dependency) and otherwise falls back to a curated public-source
+   corpus. **The app works with no search key.**
+3. **Source ranker** — enriches results with reliability tiers, coverage levels,
+   and limitations; prefers official `.gov`/`.edu` and established frameworks;
+   keeps anecdotes/unverified/stale pages as leads and **rejects them as evidence
+   with a stated reason**.
+4. **Trajectory extractor** — clusters accepted sources and derives trajectory
+   anchors by reusing the Trajectory Atlas matcher — as analogies, never
+   person-matching.
+5. **Research dossier** — a structured, transparent output: generated queries,
+   sources used/rejected (with reasons), evidence clusters, trajectory anchors,
+   limitations, survivorship-bias warnings, confidence notes, what-would-change,
+   and validation experiments. Exposed via `POST /api/research` and the `/research`
+   Research Console; summarized in Judge Mode.
+
+This is what makes Forked Futures feel like an autonomous research-and-reasoning
+system rather than a single prompt: it plans, retrieves, ranks, rejects, and
+explains — transparently, and with no key required for the demo.
+
 ## Models
 
 The live path defaults to the latest Claude model via `@anthropic-ai/sdk`

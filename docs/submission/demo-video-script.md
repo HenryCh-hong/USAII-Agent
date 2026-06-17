@@ -35,6 +35,14 @@ qualitative calibration — evidence, fit, constraint-risk, uncertainty — neve
 fabricated probability — plus the first experiment to run. Nothing here is a
 prediction." Open the **Quant Signal Track**.
 
+**1:05 — Research Console (the autonomous agent).**
+"Before judging the futures, watch the agent research. It plans public queries,
+retrieves and ranks sources by reliability, **rejects weak ones with reasons**, and
+extracts trajectory anchors — live when a search key is set, otherwise over a
+curated public corpus. Official data ranks high; anecdotes and stale pages are
+rejected, not trusted. This is the clearest 'not a chatbot wrapper' moment."
+*(Open `/research` → Research Trace → Source Radar → Sources Rejected.)*
+
 **1:20 — Branch Detail, part 1: the reasoning is shown, not hidden.**
 "Open a branch and the cockpit shows *how the system reasoned* — a nine-role
 debate, including an explicit Optimist versus Skeptic, as a judge-safe summary. To
@@ -88,9 +96,10 @@ doesn't tell you which future to pick — it lets you rehearse them first."
 2. **0:12** "Three futures as branching timelines — qualitative calibration, no fake
    probabilities, a first experiment on each." *(Future Map → open a branch.)*
 3. **0:28** "It shows *how* it reasoned: a nine-role debate with Optimist vs
-   Skeptic, official-source evidence with provenance, an evidence graph, and the
-   overclaims the safety layer rejected — a structured summary, never raw
-   chain-of-thought." *(Scroll Agent Review → Evidence → Rejected Overclaims.)*
+   Skeptic, official-source evidence with provenance, an evidence graph, an
+   autonomous research console that ranks and rejects sources, and the overclaims
+   the safety layer rejected — a structured summary, never raw chain-of-thought."
+   *(Scroll Agent Review → Evidence → Research → Rejected Overclaims.)*
 4. **0:45** "The brief shows the Decision Delta — from vague options to evidenced,
    testable branches — and states what the AI will not decide." *(Brief → Decision
    Delta.)*

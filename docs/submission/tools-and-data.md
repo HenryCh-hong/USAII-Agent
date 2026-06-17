@@ -46,6 +46,19 @@ career_path, skill, constraint, decision_framework, risk, experiment. Edge
 relations: supports, requires, creates_risk, can_be_tested_by, informs, limits.
 Each branch carries the subgraph that explains why it exists.
 
+### Autonomous research layer (`lib/web/*`, `lib/research/*`)
+A search-provider abstraction (`lib/web`) runs live web search when a key is set
+(Google Programmable Search via native `fetch`; pluggable to Tavily / SerpAPI /
+Exa) and otherwise uses a curated public-source corpus — so the demo runs with no
+search key. The research agent (`lib/research`) plans safe public queries, ranks
+sources into reliability tiers, rejects weak ones with reasons, and emits a
+transparent `ResearchDossier` (`POST /api/research`, shown on `/research`). It uses
+only public/institutional sources and never identifies private individuals.
+
+Search keys (optional, env only, never committed): `GOOGLE_SEARCH_API_KEY` +
+`GOOGLE_CSE_ID` (or another provider's key). Without them the app uses the mock
+corpus.
+
 ## How data flows
 
 `RetrievalAgent` (in code) selects curated cards + official-source cards per option

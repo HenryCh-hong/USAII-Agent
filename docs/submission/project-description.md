@@ -45,6 +45,10 @@ validation) as deterministic code, so the model is grounded and constrained.
 
 ## What makes it credible
 
+- **Autonomous web research agent** — plans safe public queries, retrieves and
+  ranks sources by reliability, rejects weak ones with reasons, and emits a
+  transparent research dossier (live web search when a key is configured; a curated
+  public-source corpus otherwise — no key required).
 - **Official-source local evidence pack** — curated cards describing what public
   sources (College Scorecard, BLS OOH, O*NET, NACE, NCES B&B, ACS PUMS) and
   decision-science frameworks actually cover, with publisher, coverage level and

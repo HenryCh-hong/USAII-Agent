@@ -35,6 +35,7 @@ import { Pill, Divider } from "@/components/ui/Primitives";
 import { PipelineDiagram } from "@/components/architecture/PipelineDiagram";
 import { EvalSummary } from "@/components/architecture/EvalSummary";
 import { RubricMap } from "@/components/architecture/RubricMap";
+import { ResearchTransparency } from "@/components/architecture/ResearchTransparency";
 import { DecisionDelta } from "@/components/shared/DecisionDelta";
 import { TrajectoryAtlas } from "@/components/shared/TrajectoryAtlas";
 import { ALL_SOURCE_CARDS } from "@/lib/knowledge/sources";
@@ -370,6 +371,23 @@ export default function ArchitecturePage() {
               ))}
             </div>
           </CockpitPanel>
+        </div>
+      </Section>
+
+      {/* 5b2) Autonomous research transparency */}
+      <Section className="pt-16">
+        <SectionTitle
+          eyebrow="Autonomous web research"
+          title="An agent that researches, then reasons"
+          subtitle="Forked Futures plans safe public queries, retrieves and ranks sources, rejects weak ones with reasons, and extracts trajectory anchors — live when a search key is present, otherwise over a curated corpus. See the live console at /research."
+        />
+        <div className="mt-8">
+          <ResearchTransparency />
+        </div>
+        <div className="mt-4">
+          <LinkButton href="/research" variant="subtle" size="md">
+            Open the Research Console <ArrowRight className="h-4 w-4" />
+          </LinkButton>
         </div>
       </Section>
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Cpu, RotateCcw } from "lucide-react";
+import { Cpu, RotateCcw, Telescope } from "lucide-react";
 import { Logo } from "./Logo";
 import { useForkedStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ export function TopNav() {
   const reset = useForkedStore((s) => s.reset);
 
   const links = [
+    { href: "/research", label: "Research", icon: Telescope },
     { href: "/architecture", label: "How it works", icon: Cpu },
   ];
 

@@ -16,6 +16,10 @@ layers of code and data, not left to a single careful prompt.
 - **It does not expose raw chain-of-thought.** The Agent Review and Reasoning Audit
   Trail are structured, summarised artifacts — never the model's verbatim
   deliberation.
+- **It does not identify or compare you to private individuals.** The web research
+  agent queries roles, fields, programs, and frameworks; public references are role
+  archetypes used as analogies — no face-based identification, no de-anonymization,
+  no person matching, no scraping of private data.
 
 ## How it is enforced
 
@@ -55,6 +59,10 @@ Four framework-free eval scripts (`npm run eval`) guard these properties:
   pre-mortem, rejected overclaims, evaluation signals, and a 7-day experiment.
 - **eval-demo-journey** — the keyless mock path returns `mocked:true` with the v2
   data present, and (when a server is up) key pages and APIs return 200.
+- **eval-research-quality** — the research dossier is well-formed; every source has
+  coverage + limitations; rejected sources state reasons; public references are
+  labeled as analogies; and there is no person-identification, face-based, or
+  fake-probability language.
 
 ## Limits we are honest about
 

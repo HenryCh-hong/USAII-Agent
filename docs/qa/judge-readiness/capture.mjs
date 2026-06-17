@@ -32,6 +32,7 @@ const desktopPages = [
   { name: "intake", path: "/intake", action: "loadDemo" },
   { name: "questions", path: "/questions", action: "useAnswers" },
   { name: "future-map", path: "/map", action: "settle" },
+  { name: "research", path: "/research", action: "scroll" },
   { name: "branch-detail", path: "/branch/quant-signal", action: "scroll" },
   { name: "future-self-chat", path: "/chat/quant-signal", action: "chat" },
   { name: "decision-brief", path: "/brief", action: "scroll" },

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Telescope } from "lucide-react";
 import { TopNav, ProgressSteps } from "@/components/shared/Nav";
 import { AmbientBackground } from "@/components/shared/AmbientBackground";
 import { Section, SectionTitle } from "@/components/ui/Section";
@@ -83,10 +83,13 @@ export default function MapPage() {
               The Decision Brief synthesizes the strongest signals, the biggest unknowns, and what the AI will not decide for you.
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Link href="/questions" className="text-sm text-mute hover:text-white">
               ← Revisit answers
             </Link>
+            <LinkButton href="/research" variant="subtle" size="md">
+              <Telescope className="h-4 w-4" /> Watch the agent research
+            </LinkButton>
             <LinkButton href="/brief" size="md">
               View Decision Brief <ArrowRight className="h-4 w-4" />
             </LinkButton>
