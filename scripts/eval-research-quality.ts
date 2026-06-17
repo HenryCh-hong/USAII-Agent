@@ -51,6 +51,15 @@ async function main(): Promise<void> {
   ok(d.limitations.length > 0 && d.survivorshipBiasWarnings.length > 0, "limitations + survivorship warnings present");
   ok(d.validationExperiments.length > 0, "uncertainties converted into validation experiments");
 
+  // Claim ledger: every claim traceable; source-supported claims cite >=1 source.
+  ok(Array.isArray(d.claims) && d.claims.length >= 2, `claim ledger present (${d.claims?.length ?? 0})`);
+  for (const c of d.claims ?? []) {
+    ok(Boolean(c.claim && c.provenance && c.affects), `claim ${c.id}: has claim/provenance/affects`);
+    if (c.provenance === "source_supported") {
+      ok(c.sources.length >= 1, `claim ${c.id}: source-supported claim cites at least one source`);
+    }
+  }
+
   // Safety scan over the whole dossier.
   const blob = JSON.stringify(d);
   const PERSON = [

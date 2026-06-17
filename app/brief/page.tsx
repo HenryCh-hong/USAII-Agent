@@ -24,6 +24,8 @@ import { Section, SectionTitle } from "@/components/ui/Section";
 import { ResponsibleAIBanner } from "@/components/shared/ResponsibleAIBanner";
 import { DecisionDelta } from "@/components/shared/DecisionDelta";
 import { TrajectoryAtlas } from "@/components/shared/TrajectoryAtlas";
+import { ClaimLedger } from "@/components/research/ClaimLedger";
+import { buildClaimLedger } from "@/lib/research/claimLedger";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -192,6 +194,18 @@ export default function BriefPage() {
         />
         <div className="mt-6">
           <TrajectoryAtlas context={simulation.context} />
+        </div>
+      </Section>
+
+      {/* Claim Ledger — traceable claims (compact). */}
+      <Section className="pt-10">
+        <SectionTitle
+          eyebrow="Claim Ledger"
+          title="Every claim, traceable"
+          subtitle="How to trust this: each key claim mapped to its support, reliability, and what it can't tell us — source-supported vs AI-inferred, made explicit."
+        />
+        <div className="mt-6">
+          <ClaimLedger claims={buildClaimLedger(simulation.context, branches)} compact />
         </div>
       </Section>
 

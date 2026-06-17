@@ -36,6 +36,8 @@ import { PipelineDiagram } from "@/components/architecture/PipelineDiagram";
 import { EvalSummary } from "@/components/architecture/EvalSummary";
 import { RubricMap } from "@/components/architecture/RubricMap";
 import { ResearchTransparency } from "@/components/architecture/ResearchTransparency";
+import { ClaimLedger } from "@/components/research/ClaimLedger";
+import { buildClaimLedger } from "@/lib/research/claimLedger";
 import { DecisionDelta } from "@/components/shared/DecisionDelta";
 import { TrajectoryAtlas } from "@/components/shared/TrajectoryAtlas";
 import { ALL_SOURCE_CARDS } from "@/lib/knowledge/sources";
@@ -388,6 +390,18 @@ export default function ArchitecturePage() {
           <LinkButton href="/research" variant="subtle" size="md">
             Open the Research Console <ArrowRight className="h-4 w-4" />
           </LinkButton>
+        </div>
+      </Section>
+
+      {/* 5b3) Claim Ledger — traceable accuracy */}
+      <Section className="pt-16">
+        <SectionTitle
+          eyebrow="Claim Ledger"
+          title="How do we know it's accurate?"
+          subtitle="Every important claim is traceable to its support, reliability, and limits — source-supported vs AI-inferred, made explicit. Shown here for the Alex demo."
+        />
+        <div className="mt-8">
+          <ClaimLedger claims={buildClaimLedger(DEMO_CONTEXT, DEMO_BRANCHES)} compact />
         </div>
       </Section>
 

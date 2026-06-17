@@ -68,6 +68,26 @@ export const researchDossierSchema = z.object({
   confidenceNotes: z.array(z.string()),
   whatWouldChangeAssessment: z.array(z.string()),
   validationExperiments: z.array(z.string()),
+  claims: z
+    .array(
+      z.object({
+        id: z.string(),
+        claim: z.string(),
+        provenance: z.enum(["source_supported", "ai_inferred", "mixed"]),
+        reliability: levelSchema,
+        limitation: z.string(),
+        affects: z.enum(["branch", "archetype", "assumption", "experiment"]),
+        affectsLabel: z.string().optional(),
+        sources: z.array(
+          z.object({
+            title: z.string(),
+            url: z.string().optional(),
+            sourceType: z.string().optional(),
+          }),
+        ),
+      }),
+    )
+    .optional(),
   generatedNote: z.string(),
 });
 

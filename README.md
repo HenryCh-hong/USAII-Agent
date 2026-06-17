@@ -12,7 +12,8 @@ Built for the **USAII Global AI Hackathon 2026** — Undergraduate Track, *Chall
 
 Start here if you're evaluating this project:
 
-- **Live transparency dashboard** — run the app, then open **`/architecture`** (Judge Mode): the 9-role pipeline, official-source RAG pack, local evidence graph, safety scrubber, and a live, end-to-end **Alex decision trace**.
+- **Live transparency dashboard** — run the app, then open **`/architecture`** (Judge Mode): the 9-role pipeline, official-source RAG pack, local evidence graph, autonomous-research transparency, Claim Ledger, safety scrubber, and a live, end-to-end **Alex decision trace**.
+- **Autonomous Research Console** — open **`/research`**: the agent plans queries, retrieves & ranks public sources, rejects weak ones with reasons, and maps every claim to its support (no key required; live web search when configured).
 - **Contact sheet (every screen, mock path)** — [`docs/qa/judge-readiness/contact-sheet.png`](docs/qa/judge-readiness/contact-sheet.png)
 - **Write-ups** (`docs/submission/`):
   - [Project description](docs/submission/project-description.md)
@@ -21,6 +22,8 @@ Start here if you're evaluating this project:
   - [Human-in-the-loop](docs/submission/human-in-loop.md)
   - [Tools & data](docs/submission/tools-and-data.md)
   - [Demo script](docs/submission/demo-script.md)
+  - [Demo video script](docs/submission/demo-video-script.md)
+  - [Live verification guide](docs/submission/live-verification-guide.md)
 
 **Verify in one command:** `npm run validate` — typecheck + 4 evaluation scripts + production build. The full demo runs with **no `ANTHROPIC_API_KEY`**; the live model path is optional and falls back to a curated mock dataset.
 

@@ -50,6 +50,27 @@ export interface GeneratedQuery {
   branchId?: string;
 }
 
+export type ClaimProvenance = "source_supported" | "ai_inferred" | "mixed";
+export type ClaimAffects = "branch" | "archetype" | "assumption" | "experiment";
+
+export interface ClaimSourceRef {
+  title: string;
+  url?: string;
+  sourceType?: string;
+}
+
+/** A single traceable research claim mapped to its support and caveats. */
+export interface ClaimLedgerEntry {
+  id: string;
+  claim: string;
+  provenance: ClaimProvenance;
+  reliability: Level;
+  limitation: string;
+  affects: ClaimAffects;
+  affectsLabel?: string;
+  sources: ClaimSourceRef[];
+}
+
 export interface ResearchDossier {
   decision: string;
   provider: SearchProviderName;
@@ -65,5 +86,7 @@ export interface ResearchDossier {
   confidenceNotes: string[];
   whatWouldChangeAssessment: string[];
   validationExperiments: string[];
+  /** Traceable claim-to-source ledger (additive, optional). */
+  claims?: ClaimLedgerEntry[];
   generatedNote: string;
 }

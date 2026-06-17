@@ -13,7 +13,8 @@
     "eval:schema": "tsx scripts/eval-agent-output-schema.ts",
     "eval:journey": "tsx scripts/eval-demo-journey.ts",
     "eval:research": "tsx scripts/eval-research-quality.ts",
-    "eval": "npm run eval:overclaim && npm run eval:rag && npm run eval:schema && npm run eval:journey && npm run eval:research",
+    "eval:robustness": "tsx scripts/eval-research-robustness.ts",
+    "eval": "npm run eval:overclaim && npm run eval:rag && npm run eval:schema && npm run eval:journey && npm run eval:research && npm run eval:robustness",
     "validate": "npm run typecheck && npm run eval && npm run build"
   },
   "dependencies": {

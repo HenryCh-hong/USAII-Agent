@@ -42,6 +42,7 @@ const desktopPages = [
 const mobilePages = [
   { name: "mobile-landing", path: "/" },
   { name: "mobile-future-map", path: "/map" },
+  { name: "mobile-research", path: "/research" },
   { name: "mobile-decision-brief", path: "/brief" },
 ];
 

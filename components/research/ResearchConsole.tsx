@@ -15,6 +15,7 @@ import { CockpitPanel } from "@/components/ui/CockpitPanel";
 import { ResearchTrace } from "./ResearchTrace";
 import { SourceRadar } from "./SourceRadar";
 import { SourceCard } from "./SourceCard";
+import { ClaimLedger } from "./ClaimLedger";
 import { cn } from "@/lib/utils";
 
 const RES_STYLE: Record<Resonance, string> = {
@@ -104,6 +105,17 @@ export function ResearchConsole({ dossier }: { dossier: ResearchDossier }) {
             Anchors are analogies that rhyme with your stated context — never a claim
             that you resemble any specific real person, and never a prediction.
           </p>
+        </CockpitPanel>
+      )}
+
+      {dossier.claims && dossier.claims.length > 0 && (
+        <CockpitPanel label="Claim Ledger · every claim is traceable" icon={ListChecks} accent="brand" status={`${dossier.claims.length} claims`}>
+          <p className="mb-4 text-sm leading-relaxed text-soft/85">
+            The visible answer to &quot;how do I know this isn&apos;t just
+            impressive-looking claims?&quot; — each claim mapped to its support,
+            reliability, what it affects, and what it cannot tell us.
+          </p>
+          <ClaimLedger claims={dossier.claims} />
         </CockpitPanel>
       )}
 

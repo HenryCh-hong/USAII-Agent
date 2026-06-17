@@ -12,6 +12,7 @@ import { getSearchProvider, liveSearchAvailable } from "../web/searchProvider";
 import { planQueries } from "./queryPlanner";
 import { rankSources, type RankInput } from "./sourceRanker";
 import { buildClusters, extractAnchors } from "./trajectoryExtractor";
+import { buildClaimLedger } from "./claimLedger";
 
 const uniq = (a: string[]): string[] => Array.from(new Set(a));
 
@@ -80,6 +81,7 @@ export async function runResearch(
     limitations,
     survivorshipBiasWarnings,
     confidenceNotes,
+    claims: buildClaimLedger(ctx, branches ?? []),
     whatWouldChangeAssessment: whatWouldChangeAssessment.length
       ? whatWouldChangeAssessment
       : ["A cheap real-world test that confirms or weakens the load-bearing assumption."],
