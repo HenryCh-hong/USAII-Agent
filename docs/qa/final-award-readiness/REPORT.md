@@ -8,6 +8,25 @@ it feel trustworthy, not just impressive: a **Claim Ledger** that makes every
 claim traceable, a **5-scenario robustness eval** that proves it generalizes
 beyond Alex, and a **live-verification guide**. Everything runs with **no keys**.
 
+## Live verification + red-team pass (latest)
+
+- **Live search / model:** keys absent in this environment → both remain
+  **unverified** (provider-ready; user-run steps in `live-verification-guide.md`).
+  Not claimed as verified.
+- **Adversarial red-team (10 judge criticisms vs the actual repo):** 7 answered,
+  3 partial — all fixed with smallest-safe changes:
+  - *"Only scripted for Alex"* → honest **template notice** on `/map` + `/branch`
+    when running the keyless adapted-template path, and the EvalSummary copy scoped
+    to "the research dossier generalizes".
+  - *"Sources don't support claims"* → a **claim↔source fidelity check** in
+    `eval-rag-coverage` (token-overlap join of each branch card to its cited
+    source-pack card) + an honest scope line on the Claim Ledger.
+  - *"UI too dense"* → a lightweight **jump-nav** on the dense branch page.
+- **Deployment readiness:** `deployment-checklist.md` added; verified no server-only
+  search code leaks into client components; Playwright is dev-only (not a runtime
+  dep); no required env vars.
+- **In-app System Evaluation** updated to show all **6 evals (6/6 passing)**.
+
 ## 1. What changed (this pass)
 - **Claim Ledger** (`lib/research/claimLedger.ts`, `components/research/ClaimLedger.tsx`):
   every important claim mapped to its support, reliability, what it affects

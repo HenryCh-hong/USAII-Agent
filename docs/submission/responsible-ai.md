@@ -45,7 +45,7 @@ layers of code and data, not left to a single careful prompt.
 
 ## Evaluation harness
 
-Four framework-free eval scripts (`npm run eval`) guard these properties:
+Six framework-free eval scripts (`npm run eval`) guard these properties:
 
 - **eval-overclaim-safety** — scans user-facing source, mock data, knowledge cards
   and these submission docs for banned/risky language, with word-boundary and
@@ -61,8 +61,11 @@ Four framework-free eval scripts (`npm run eval`) guard these properties:
   data present, and (when a server is up) key pages and APIs return 200.
 - **eval-research-quality** — the research dossier is well-formed; every source has
   coverage + limitations; rejected sources state reasons; public references are
-  labeled as analogies; and there is no person-identification, face-based, or
-  fake-probability language.
+  labeled as analogies; the claim ledger is traceable (source-supported claims cite
+  a source); and there is no person-identification, face-based, or fake-probability
+  language.
+- **eval-research-robustness** — the research agent produces a grounded, safe, well-
+  formed dossier across five non-Alex scenarios (claim-to-source fidelity included).
 
 ## Limits we are honest about
 

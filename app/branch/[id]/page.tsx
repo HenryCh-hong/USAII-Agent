@@ -28,6 +28,8 @@ import { Premortem } from "@/components/branch/Premortem";
 import { RegretRadar } from "@/components/branch/RegretRadar";
 import { ExperimentPlan } from "@/components/branch/ExperimentPlan";
 import { CalibrationPanel } from "@/components/branch/CalibrationPanel";
+import { MockTemplateNotice } from "@/components/shared/MockTemplateNotice";
+import { JumpNav } from "@/components/shared/JumpNav";
 import { AgentReview } from "@/components/branch/AgentReview";
 import { EvidenceGraph } from "@/components/branch/EvidenceGraph";
 import { ReasoningAuditTrail } from "@/components/branch/ReasoningAuditTrail";
@@ -150,9 +152,26 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         </motion.div>
       </Section>
 
+      <Section className="pt-6">
+        <MockTemplateNotice simulation={simulation} />
+      </Section>
+
+      <Section className="pt-6">
+        <JumpNav
+          items={[
+            { id: "agent-review", label: "Agent review" },
+            { id: "trajectory", label: "Trajectory" },
+            { id: "evidence", label: "Evidence" },
+            { id: "calibration", label: "Calibration" },
+            { id: "audit", label: "Audit trail" },
+            { id: "experiment", label: "7-day test" },
+          ]}
+        />
+      </Section>
+
       {/* Agent Review — the multi-agent debate behind this branch */}
       {branch.agentReview && (
-        <Section className="pt-14">
+        <Section className="pt-14" id="agent-review">
           <SectionTitle
             eyebrow="Agent review"
             title="How the system reasoned about this branch"
@@ -165,7 +184,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
       )}
 
       {/* Trajectory */}
-      <Section className="pt-14">
+      <Section className="pt-14" id="trajectory">
         <SectionTitle
           eyebrow="12-month trajectory"
           title="How this path could unfold"
@@ -230,7 +249,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
       </Section>
 
       {/* Evidence console + base rates */}
-      <Section className="pt-14">
+      <Section className="pt-14" id="evidence">
         <SectionTitle
           eyebrow="Evidence console"
           title="What this scenario is built on"
@@ -283,7 +302,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
       </Section>
 
       {/* Experiment plan */}
-      <Section className="pt-14">
+      <Section className="pt-14" id="experiment">
         <SectionTitle
           eyebrow="7-day experiment"
           title="Replace an assumption with real signal"
@@ -301,7 +320,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
       </Section>
 
       {/* Calibration cockpit */}
-      <Section className="pt-14">
+      <Section className="pt-14" id="calibration">
         <SectionTitle
           eyebrow="Calibration cockpit"
           title="How confident is this scenario?"
@@ -334,7 +353,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
 
       {/* Reasoning audit trail */}
       {branch.reasoningAuditTrail && (
-        <Section className="pt-14">
+        <Section className="pt-14" id="audit">
           <SectionTitle
             eyebrow="Reasoning audit trail"
             title="The reasoning, made auditable"

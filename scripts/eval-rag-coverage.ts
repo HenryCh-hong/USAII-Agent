@@ -74,11 +74,13 @@ const sourceFiles = readdirSync(SOURCES_DIR).filter((f) => f.endsWith(".json"));
 ok(sourceFiles.length >= 7, `official-source pack has >= 7 files (${sourceFiles.length})`);
 
 let cardCount = 0;
+const sourceById = new Map<string, { claim: string; title: string }>();
 for (const file of sourceFiles) {
   const data = JSON.parse(readFileSync(join(SOURCES_DIR, file), "utf8"));
   ok(Array.isArray(data.items) && data.items.length >= 1, `${file}: has items`);
   for (const card of data.items) {
     cardCount++;
+    sourceById.set(card.id, { claim: String(card.claim ?? ""), title: String(card.title ?? "") });
     for (const field of REQUIRED) {
       ok(card[field] !== undefined && card[field] !== "", `${file} · ${card.id}: has "${field}"`);
     }
@@ -89,6 +91,32 @@ for (const file of sourceFiles) {
   }
 }
 
+/* ------------------- Claim-to-source fidelity (entailment proxy) ----------- */
+// Each branch evidence card that cites a source-pack card by id must share
+// non-trivial token overlap with that source's own framing — turning "a citation
+// exists" into "the citation's framing matches the claim", catching mismatched pairs.
+function toks(s: string): Set<string> {
+  return new Set(
+    s.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter((t) => t.length > 4),
+  );
+}
+let fidelityChecked = 0;
+for (const b of DEMO_BRANCHES) {
+  for (const card of b.evidenceCards) {
+    if (!card.sourceCardId) continue;
+    const src = sourceById.get(card.sourceCardId);
+    ok(src, `${b.id} · ${card.id}: sourceCardId "${card.sourceCardId}" resolves to a source-pack card`);
+    if (!src) continue;
+    const claimToks = toks(card.claim ?? card.content ?? "");
+    const srcToks = toks(`${src.claim} ${src.title}`);
+    let overlap = 0;
+    for (const t of claimToks) if (srcToks.has(t)) overlap++;
+    ok(overlap >= 2, `${b.id} · ${card.id}: claim shares >=2 meaningful tokens with cited source (${overlap})`);
+    fidelityChecked++;
+  }
+}
+ok(fidelityChecked >= 3, `claim-to-source fidelity checked on >=3 sourced cards (${fidelityChecked})`);
+
 console.log(
-  `PASS  eval-rag-coverage — ${checks} checks (${DEMO_BRANCHES.length} branches, ${sourceFiles.length} source files, ${cardCount} cards)`,
+  `PASS  eval-rag-coverage — ${checks} checks (${DEMO_BRANCHES.length} branches, ${sourceFiles.length} source files, ${cardCount} cards, ${fidelityChecked} fidelity)`,
 );

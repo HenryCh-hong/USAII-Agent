@@ -45,9 +45,13 @@ export function SectionTitle({
 export function Section({
   className,
   children,
+  ...props
 }: React.HTMLAttributes<HTMLElement>) {
   return (
-    <section className={cn("mx-auto w-full max-w-6xl px-5 sm:px-8", className)}>
+    <section
+      className={cn("mx-auto w-full max-w-6xl px-5 sm:px-8 scroll-mt-20", className)}
+      {...props}
+    >
       {children}
     </section>
   );

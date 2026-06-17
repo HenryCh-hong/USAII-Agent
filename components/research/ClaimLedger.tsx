@@ -74,6 +74,12 @@ export function ClaimLedger({ claims, compact = false }: { claims: ClaimLedgerEn
           </div>
         );
       })}
+      <p className="text-[11px] leading-relaxed text-mute/80">
+        Scope: claims are the cited source&apos;s own coverage-level framing (copied
+        with provenance and kept at the source&apos;s coverage level). The system
+        does not assert facts beyond what a source covers; AI-inferred claims carry
+        no source and are routed to a validation experiment.
+      </p>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { TopNav, ProgressSteps } from "@/components/shared/Nav";
 import { AmbientBackground } from "@/components/shared/AmbientBackground";
 import { Section, SectionTitle } from "@/components/ui/Section";
 import { ResponsibleAIBanner } from "@/components/shared/ResponsibleAIBanner";
+import { MockTemplateNotice } from "@/components/shared/MockTemplateNotice";
 import { BranchMap } from "@/components/map/BranchMap";
 import { BranchCard } from "@/components/map/BranchCard";
 import { LinkButton } from "@/components/ui/Button";
@@ -51,6 +52,10 @@ export default function MapPage() {
             {mocked ? "Demo simulation" : "Live simulation"}
           </Badge>
         </div>
+      </Section>
+
+      <Section className="pt-6">
+        <MockTemplateNotice simulation={simulation} />
       </Section>
 
       {/* The branching visualization */}
