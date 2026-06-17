@@ -41,12 +41,12 @@ function List({ items }: { items: string[] }) {
 export function ResearchConsole({ dossier }: { dossier: ResearchDossier }) {
   return (
     <div className="space-y-8">
-      <CockpitPanel label="Research Trace · what the agent did" icon={ListChecks} accent="brand" status={dossier.mocked ? "mock corpus" : `live · ${dossier.provider}`}>
+      <CockpitPanel label="Exploration trail · what we checked" icon={ListChecks} accent="brand" status={dossier.mocked ? "mock corpus" : `live · ${dossier.provider}`}>
         <ResearchTrace dossier={dossier} />
         <p className="mt-4 text-xs leading-relaxed text-mute">{dossier.generatedNote}</p>
       </CockpitPanel>
 
-      <CockpitPanel label="Query Plan · autonomous" icon={Search} accent="brand" status={`${dossier.generatedQueries.length} queries`}>
+      <CockpitPanel label="Search plan · what we looked for" icon={Search} accent="brand" status={`${dossier.generatedQueries.length} queries`}>
         <ul className="space-y-2.5">
           {dossier.generatedQueries.map((q, i) => (
             <li key={i} className="rounded-lg border border-line/60 bg-white/[0.02] px-3.5 py-2.5">
@@ -59,7 +59,7 @@ export function ResearchConsole({ dossier }: { dossier: ResearchDossier }) {
 
       <SourceRadar sources={dossier.sourcesFound} />
 
-      <CockpitPanel label="Sources Used" icon={CheckCircle2} accent="quant" status={`${dossier.sourcesUsed.length} accepted`}>
+      <CockpitPanel label="Clues we followed" icon={CheckCircle2} accent="quant" status={`${dossier.sourcesUsed.length} accepted`}>
         <div className="grid gap-3 md:grid-cols-2">
           {dossier.sourcesUsed.map((s) => (
             <SourceCard key={s.id} source={s} />
@@ -68,7 +68,7 @@ export function ResearchConsole({ dossier }: { dossier: ResearchDossier }) {
       </CockpitPanel>
 
       {dossier.sourcesRejected.length > 0 && (
-        <CockpitPanel label="Sources Rejected · with reasons" icon={ShieldX} accent="startup" status={`${dossier.sourcesRejected.length} filtered`}>
+        <CockpitPanel label="Clues we set aside · with reasons" icon={ShieldX} accent="startup" status={`${dossier.sourcesRejected.length} filtered`}>
           <div className="grid gap-3 md:grid-cols-2">
             {dossier.sourcesRejected.map((s) => (
               <SourceCard key={s.id} source={s} rejected />
@@ -109,7 +109,7 @@ export function ResearchConsole({ dossier }: { dossier: ResearchDossier }) {
       )}
 
       {dossier.claims && dossier.claims.length > 0 && (
-        <CockpitPanel label="Claim Ledger · every claim is traceable" icon={ListChecks} accent="brand" status={`${dossier.claims.length} claims`}>
+        <CockpitPanel label="Evidence trail · every claim is traceable" icon={ListChecks} accent="brand" status={`${dossier.claims.length} claims`}>
           <p className="mb-4 text-sm leading-relaxed text-soft/85">
             The visible answer to &quot;how do I know this isn&apos;t just
             impressive-looking claims?&quot; — each claim mapped to its support,

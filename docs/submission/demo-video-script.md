@@ -33,7 +33,9 @@ Click **See the Alex demo**.
 "Three futures as branching timelines, not a card list. Each node carries
 qualitative calibration — evidence, fit, constraint-risk, uncertainty — never a
 fabricated probability — plus the first experiment to run. Nothing here is a
-prediction." Open the **Quant Signal Track**.
+prediction. Each future is a **playable path card** — main stat, buff, risk, boss
+fight, and one concrete *next quest* — framed as a rehearsal, not a prophecy." Open
+the **Quant Signal Path**.
 
 **1:05 — Research Console (the autonomous agent).**
 "Before judging the futures, watch the agent research. It plans public queries,

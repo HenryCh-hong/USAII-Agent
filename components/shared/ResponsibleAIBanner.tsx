@@ -22,10 +22,10 @@ export function ResponsibleAIBanner({
       <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-brand-glow" />
       <p className="text-xs leading-relaxed text-soft/90">
         {variant === "compact" ? (
-          <>These are <span className="text-white">plausible scenarios, not predictions.</span> Forked Futures does not choose your future — it helps you understand the futures you're choosing between.</>
+          <>These are futures to <span className="text-white">rehearse, not prophecies</span>. Forked Futures helps you explore the paths you&apos;re choosing between — the decision stays yours.</>
         ) : (
           <>
-            Everything here is a <span className="text-white font-medium">plausible scenario built from your context, curated evidence, and explicit assumptions</span> — not a prediction or a recommendation. Claims are tagged by where they came from, uncertainty is shown rather than hidden, and the final decision stays with you.
+            Everything here is a <span className="text-white font-medium">future to rehearse — built from your context, evidence, and explicit assumptions</span>. Treat it as a map to test this week, not an answer to obey: claims are tagged by where they came from, uncertainty is shown rather than hidden, and the choice stays with you.
           </>
         )}
       </p>

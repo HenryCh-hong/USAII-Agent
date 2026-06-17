@@ -13,7 +13,7 @@ export function TopNav() {
   const reset = useForkedStore((s) => s.reset);
 
   const links = [
-    { href: "/research", label: "Research", icon: Telescope },
+    { href: "/research", label: "Explore", icon: Telescope },
     { href: "/architecture", label: "How it works", icon: Cpu },
   ];
 

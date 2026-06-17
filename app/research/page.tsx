@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { ResponsibleAIBanner } from "@/components/shared/ResponsibleAIBanner";
 import { ResearchConsole } from "@/components/research/ResearchConsole";
+import { FutureRunTimeline } from "@/components/shared/FutureRunTimeline";
 import { useForkedStore } from "@/lib/store";
 import { useEnsureSimulation, useHydrated } from "@/lib/hooks";
 import type { ResearchDossier } from "@/lib/research/types";
@@ -70,15 +71,19 @@ export default function ResearchPage() {
       <Section className="pt-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionTitle
-            eyebrow="Research Console · autonomous agent"
-            title="The agent researches the decision"
+            eyebrow="Explore · the evidence behind your futures"
+            title="Explore the evidence behind your futures"
             subtitle={simulation.context.decision}
           />
           <Badge tone={dossier && !dossier.mocked ? "brand" : "neutral"}>
             <Sparkles className="h-3 w-3" />
-            {dossier ? (dossier.mocked ? "Mock corpus (no key)" : `Live · ${dossier.provider}`) : "Researching"}
+            {dossier ? (dossier.mocked ? "Mock corpus (no key)" : `Live · ${dossier.provider}`) : "Exploring"}
           </Badge>
         </div>
+      </Section>
+
+      <Section className="pt-6">
+        <FutureRunTimeline current="Inspect the evidence trail" />
       </Section>
 
       <Section className="pt-6">
@@ -89,8 +94,8 @@ export default function ResearchPage() {
         {loading || !dossier ? (
           <div className="flex flex-col items-center gap-3 rounded-2xl border border-line/60 bg-panel/40 p-16 text-center backdrop-blur-xl">
             <Loader2 className="h-6 w-6 animate-spin text-brand-glow" />
-            <div className="text-sm font-medium text-white">Autonomous research in progress…</div>
-            <div className="mono-label">planning queries · retrieving public sources · ranking · extracting anchors</div>
+            <div className="text-sm font-medium text-white">Exploring the evidence…</div>
+            <div className="mono-label">planning searches · gathering clues · weighing reliability · drawing path echoes</div>
           </div>
         ) : (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>

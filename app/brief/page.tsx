@@ -28,6 +28,8 @@ import { ClaimLedger } from "@/components/research/ClaimLedger";
 import { buildClaimLedger } from "@/lib/research/claimLedger";
 import { DecisionDnaPanel, BranchBottlenecks } from "@/components/shared/DecisionDna";
 import { buildDecisionDna } from "@/lib/decision/decisionDna";
+import { FutureRunTimeline } from "@/components/shared/FutureRunTimeline";
+import { FutureRunSummary } from "@/components/shared/FutureRunSummary";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -145,6 +147,10 @@ export default function BriefPage() {
             {mocked === false ? "Live synthesis" : "Demo synthesis"}
           </Badge>
         </div>
+      </Section>
+
+      <Section className="pt-6">
+        <FutureRunTimeline current="Choose the next quest" />
       </Section>
 
       {/* Decision frame — the prominent lead statement. */}
@@ -419,6 +425,11 @@ export default function BriefPage() {
 
       <Section className="pt-8">
         <ResponsibleAIBanner />
+      </Section>
+
+      {/* Future run summary. */}
+      <Section className="pt-10">
+        <FutureRunSummary branches={branches} />
       </Section>
 
       {/* CTA row. */}

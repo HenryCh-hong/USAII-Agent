@@ -8,7 +8,9 @@ import { Section, SectionTitle } from "@/components/ui/Section";
 import { ResponsibleAIBanner } from "@/components/shared/ResponsibleAIBanner";
 import { MockTemplateNotice } from "@/components/shared/MockTemplateNotice";
 import { BranchMap } from "@/components/map/BranchMap";
-import { BranchCard } from "@/components/map/BranchCard";
+import { PathCard } from "@/components/map/PathCard";
+import { FutureRunTimeline } from "@/components/shared/FutureRunTimeline";
+import { buildDecisionDna } from "@/lib/decision/decisionDna";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { useForkedStore } from "@/lib/store";
@@ -30,6 +32,7 @@ export default function MapPage() {
   }
 
   const { branches, context, mocked } = simulation;
+  const dna = buildDecisionDna(context, branches);
 
   return (
     <main className="min-h-screen pb-24">
@@ -55,6 +58,10 @@ export default function MapPage() {
       </Section>
 
       <Section className="pt-6">
+        <FutureRunTimeline current="Unlock 3 paths" />
+      </Section>
+
+      <Section className="pt-6">
         <MockTemplateNotice simulation={simulation} />
       </Section>
 
@@ -65,11 +72,16 @@ export default function MapPage() {
         </div>
       </Section>
 
-      {/* Full branch previews */}
+      {/* Playable path cards */}
       <Section className="pt-8">
         <div className="grid gap-5 md:grid-cols-3">
           {branches.map((b, i) => (
-            <BranchCard key={b.id} branch={b} index={i} />
+            <PathCard
+              key={b.id}
+              branch={b}
+              index={i}
+              bottleneck={dna.branchBottlenecks.find((x) => x.branchId === b.id)}
+            />
           ))}
         </div>
       </Section>
@@ -93,7 +105,7 @@ export default function MapPage() {
               ← Revisit answers
             </Link>
             <LinkButton href="/research" variant="subtle" size="md">
-              <Telescope className="h-4 w-4" /> Watch the agent research
+              <Telescope className="h-4 w-4" /> Explore the evidence
             </LinkButton>
             <LinkButton href="/brief" size="md">
               View Decision Brief <ArrowRight className="h-4 w-4" />

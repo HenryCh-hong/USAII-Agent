@@ -117,7 +117,7 @@ export default function LandingPage() {
             transition={{ duration: 0.6 }}
             className="space-y-7"
           >
-            <Eyebrow>Decision Intelligence Cockpit</Eyebrow>
+            <Eyebrow>A playable future simulator</Eyebrow>
 
             <p className="mono-label">
               Not a prediction · not a recommendation · a structured future rehearsal

@@ -8,6 +8,22 @@ it feel trustworthy, not just impressive: a **Claim Ledger** that makes every
 claim traceable, a **5-scenario robustness eval** that proves it generalizes
 beyond Alex, and a **live-verification guide**. Everything runs with **no keys**.
 
+## Specificity + playable-simulator reframe (latest)
+
+- **Decision DNA** (`lib/decision/`): a sharp, hypothesis-framed diagnosis of what
+  the decision is really about — core tension, the decision underneath, value
+  conflict, missing evidence, per-branch bottlenecks with concrete 7-day tests, and
+  a one-line diagnosis. On the Decision Brief, Judge Mode, and Branch Detail.
+  Guarded by `eval-specificity` (no generic-advice language).
+- **Playable future simulator UX:** branches now render as **path cards** (main
+  stat · buff · risk · boss fight · bottleneck · concrete next quest), a
+  **Future Run** timeline frames the journey, and a **Future Run Summary** closes
+  the Brief. Investigative `/research` labels softened to exploration ("clues we
+  followed / set aside", "evidence trail"); the banner reads warmer ("a rehearsal,
+  not a prophecy"). **Judge Mode kept precise** (autonomous research agent, claim
+  ledger, RAG, 9-role debate, eval harness). Backend unchanged; Responsible-AI
+  preserved (no predictions, analogies not destiny, human in control).
+
 ## Live verification + red-team pass (latest)
 
 - **Live search / model:** keys absent in this environment → both remain
