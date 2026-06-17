@@ -38,6 +38,8 @@ import { RubricMap } from "@/components/architecture/RubricMap";
 import { ResearchTransparency } from "@/components/architecture/ResearchTransparency";
 import { ClaimLedger } from "@/components/research/ClaimLedger";
 import { buildClaimLedger } from "@/lib/research/claimLedger";
+import { DecisionDnaPanel } from "@/components/shared/DecisionDna";
+import { buildDecisionDna } from "@/lib/decision/decisionDna";
 import { DecisionDelta } from "@/components/shared/DecisionDelta";
 import { TrajectoryAtlas } from "@/components/shared/TrajectoryAtlas";
 import { ALL_SOURCE_CARDS } from "@/lib/knowledge/sources";
@@ -390,6 +392,18 @@ export default function ArchitecturePage() {
           <LinkButton href="/research" variant="subtle" size="md">
             Open the Research Console <ArrowRight className="h-4 w-4" />
           </LinkButton>
+        </div>
+      </Section>
+
+      {/* 5b25) Decision DNA — what the decision is really about */}
+      <Section className="pt-16">
+        <SectionTitle
+          eyebrow="Decision DNA"
+          title="What the decision is really about"
+          subtitle="A sharp, hypothesis-framed diagnosis — shown here for the Alex demo; the same derivation runs for any decision."
+        />
+        <div className="mt-8">
+          <DecisionDnaPanel dna={buildDecisionDna(DEMO_CONTEXT, DEMO_BRANCHES)} compact />
         </div>
       </Section>
 

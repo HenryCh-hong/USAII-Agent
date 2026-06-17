@@ -26,6 +26,8 @@ import { DecisionDelta } from "@/components/shared/DecisionDelta";
 import { TrajectoryAtlas } from "@/components/shared/TrajectoryAtlas";
 import { ClaimLedger } from "@/components/research/ClaimLedger";
 import { buildClaimLedger } from "@/lib/research/claimLedger";
+import { DecisionDnaPanel, BranchBottlenecks } from "@/components/shared/DecisionDna";
+import { buildDecisionDna } from "@/lib/decision/decisionDna";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -106,6 +108,7 @@ export default function BriefPage() {
   }
 
   const branches = simulation.branches;
+  const dna = buildDecisionDna(simulation.context, branches);
   const active = brief ?? DEMO_BRIEF;
   const isLoadingBrief = loading && !brief;
 
@@ -171,6 +174,19 @@ export default function BriefPage() {
             </div>
           </Card>
         </motion.div>
+      </Section>
+
+      {/* Decision DNA — sharp diagnosis, near the top. */}
+      <Section className="pt-10">
+        <SectionTitle
+          eyebrow="Decision DNA"
+          title="What this decision is really about"
+          subtitle="A sharp, testable diagnosis of the tension underneath your options — a hypothesis to test, not a verdict."
+        />
+        <div className="mt-6 space-y-4">
+          <DecisionDnaPanel dna={dna} />
+          <BranchBottlenecks items={dna.branchBottlenecks} />
+        </div>
       </Section>
 
       {/* Decision Delta — before/after impact (derived from real branch data). */}

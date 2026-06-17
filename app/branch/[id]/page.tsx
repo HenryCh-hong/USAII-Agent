@@ -30,6 +30,8 @@ import { ExperimentPlan } from "@/components/branch/ExperimentPlan";
 import { CalibrationPanel } from "@/components/branch/CalibrationPanel";
 import { MockTemplateNotice } from "@/components/shared/MockTemplateNotice";
 import { JumpNav } from "@/components/shared/JumpNav";
+import { BranchBottleneckCard } from "@/components/shared/DecisionDna";
+import { buildDecisionDna } from "@/lib/decision/decisionDna";
 import { AgentReview } from "@/components/branch/AgentReview";
 import { EvidenceGraph } from "@/components/branch/EvidenceGraph";
 import { ReasoningAuditTrail } from "@/components/branch/ReasoningAuditTrail";
@@ -87,6 +89,9 @@ export default function BranchPage({ params }: { params: { id: string } }) {
   const index = simulation.branches.findIndex((b) => b.id === branch.id);
   const accentKey = accentForBranch(branch.id, index);
   const accent = accentClasses(accentKey);
+  const bottleneck = buildDecisionDna(simulation.context, simulation.branches).branchBottlenecks.find(
+    (x) => x.branchId === branch.id,
+  );
 
   return (
     <main className="min-h-screen pb-24">
@@ -156,9 +161,16 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         <MockTemplateNotice simulation={simulation} />
       </Section>
 
+      {bottleneck && (
+        <Section className="pt-6" id="bottleneck">
+          <BranchBottleneckCard b={bottleneck} />
+        </Section>
+      )}
+
       <Section className="pt-6">
         <JumpNav
           items={[
+            { id: "bottleneck", label: "Bottleneck" },
             { id: "agent-review", label: "Agent review" },
             { id: "trajectory", label: "Trajectory" },
             { id: "evidence", label: "Evidence" },
