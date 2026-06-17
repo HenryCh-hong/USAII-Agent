@@ -22,6 +22,7 @@ import { ResponsibleAIBanner } from "@/components/shared/ResponsibleAIBanner";
 import { CalibrationBadges } from "@/components/shared/LevelBadge";
 import { Trajectory } from "@/components/branch/Trajectory";
 import { AssumptionLedger } from "@/components/branch/AssumptionLedger";
+import { AssumptionStressTest } from "@/components/branch/AssumptionStressTest";
 import { EvidenceCards } from "@/components/branch/EvidenceCards";
 import { Premortem } from "@/components/branch/Premortem";
 import { RegretRadar } from "@/components/branch/RegretRadar";
@@ -213,6 +214,18 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         />
         <div className="mt-6">
           <AssumptionLedger assumptions={branch.assumptions} />
+        </div>
+      </Section>
+
+      {/* Assumption stress test — qualitative sensitivity + firming tests */}
+      <Section className="pt-14">
+        <SectionTitle
+          eyebrow="Assumption stress test"
+          title="What if an assumption fails?"
+          subtitle="Each assumption stressed qualitatively — how much the branch leans on it, and the cheapest way to firm it up before committing. Sensitivity reflects provenance and confidence, not a probability."
+        />
+        <div className="mt-6">
+          <AssumptionStressTest assumptions={branch.assumptions} />
         </div>
       </Section>
 

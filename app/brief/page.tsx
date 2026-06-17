@@ -23,6 +23,7 @@ import { AmbientBackground } from "@/components/shared/AmbientBackground";
 import { Section, SectionTitle } from "@/components/ui/Section";
 import { ResponsibleAIBanner } from "@/components/shared/ResponsibleAIBanner";
 import { DecisionDelta } from "@/components/shared/DecisionDelta";
+import { TrajectoryAtlas } from "@/components/shared/TrajectoryAtlas";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -179,6 +180,18 @@ export default function BriefPage() {
         />
         <div className="mt-6">
           <DecisionDelta context={simulation.context} branches={branches} />
+        </div>
+      </Section>
+
+      {/* Trajectory Atlas — reference futures (analogies, not predictions). */}
+      <Section className="pt-10">
+        <SectionTitle
+          eyebrow="Trajectory Atlas"
+          title="Reference futures your decision rhymes with"
+          subtitle="Curated role trajectories that overlap with your anchors — analogies to learn from, never predictions, and never a match to a real person."
+        />
+        <div className="mt-6">
+          <TrajectoryAtlas context={simulation.context} />
         </div>
       </Section>
 

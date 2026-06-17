@@ -38,9 +38,9 @@ const NEGATION_RE =
   /\b(?:not|never|no|without|nor|nothing|neither|don'?t|doesn'?t|isn'?t|won'?t|cannot|can'?t)\b/i;
 
 // Roots scanned for banned phrases (user-facing surfaces + docs + data).
-const PHRASE_ROOTS = ["lib/mock", "knowledge", "components", "app", "docs/submission"];
+const PHRASE_ROOTS = ["lib/mock", "lib/trajectory", "knowledge", "components", "app", "docs/submission"];
 // Roots scanned for fabricated exact percentages (data/docs only).
-const PERCENT_ROOTS = ["lib/mock", "knowledge", "docs/submission"];
+const PERCENT_ROOTS = ["lib/mock", "lib/trajectory", "knowledge", "docs/submission"];
 const EXTS = [".ts", ".tsx", ".json", ".md"];
 
 function walk(dir: string): string[] {

@@ -34,7 +34,9 @@ import { LinkButton } from "@/components/ui/Button";
 import { Pill, Divider } from "@/components/ui/Primitives";
 import { PipelineDiagram } from "@/components/architecture/PipelineDiagram";
 import { EvalSummary } from "@/components/architecture/EvalSummary";
+import { RubricMap } from "@/components/architecture/RubricMap";
 import { DecisionDelta } from "@/components/shared/DecisionDelta";
+import { TrajectoryAtlas } from "@/components/shared/TrajectoryAtlas";
 import { ALL_SOURCE_CARDS } from "@/lib/knowledge/sources";
 import { EVIDENCE_NODES, EVIDENCE_EDGES } from "@/lib/knowledge/graph";
 import { DEMO_CONTEXT, DEMO_BRANCHES, DEMO_BRIEF } from "@/lib/mock";
@@ -183,6 +185,18 @@ export default function ArchitecturePage() {
             <Badge tone="neutral">Mock-first · no API key needed</Badge>
           </div>
         </motion.div>
+      </Section>
+
+      {/* 1b) Rubric map — judge orientation */}
+      <Section className="pt-16">
+        <SectionTitle
+          eyebrow="For judges"
+          title="How this maps to the rubric"
+          subtitle="Where each scoring category is demonstrated in the product — navigate straight to the evidence."
+        />
+        <div className="mt-8">
+          <RubricMap />
+        </div>
       </Section>
 
       {/* 2) The pipeline */}
@@ -420,6 +434,18 @@ export default function ArchitecturePage() {
         />
         <div className="mt-8">
           <DecisionDelta context={DEMO_CONTEXT} branches={DEMO_BRANCHES} compact />
+        </div>
+      </Section>
+
+      {/* 5e) Trajectory Atlas — reference futures */}
+      <Section className="pt-16">
+        <SectionTitle
+          eyebrow="Trajectory Atlas"
+          title="Reference futures, as analogies"
+          subtitle="The system maps the user's anchors to curated role trajectories — analogies to learn from, never predictions and never a real person. Shown here for the Alex demo."
+        />
+        <div className="mt-8">
+          <TrajectoryAtlas context={DEMO_CONTEXT} compact />
         </div>
       </Section>
 
