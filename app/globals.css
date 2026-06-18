@@ -95,6 +95,21 @@
   }
 }
 
+/* Gentle bob for the Future Run pixel traveler. Looping animation is auto-killed
+   by the prefers-reduced-motion block below (iteration-count: 1). */
+.traveler-bob {
+  animation: traveler-bob 2.8s ease-in-out infinite;
+}
+@keyframes traveler-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
 /* Respect reduced-motion: kill looping/decorative animation + smooth scroll. */
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -30,6 +30,7 @@ import { ExperimentPlan } from "@/components/branch/ExperimentPlan";
 import { CalibrationPanel } from "@/components/branch/CalibrationPanel";
 import { MockTemplateNotice } from "@/components/shared/MockTemplateNotice";
 import { JumpNav } from "@/components/shared/JumpNav";
+import { FutureRunTimeline } from "@/components/shared/FutureRunTimeline";
 import { BranchBottleneckCard } from "@/components/shared/DecisionDna";
 import { buildDecisionDna } from "@/lib/decision/decisionDna";
 import { AgentReview } from "@/components/branch/AgentReview";
@@ -106,6 +107,10 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         >
           <ArrowLeft className="h-4 w-4" /> Back to the Future Map
         </Link>
+      </Section>
+
+      <Section className="pt-5">
+        <FutureRunTimeline current="Pressure-test assumptions" />
       </Section>
 
       <Section className="pt-5">

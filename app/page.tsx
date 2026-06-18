@@ -163,7 +163,7 @@ export default function LandingPage() {
               <div className="mb-4 flex items-center justify-between">
                 <Badge tone="brand">
                   <Sparkles className="h-3 w-3" />
-                  Live preview
+                  Demo preview
                 </Badge>
                 <span className="text-[11px] text-mute">Alex · quant vs. startup vs. research</span>
               </div>

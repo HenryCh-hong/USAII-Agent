@@ -4,6 +4,7 @@ import { TopNav, ProgressSteps } from "@/components/shared/Nav";
 import { AmbientBackground } from "@/components/shared/AmbientBackground";
 import { Section, SectionTitle } from "@/components/ui/Section";
 import { ResponsibleAIBanner } from "@/components/shared/ResponsibleAIBanner";
+import { FutureRunTimeline } from "@/components/shared/FutureRunTimeline";
 import { IntakeForm } from "@/components/intake/IntakeForm";
 
 export default function IntakePage() {
@@ -14,6 +15,10 @@ export default function IntakePage() {
 
       <Section className="pt-8">
         <ProgressSteps current="intake" />
+      </Section>
+
+      <Section className="pt-6">
+        <FutureRunTimeline current="Name the decision" />
       </Section>
 
       <Section className="pt-10">
