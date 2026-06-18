@@ -186,9 +186,11 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         />
       </Section>
 
+      <ChapterDivider n={1} label="Route mechanics" />
+
       {/* Agent Review — the multi-agent debate behind this branch */}
       {branch.agentReview && (
-        <Section className="pt-14" id="agent-review">
+        <Section className="pt-8" id="agent-review">
           <SectionTitle
             eyebrow="Agent review"
             title="How the system reasoned about this branch"
@@ -241,8 +243,10 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         </div>
       </Section>
 
+      <ChapterDivider n={2} label="Evidence trail" />
+
       {/* Assumption ledger — responsible-AI centerpiece */}
-      <Section className="pt-14">
+      <Section className="pt-8">
         <SectionTitle
           eyebrow="Assumption ledger"
           title="Every claim, tagged by where it came from"
@@ -294,8 +298,10 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         </Section>
       )}
 
+      <ChapterDivider n={3} label="Decision pressure" />
+
       {/* Premortem */}
-      <Section className="pt-14">
+      <Section className="pt-8">
         <SectionTitle
           eyebrow="Premortem"
           title="If this path failed, why might that be?"
@@ -315,24 +321,6 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         />
         <div className="mt-6">
           <RegretRadar items={branch.regretRadar} />
-        </div>
-      </Section>
-
-      {/* Experiment plan */}
-      <Section className="pt-14" id="experiment">
-        <SectionTitle
-          eyebrow="7-day experiment"
-          title="Replace an assumption with real signal"
-          subtitle="A low-cost week of action to gather evidence before any commitment — with the context that makes it worth running."
-        />
-        <div className="mt-6">
-          <ExperimentPlan
-            steps={branch.sevenDayExperiment}
-            skillCompounding={branch.skillCompounding}
-            emotionalLoad={branch.emotionalLoad}
-            bottlenecks={branch.bottlenecks}
-            accentKey={accentKey}
-          />
         </div>
       </Section>
 
@@ -396,6 +384,26 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         </Section>
       )}
 
+      <ChapterDivider n={4} label="Next quest" />
+
+      {/* Experiment plan — the closing next quest */}
+      <Section className="pt-6" id="experiment">
+        <SectionTitle
+          eyebrow="7-day experiment"
+          title="Replace an assumption with real signal"
+          subtitle="A low-cost week of action to gather evidence before any commitment — with the context that makes it worth running."
+        />
+        <div className="mt-6">
+          <ExperimentPlan
+            steps={branch.sevenDayExperiment}
+            skillCompounding={branch.skillCompounding}
+            emotionalLoad={branch.emotionalLoad}
+            bottlenecks={branch.bottlenecks}
+            accentKey={accentKey}
+          />
+        </div>
+      </Section>
+
       {/* Responsible AI + nav */}
       <Section className="pt-14">
         <ResponsibleAIBanner />
@@ -429,5 +437,21 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         </div>
       </Section>
     </main>
+  );
+}
+
+/** Lightweight chapter break — chunks the long path page into readable acts so it
+ * reads as a "path chapter," not a flat stack of analysis cards. Presentational. */
+function ChapterDivider({ n, label }: { n: number; label: string }) {
+  return (
+    <Section className="pt-16">
+      <div className="flex items-center gap-3">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-brand-glow/70">
+          Chapter {n}
+        </span>
+        <span className="text-sm font-medium text-white">{label}</span>
+        <span className="h-px flex-1 bg-gradient-to-r from-line/80 to-transparent" />
+      </div>
+    </Section>
   );
 }
