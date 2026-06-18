@@ -4,6 +4,11 @@ The whole demo runs on the **mock path with no API key**, so it never depends on
 the network. Persona: **Alex**, a CS sophomore choosing between quant recruiting,
 building a startup, and preparing for research / grad school.
 
+**Lead with the core loop:** one decision → three evidence-traced futures → an
+evidence trail → assumption pressure-tests → a 7-day next quest → **the human
+decides**. Everything else (Trajectory Atlas, Claim Ledger, Decision Delta, Judge
+Mode) is *optional depth* that backs up the loop — not separate products.
+
 ## Fast path (recommended)
 
 1. **Landing (0:00–0:10).** "Forked Futures is a decision-intelligence cockpit for

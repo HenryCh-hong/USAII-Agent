@@ -2,7 +2,9 @@
 
 > **Forked Futures does not use AI to choose your future. It uses AI to help you understand the futures you're choosing between.**
 
-An evidence-grounded, uncertainty-aware **multi-agent future simulator** that helps students and early professionals compare possible life and career paths, see hidden tradeoffs, and turn uncertainty into a first real-world experiment.
+Forked Futures takes **one messy life or career decision** and turns it into **three evidence-traced futures**, a clear **Decision DNA** diagnosis, and **one 7-day validation test** — while keeping the final choice with you. It is an uncertainty-aware, mock-first future simulator for students and early-career decisions.
+
+It runs fully **without API keys** via a curated mock fallback; the optional live model and web-search providers are **provider-ready but unverified** until you add your own keys. **`/architecture`** is the judge-facing **Judge Mode**, and **`/research`** shows the autonomous research / evidence-exploration flow.
 
 Built for the **USAII Global AI Hackathon 2026** — Undergraduate Track, *Challenge Brief 3: Build the "Second Brain" for Real Life* (spirit of Direction A — Life Decision Simulator, with execution-planning elements of Direction B).
 

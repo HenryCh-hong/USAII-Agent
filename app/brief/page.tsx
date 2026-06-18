@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   Sparkles,
   Compass,
+  Flag,
   Radar,
   HelpCircle,
   FlaskConical,
@@ -114,6 +115,14 @@ export default function BriefPage() {
   const active = brief ?? DEMO_BRIEF;
   const isLoadingBrief = loading && !brief;
 
+  // Above-the-fold payoff, built from already-hydrated simulation data (DNA +
+  // branch tests) so it renders immediately and never flashes empty while the
+  // async brief synthesis loads.
+  const nextQuest =
+    dna.branchBottlenecks[0]?.sevenDayTest ??
+    active.recommendedExperiments?.[0] ??
+    "Run the cheapest decisive 7-day test on the path you're most drawn to.";
+
   // Sections 6 & 10 are derived from branch data (no change to the brief contract):
   // what would move the assessment, and the honest evidence-coverage note.
   const whatWouldChange = branches.flatMap((b) =>
@@ -138,7 +147,7 @@ export default function BriefPage() {
       <Section className="pt-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionTitle
-            eyebrow="Decision Brief · final mission brief"
+            eyebrow="Future Run Complete · decision brief"
             title="What you're really deciding"
             subtitle={simulation.context.decision}
           />
@@ -147,6 +156,29 @@ export default function BriefPage() {
             {mocked === false ? "Live synthesis" : "Demo synthesis"}
           </Badge>
         </div>
+      </Section>
+
+      {/* Future Run Complete — above-the-fold payoff (sync data, never flashes empty). */}
+      <Section className="pt-6">
+        <Card className="overflow-hidden border-brand/25 bg-brand/[0.05]">
+          <div className="grid gap-4 p-5 sm:p-6 md:grid-cols-[1.3fr_1fr]">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-glow/80">
+                <Flag className="h-3.5 w-3.5" /> Future Run Complete
+              </div>
+              <p className="text-base leading-relaxed text-white sm:text-lg">{dna.diagnosis}</p>
+              <p className="text-xs leading-relaxed text-mute">
+                A hypothesis to test — not a verdict. The final call stays yours.
+              </p>
+            </div>
+            <div className="space-y-1.5 rounded-xl border border-line/60 bg-white/[0.02] p-4">
+              <div className="mono-label flex items-center gap-1.5">
+                <FlaskConical className="h-3 w-3" /> Your next quest
+              </div>
+              <p className="text-sm leading-relaxed text-soft/90">{nextQuest}</p>
+            </div>
+          </div>
+        </Card>
       </Section>
 
       <Section className="pt-6">

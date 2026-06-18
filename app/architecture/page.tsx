@@ -142,6 +142,24 @@ const KNOWLEDGE_FILES = [
 
 const HUMAN_FACTORS = ["Values", "Risk tolerance", "Family", "Identity", "Lived experience"];
 
+// One-screen "what the AI does" summary — input -> transformation -> output -> action.
+const AI_SUMMARY: { k: string; v: string }[] = [
+  { k: "Input", v: "a messy life / career decision + your values, constraints and fears" },
+  {
+    k: "AI transformation",
+    v: "clarifying questions → evidence retrieval → source ranking → claim ledger → three futures → 9-role agent debate → assumption pressure-tests → safety review",
+  },
+  { k: "Output", v: "three evidence-traced paths + a Decision Brief + a concrete next quest" },
+  { k: "User action", v: "run one 7-day validation test this week while keeping the final decision" },
+];
+
+// Why an LLM beats the obvious non-AI tools, named explicitly for judges.
+const WHY_NOT = [
+  "Search retrieves facts but does not reason over your personal tradeoffs.",
+  "Forms collect fixed answers but cannot adapt to open-ended uncertainty.",
+  "Spreadsheets compare static criteria but never surface hidden assumptions or generate a validation test.",
+];
+
 // Real data powering the judge-facing dashboard (deduped by source).
 const OFFICIAL_SOURCES = Array.from(
   new Map(ALL_SOURCE_CARDS.map((c) => [c.sourceName, c.publisher])).entries(),
@@ -190,6 +208,45 @@ export default function ArchitecturePage() {
             <Badge tone="neutral">Mock-first · no API key needed</Badge>
           </div>
         </motion.div>
+      </Section>
+
+      {/* 1a) One-screen "what the AI does" — judge orientation */}
+      <Section className="pt-12">
+        <div className="grid gap-4 lg:grid-cols-[1.15fr_1fr]">
+          <CockpitPanel
+            label="What the AI does · one screen"
+            icon={Brain}
+            accent="brand"
+            status="input → action"
+          >
+            <ol className="space-y-3">
+              {AI_SUMMARY.map((row) => (
+                <li key={row.k} className="flex flex-col gap-1 rounded-lg border border-line/60 bg-white/[0.02] px-3.5 py-2.5 sm:flex-row sm:gap-3">
+                  <span className="mono-label shrink-0 text-brand-glow/80 sm:w-36">{row.k}</span>
+                  <span className="text-sm leading-relaxed text-soft/90">{row.v}</span>
+                </li>
+              ))}
+            </ol>
+          </CockpitPanel>
+          <Card>
+            <CardBody className="space-y-3">
+              <CardTitle>Why AI — not search, a form, or a spreadsheet</CardTitle>
+              <ul className="space-y-2.5">
+                {WHY_NOT.map((w) => (
+                  <li key={w} className="flex gap-2.5 text-sm leading-relaxed text-soft/85">
+                    <span className="mt-0.5 select-none text-mute/60">–</span>
+                    <span>{w}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-sm leading-relaxed text-soft">
+                AI earns its place by turning messy context into{" "}
+                <span className="text-white">structured futures, explicit disagreements, honest evidence limits, and a next action</span>{" "}
+                — none of which a lookup, a form, or a grid can produce.
+              </p>
+            </CardBody>
+          </Card>
+        </div>
       </Section>
 
       {/* 1b) Rubric map — judge orientation */}

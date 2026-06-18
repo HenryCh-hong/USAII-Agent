@@ -10,6 +10,11 @@ building a startup, and preparing for research / grad school.
 > structured pipeline. Do not claim live performance unless you have run and shown
 > it on the day.
 
+> Lead with the core loop: **one decision → three evidence-traced futures →
+> evidence trail → pressure test → 7-day next quest → the human decides.** Narrate
+> the extra surfaces (Trajectory Atlas, Claim Ledger, Decision Delta, Judge Mode)
+> as *optional depth* that makes the loop trustworthy — not as separate features.
+
 ---
 
 ## 3–5 minute script

@@ -72,8 +72,17 @@ export default function MapPage() {
         </div>
       </Section>
 
+      {/* Route select */}
+      <Section className="pt-10">
+        <SectionTitle
+          eyebrow="Route select"
+          title="Choose a route to enter"
+          subtitle="Each path opens a full chapter — the 9-role agent debate, evidence graph, claim ledger, assumption stress test, and reasoning audit trail. The map is the overview; the reasoning lives inside a route."
+        />
+      </Section>
+
       {/* Playable path cards */}
-      <Section className="pt-8">
+      <Section className="pt-6">
         <div className="grid gap-5 md:grid-cols-3">
           {branches.map((b, i) => (
             <PathCard

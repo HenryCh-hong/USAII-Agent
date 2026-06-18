@@ -137,9 +137,19 @@ export default function LandingPage() {
               into simulated paths, visible tradeoffs, and first-step experiments.
             </p>
 
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm font-medium text-soft">
+              <span className="text-white">One decision</span>
+              <span className="text-brand-glow">→</span>
+              <span>three evidence-traced futures</span>
+              <span className="text-brand-glow">→</span>
+              <span>one 7-day test</span>
+              <span className="text-brand-glow">→</span>
+              <span className="text-white">you decide</span>
+            </div>
+
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <LinkButton href="/intake" size="lg">
-                Start a Future Simulation <ArrowRight className="h-4 w-4" />
+                Start a Future Run <ArrowRight className="h-4 w-4" />
               </LinkButton>
               <Button variant="outline" size="lg" onClick={openDemo}>
                 <Play className="h-4 w-4" /> See the Alex demo
@@ -291,7 +301,7 @@ export default function LandingPage() {
               Watch the demo
             </Button>
             <LinkButton href="/intake" size="md">
-              Start your simulation <ArrowRight className="h-4 w-4" />
+              Start your Future Run <ArrowRight className="h-4 w-4" />
             </LinkButton>
           </div>
         </div>
