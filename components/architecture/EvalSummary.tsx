@@ -8,12 +8,13 @@ import { CockpitPanel } from "@/components/ui/CockpitPanel";
  * live path is verified. Numbers mirror the committed eval scripts' output.
  */
 const RESULTS: { name: string; detail: string }[] = [
-  { name: "Overclaim safety", detail: "no banned / probability language across 93 user-facing files" },
-  { name: "RAG coverage", detail: "349 checks · 3 branches · 7 official sources · 19 cards" },
+  { name: "Overclaim safety", detail: "no banned / probability language across 100 user-facing files" },
+  { name: "RAG coverage", detail: "362 checks · 3 branches · 7 official sources · 19 cards · 6 fidelity" },
   { name: "Agent output schema", detail: "33 checks · all 3 branches satisfy the Zod contract + carry every v2 artifact" },
   { name: "Demo journey", detail: "covers all pages + APIs incl. /research (45 checks with a live server) · keyless fallback intact" },
   { name: "Research quality", detail: "65 checks · dossier well-formed; sources carry limits; rejected sources state reasons; no person-matching" },
   { name: "Research robustness", detail: "50 checks across 5 non-Alex scenarios · the research dossier generalizes to any decision" },
+  { name: "Specificity", detail: "40 checks · Decision DNA is specific (named tension, per-branch bottlenecks, 7-day tests) · no generic-advice language" },
 ];
 
 export function EvalSummary({ lastRun }: { lastRun?: string }) {
@@ -22,7 +23,7 @@ export function EvalSummary({ lastRun }: { lastRun?: string }) {
       label="System Evaluation · last local run"
       icon={CheckCircle2}
       accent="quant"
-      status="6 / 6 passing"
+      status="7 / 7 passing"
     >
       <ul className="space-y-2.5">
         {RESULTS.map((r) => (

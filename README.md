@@ -25,7 +25,7 @@ Start here if you're evaluating this project:
   - [Demo video script](docs/submission/demo-video-script.md)
   - [Live verification guide](docs/submission/live-verification-guide.md)
 
-**Verify in one command:** `npm run validate` — typecheck + 4 evaluation scripts + production build. The full demo runs with **no `ANTHROPIC_API_KEY`**; the live model path is optional and falls back to a curated mock dataset.
+**Verify in one command:** `npm run validate` — typecheck + 7 evaluation scripts + production build. The full demo runs with **no API keys** (the mock fallback mirrors the full structured pipeline); the live model and web-search providers are optional and provider-ready, to be verified with your own keys.
 
 > The original pipeline is described below. The current **v2** system (9-role debate, official-source evidence pack, local evidence graph, reasoning audit trail, and evaluation harness) is documented in `docs/submission/` and shown live on `/architecture`.
 
@@ -49,14 +49,18 @@ npm install
 npm run dev          # http://localhost:3000
 ```
 
-**No API key required.** The app ships mock-first: the full journey works entirely on a curated demo dataset. To enable the live multi-agent pipeline, copy `.env.example` to `.env.local` and add:
+**No API key required.** The app ships mock-first, and **the mock fallback mirrors the full structured pipeline** — so the entire journey is representative with no keys. The optional live providers are **implemented and provider-ready, but must be verified with your own keys** (they have not been benchmarked here — see [`docs/submission/live-verification-guide.md`](docs/submission/live-verification-guide.md)). To enable an optional live mode, copy `.env.example` to `.env.local` and add any of:
 
 ```bash
+# Optional — live model generation (else curated mock branches/brief/chat)
 ANTHROPIC_API_KEY=sk-ant-...
-ANTHROPIC_MODEL=claude-opus-4-8   # optional override
+ANTHROPIC_MODEL=claude-opus-4-8         # optional model override
+# Optional — live web research (else curated public-source corpus)
+GOOGLE_SEARCH_API_KEY=your-key
+GOOGLE_CSE_ID=your-search-engine-id
 ```
 
-When a key is present, the API routes generate branches live, validate every generation against Zod, retry once on failure, and **fall back to the mock dataset if anything goes wrong** — so the demo can never hard-fail.
+When keys are present, the API routes run live, validate every generation against Zod, retry once on failure, and **fall back to the mock dataset if anything goes wrong** — so the demo can never hard-fail.
 
 ---
 

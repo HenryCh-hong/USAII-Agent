@@ -45,7 +45,7 @@ layers of code and data, not left to a single careful prompt.
 
 ## Evaluation harness
 
-Six framework-free eval scripts (`npm run eval`) guard these properties:
+Seven framework-free eval scripts (`npm run eval`) guard these properties:
 
 - **eval-overclaim-safety** — scans user-facing source, mock data, knowledge cards
   and these submission docs for banned/risky language, with word-boundary and
@@ -66,6 +66,9 @@ Six framework-free eval scripts (`npm run eval`) guard these properties:
   language.
 - **eval-research-robustness** — the research agent produces a grounded, safe, well-
   formed dossier across five non-Alex scenarios (claim-to-source fidelity included).
+- **eval-specificity** — the Decision DNA is specific (named tension, per-branch
+  bottlenecks, concrete 7-day tests) and user-facing copy is free of generic-advice
+  language.
 
 ## Limits we are honest about
 

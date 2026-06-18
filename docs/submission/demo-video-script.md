@@ -78,7 +78,7 @@ uncertainty, and experiments to run this week. The choice stays with Alex."
 "Why this is not a chatbot wrapper, in one screen: the official-source RAG pack,
 the local evidence graph, the nine-role pipeline, the safety scrubber, a live
 sample trace of Alex's decision end-to-end, and a **System Evaluation** panel —
-four eval scripts, reproducible with `npm run eval`. The safeguards are tested, not
+seven eval scripts, reproducible with `npm run eval`. The safeguards are tested, not
 asserted."
 
 **4:30 — Responsible-AI close.**

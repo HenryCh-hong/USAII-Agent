@@ -72,8 +72,8 @@ fully representative offline.
 ```bash
 npm install
 npm run dev            # http://localhost:3000 — works with no API key
-npm run validate       # typecheck + 4 evals + production build
-npm run eval           # the four evaluation scripts only
+npm run validate       # typecheck + 7 evals + production build
+npm run eval           # the seven evaluation scripts only
 ```
 
 Set `ANTHROPIC_API_KEY` to enable the optional live path; without it, everything

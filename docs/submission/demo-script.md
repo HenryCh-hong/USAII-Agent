@@ -61,4 +61,4 @@ again from a clean state.
 npm install && npm run validate
 ```
 
-Runs typecheck, the four evaluation scripts, and the production build.
+Runs typecheck, the seven evaluation scripts, and the production build.
