@@ -67,6 +67,12 @@ const WHY_AI = [
   },
 ];
 
+const NOT_AI = [
+  { tool: "Search", limit: "finds facts" },
+  { tool: "Forms", limit: "collect fixed answers" },
+  { tool: "Spreadsheets", limit: "compare fixed criteria" },
+];
+
 const PIPELINE = [
   {
     icon: Layers,
@@ -157,6 +163,10 @@ export default function LandingPage() {
             </div>
 
             <p className="text-xs leading-relaxed text-mute">
+              <span className="text-soft">See the Alex demo</span> walks a worked example — Alex, a CS sophomore weighing quant recruiting, a startup, and research.
+            </p>
+
+            <p className="text-xs leading-relaxed text-mute">
               These are plausible scenarios, not predictions. The system can help
               you understand a decision — it never makes it for you.
             </p>
@@ -197,18 +207,26 @@ export default function LandingPage() {
           </p>
         </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {WHY_AI.map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.45, delay: i * 0.08 }}
-              >
-                <Card hover className={`group h-full ${item.border}`}>
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          {NOT_AI.map((t) => (
+            <div key={t.tool} className="rounded-2xl border border-line/60 bg-white/[0.02] p-5">
+              <div className="text-sm font-semibold text-white">{t.tool}</div>
+              <div className="mt-0.5 text-sm text-mute">{t.limit}.</div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-soft">
+          Forked Futures reasons across your messy context, the hidden assumptions inside a choice, and the next test worth running.
+        </p>
+        <details className="mt-5">
+          <summary className="inline-flex cursor-pointer list-none items-center gap-2 text-sm font-medium text-brand-glow transition-colors hover:text-white">
+            Why AI? — see the full case
+          </summary>
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {WHY_AI.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Card key={item.title} hover className={`group h-full ${item.border}`}>
                   <CardBody className="space-y-3">
                     <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line/60 bg-white/[0.03]">
                       <Icon className={`h-5 w-5 ${item.accent}`} />
@@ -217,10 +235,10 @@ export default function LandingPage() {
                     <p className="text-sm leading-relaxed text-soft/80">{item.body}</p>
                   </CardBody>
                 </Card>
-              </motion.div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </details>
       </Section>
 
       {/* PIPELINE TEASER */}
@@ -309,7 +327,15 @@ export default function LandingPage() {
 
       {/* FOOTER */}
       <Section className="pt-16">
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-line/50 pt-8 sm:flex-row">
+        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] text-mute/80">
+          {["Next.js", "TypeScript", "Zod", "Tailwind", "Vercel", "Anthropic (optional)", "mock-first fallback"].map((t, i) => (
+            <span key={t} className="inline-flex items-center gap-2">
+              {i > 0 && <span className="text-line">·</span>}
+              {t}
+            </span>
+          ))}
+        </div>
+        <div className="mt-6 flex flex-col items-center justify-between gap-4 border-t border-line/50 pt-8 sm:flex-row">
           <Logo />
           <p className="text-xs text-mute">
             USAII Global AI Hackathon 2026 · Challenge Brief 3

@@ -90,9 +90,8 @@ export function PathCard({
             href={`/branch/${branch.id}`}
             className={cn("inline-flex items-center gap-1.5 text-sm font-medium transition-colors hover:gap-2.5", accent.text)}
           >
-            Explore this path <ArrowRight className="h-4 w-4" />
+            Enter this path <ArrowRight className="h-4 w-4" />
           </Link>
-          <p className="mono-label">A rehearsal, not a prophecy</p>
         </div>
       </Card>
     </motion.div>

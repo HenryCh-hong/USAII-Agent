@@ -244,11 +244,16 @@ export default function BriefPage() {
         <SectionTitle
           eyebrow="Trajectory Atlas"
           title="Reference futures your decision rhymes with"
-          subtitle="Curated role trajectories that rhyme with your anchors — analogies, never predictions or real people."
+          subtitle="Curated role trajectories used as analogies — for context only, not a prediction."
         />
-        <div className="mt-6">
-          <TrajectoryAtlas context={simulation.context} />
-        </div>
+        <details className="mt-6">
+          <summary className="inline-flex cursor-pointer list-none items-center gap-2 text-sm font-medium text-brand-glow transition-colors hover:text-white">
+            Show full trajectory atlas
+          </summary>
+          <div className="mt-5">
+            <TrajectoryAtlas context={simulation.context} />
+          </div>
+        </details>
       </Section>
 
       {/* Claim Ledger — traceable claims (compact). */}

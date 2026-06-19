@@ -44,10 +44,11 @@ export function TopNav() {
               reset();
               router.push("/");
             }}
-            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-mute transition-colors hover:text-white"
+            title="Reset this demo session and start over"
+            className="ml-1.5 inline-flex items-center gap-1.5 rounded-lg border border-line/60 px-3 py-1.5 text-sm text-mute transition-colors hover:border-line hover:text-white"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            Restart
+            Restart run
           </button>
         </nav>
       </div>

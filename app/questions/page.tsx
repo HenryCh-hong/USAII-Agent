@@ -212,13 +212,13 @@ export default function QuestionsPage() {
                       <h3 className="text-base font-semibold leading-snug text-white sm:text-lg">
                         {q.question}
                       </h3>
-                      <div className="flex items-start gap-2 text-sm leading-relaxed text-soft/80">
-                        <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-glow/70" />
-                        <span>
-                          <span className="text-mute">Why this matters · </span>
-                          {q.why}
-                        </span>
-                      </div>
+                      <details className="text-sm leading-relaxed text-soft/80">
+                        <summary className="flex cursor-pointer list-none items-center gap-2 text-mute transition-colors hover:text-soft">
+                          <Lightbulb className="h-3.5 w-3.5 shrink-0 text-brand-glow/70" />
+                          Why this matters
+                        </summary>
+                        <p className="mt-1.5 pl-6">{q.why}</p>
+                      </details>
                       <Pill className="gap-1.5">
                         <HelpCircle className="h-3 w-3 text-mute" />
                         Probes: {q.probes}
@@ -255,20 +255,30 @@ export default function QuestionsPage() {
               Running the simulation opens three plausible futures side by side. Nothing here decides for you.
             </div>
           </div>
-          <Button size="lg" onClick={runSimulation} disabled={running}>
-            {running ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Running…
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4" />
-                Run the simulation
-                <ArrowRight className="h-4 w-4" />
-              </>
-            )}
-          </Button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => router.push("/intake")}
+              disabled={running}
+              className="inline-flex items-center gap-1.5 text-sm text-mute transition-colors hover:text-white disabled:opacity-50"
+            >
+              ← Back to setup
+            </button>
+            <Button size="lg" onClick={runSimulation} disabled={running}>
+              {running ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Running…
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4" />
+                  Run the simulation
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </Section>
 
