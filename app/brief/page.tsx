@@ -50,6 +50,7 @@ export default function BriefPage() {
   const simulation = useForkedStore((s) => s.simulation);
   const brief = useForkedStore((s) => s.brief);
   const setBrief = useForkedStore((s) => s.setBrief);
+  const enteredBranchId = useForkedStore((s) => s.enteredBranchId);
 
   const [loading, setLoading] = useState(false);
   const [mocked, setMocked] = useState<boolean | null>(null);
@@ -112,6 +113,10 @@ export default function BriefPage() {
   }
 
   const branches = simulation.branches;
+  const enteredBranch = branches.find((b) => b.id === enteredBranchId);
+  const unlivedBranches = enteredBranch
+    ? branches.filter((b) => b.id !== enteredBranchId)
+    : branches;
   const dna = buildDecisionDna(simulation.context, branches);
   const active = brief ?? DEMO_BRIEF;
   const isLoadingBrief = loading && !brief;
@@ -470,30 +475,53 @@ export default function BriefPage() {
         <ResponsibleAIBanner />
       </Section>
 
-      {/* Futures you might still sample — unlived futures (low-cost tastes). */}
+      {/* Futures you did not enter — still learnable (or "might sample" if none entered). */}
       <Section className="pt-10">
         <SectionTitle
           eyebrow="Unlived futures"
-          title="Futures you might still sample"
-          subtitle="Even after you choose, these stay partly open — low-cost ways to keep an unlived future alive. Opportunity cost, not regret."
+          title={
+            enteredBranch
+              ? "Futures you did not enter — but can still learn from"
+              : "Futures you might still sample"
+          }
+          subtitle={
+            enteredBranch
+              ? `You entered ${enteredBranch.track}. These are the routes you didn't take — the signal each gives, and a low-cost way to sample it. Opportunity cost, not regret.`
+              : "Even after you choose, these stay partly open — low-cost ways to keep an unlived future alive. Opportunity cost, not regret."
+          }
         />
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          {branches.map((b, i) => {
+        <div
+          className={cn(
+            "mt-6 grid gap-4",
+            unlivedBranches.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3",
+          )}
+        >
+          {unlivedBranches.map((b) => {
+            const i = branches.findIndex((x) => x.id === b.id);
             const u = buildUnlivedFuture(b);
             const accent = accentClasses(accentForBranch(b.id, i));
             return (
-              <Card key={b.id}>
+              <Card key={b.id} hover className={cn("overflow-hidden", accent.glow)}>
                 <div className="space-y-2.5 p-5">
                   <div className={cn("text-sm font-semibold", accent.text)}>{b.track}</div>
                   <p className="text-xs leading-relaxed text-mute">
-                    <span className="text-soft">Might miss:</span> {u.teaches}
+                    <span className="text-soft">Signal it gives:</span> {u.teaches}
                   </p>
                   {u.sampleTest && (
                     <div className="rounded-lg border border-line/60 bg-white/[0.02] p-2.5">
-                      <div className="mono-label">Sample it</div>
+                      <div className="mono-label">Sample it (low-cost)</div>
                       <p className="mt-1 text-sm leading-snug text-soft/90">{u.sampleTest}</p>
                     </div>
                   )}
+                  <Link
+                    href={`/branch/${b.id}`}
+                    className={cn(
+                      "inline-flex items-center gap-1.5 text-sm font-medium transition-colors hover:gap-2.5",
+                      accent.text,
+                    )}
+                  >
+                    Peek at this future <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
               </Card>
             );

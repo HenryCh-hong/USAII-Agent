@@ -36,10 +36,13 @@ export function PathCard({
   branch,
   index,
   bottleneck,
+  status = "open",
 }: {
   branch: FutureBranch;
   index: number;
   bottleneck?: BranchBottleneck;
+  /** "current" = the route the user entered; "unlived" = a route still explorable. */
+  status?: "current" | "unlived" | "open";
 }) {
   const accentKey = accentForBranch(branch.id, index);
   const accent = accentClasses(accentKey);
@@ -56,7 +59,7 @@ export function PathCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
     >
-      <Card hover className={cn("h-full overflow-hidden", accent.glow)}>
+      <Card hover className={cn("h-full overflow-hidden", accent.glow, status === "current" && "ring-1 ring-brand/40")}>
         <div className={cn("h-1 w-full bg-gradient-to-r", accent.from, "to-transparent")} />
         <div className="space-y-3.5 p-5">
           <div className="flex items-center justify-between gap-2">
@@ -65,6 +68,17 @@ export function PathCard({
               <Sparkles className="h-3 w-3" /> {MAIN_STAT[accentKey]}
             </span>
           </div>
+
+          {status === "current" && (
+            <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-brand/50 bg-brand/10 px-2.5 py-0.5 text-[11px] font-semibold text-brand-glow">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-glow" /> You are here · current path
+            </span>
+          )}
+          {status === "unlived" && (
+            <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-line/60 bg-white/[0.02] px-2.5 py-0.5 text-[11px] font-medium text-mute">
+              Unlived future · still explorable
+            </span>
+          )}
 
           <h3 className="text-lg font-semibold leading-snug text-white">{branch.title}</h3>
 
@@ -98,7 +112,12 @@ export function PathCard({
             href={`/branch/${branch.id}`}
             className={cn("inline-flex items-center gap-1.5 text-sm font-medium transition-colors hover:gap-2.5", accent.text)}
           >
-            Enter this path <ArrowRight className="h-4 w-4" />
+            {status === "current"
+              ? "You're on this route"
+              : status === "unlived"
+                ? "Peek at this future"
+                : "Enter this path"}{" "}
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </Card>

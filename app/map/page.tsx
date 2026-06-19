@@ -20,6 +20,7 @@ export default function MapPage() {
   const hydrated = useHydrated();
   useEnsureSimulation();
   const simulation = useForkedStore((s) => s.simulation);
+  const enteredBranchId = useForkedStore((s) => s.enteredBranchId);
 
   if (!hydrated || !simulation) {
     return (
@@ -90,6 +91,9 @@ export default function MapPage() {
               branch={b}
               index={i}
               bottleneck={dna.branchBottlenecks.find((x) => x.branchId === b.id)}
+              status={
+                enteredBranchId ? (b.id === enteredBranchId ? "current" : "unlived") : "open"
+              }
             />
           ))}
         </div>

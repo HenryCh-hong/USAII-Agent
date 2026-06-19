@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -50,6 +51,13 @@ export default function BranchPage({ params }: { params: { id: string } }) {
   useEnsureSimulation();
   const simulation = useForkedStore((s) => s.simulation);
   const branch = useForkedStore((s) => s.getBranch(id));
+  const setEnteredBranch = useForkedStore((s) => s.setEnteredBranch);
+
+  // Opening a branch = "entering" that route (powers the current/unlived markers
+  // on /map and /brief). UI state only.
+  useEffect(() => {
+    if (branch) setEnteredBranch(branch.id);
+  }, [branch, setEnteredBranch]);
 
   if (!hydrated || !simulation) {
     return (
@@ -96,6 +104,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
     (x) => x.branchId === branch.id,
   );
   const unlived = buildUnlivedFuture(branch);
+  const otherBranches = simulation.branches.filter((b) => b.id !== branch.id);
 
   return (
     <main className="min-h-screen pb-24">
@@ -443,6 +452,44 @@ export default function BranchPage({ params }: { params: { id: string } }) {
           />
         </div>
       </Section>
+
+      {/* Other futures still on the map — the routes you didn't enter */}
+      {otherBranches.length > 0 && (
+        <Section className="pt-14">
+          <SectionTitle
+            eyebrow="Other futures still on the map"
+            title="The routes you didn't enter — still explorable"
+            subtitle="You're in one route; the others stay open. Peek at what each could teach you — opportunity cost, not regret."
+          />
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {otherBranches.map((ob) => {
+              const oi = simulation.branches.findIndex((x) => x.id === ob.id);
+              const oAccent = accentClasses(accentForBranch(ob.id, oi));
+              const ou = buildUnlivedFuture(ob);
+              return (
+                <Card key={ob.id} hover className={cn("overflow-hidden", oAccent.glow)}>
+                  <CardBody className="space-y-2.5">
+                    <div className={cn("text-sm font-semibold", oAccent.text)}>{ob.track}</div>
+                    <div className="text-sm font-medium text-white">{ob.title}</div>
+                    <p className="text-xs leading-relaxed text-mute">
+                      <span className="text-soft">Teaches:</span> {ou.teaches}
+                    </p>
+                    <Link
+                      href={`/branch/${ob.id}`}
+                      className={cn(
+                        "inline-flex items-center gap-1.5 text-sm font-medium transition-colors hover:gap-2.5",
+                        oAccent.text,
+                      )}
+                    >
+                      Peek at this future <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </CardBody>
+                </Card>
+              );
+            })}
+          </div>
+        </Section>
+      )}
 
       {/* Responsible AI + nav */}
       <Section className="pt-14">

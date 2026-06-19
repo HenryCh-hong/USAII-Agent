@@ -27,12 +27,16 @@ interface ForkedState {
   chats: Record<string, ChatMessage[]>;
   /** "mock" until a live model has produced a result this session. */
   lastSource: "mock" | "live" | null;
+  /** The route the user has "entered" (last branch opened) — UI state powering the
+   * selected-route / unlived-routes loop. Not a schema or DB change. */
+  enteredBranchId: string | null;
 
   setContext: (c: UserContext) => void;
   setQuestions: (q: ClarifyingQuestion[]) => void;
   answerQuestion: (id: string, answer: string) => void;
   setSimulation: (s: SimulationResult) => void;
   setBrief: (b: DecisionBrief) => void;
+  setEnteredBranch: (id: string) => void;
   appendChat: (branchId: string, msg: ChatMessage) => void;
   resetChat: (branchId: string) => void;
   getBranch: (id: string) => FutureBranch | undefined;
@@ -53,6 +57,7 @@ export const useForkedStore = create<ForkedState>()(
       brief: null,
       chats: {},
       lastSource: null,
+      enteredBranchId: null,
 
       setContext: (context) => set({ context }),
       setQuestions: (questions) => set({ questions }),
@@ -68,6 +73,7 @@ export const useForkedStore = create<ForkedState>()(
           lastSource: simulation.mocked ? "mock" : "live",
         }),
       setBrief: (brief) => set({ brief }),
+      setEnteredBranch: (enteredBranchId) => set({ enteredBranchId }),
       appendChat: (branchId, msg) =>
         set((s) => ({
           chats: {
@@ -84,6 +90,9 @@ export const useForkedStore = create<ForkedState>()(
           questions,
           simulation,
           lastSource: simulation.mocked ? "mock" : "live",
+          // NOTE: do not reset enteredBranchId here — useEnsureSimulation may
+          // re-seed on a fresh /map or /brief load and would otherwise wipe the
+          // entered route. It is cleared only on reset() (Restart).
         }),
       reset: () =>
         set({
@@ -93,6 +102,7 @@ export const useForkedStore = create<ForkedState>()(
           brief: null,
           chats: {},
           lastSource: null,
+          enteredBranchId: null,
         }),
     }),
     {
@@ -107,6 +117,7 @@ export const useForkedStore = create<ForkedState>()(
         brief: s.brief,
         chats: s.chats,
         lastSource: s.lastSource,
+        enteredBranchId: s.enteredBranchId,
       }),
     },
   ),
