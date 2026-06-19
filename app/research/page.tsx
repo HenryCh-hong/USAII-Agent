@@ -71,8 +71,8 @@ export default function ResearchPage() {
       <Section className="pt-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionTitle
-            eyebrow="Explore · the evidence behind your futures"
-            title="Explore the evidence behind your futures"
+            eyebrow="Evidence Trail"
+            title="The evidence behind your futures"
             subtitle={simulation.context.decision}
           />
           <Badge tone={dossier && !dossier.mocked ? "brand" : "neutral"}>
@@ -99,6 +99,19 @@ export default function ResearchPage() {
           </div>
         ) : (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+            <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {[
+                { k: "Searched", v: dossier.generatedQueries.length },
+                { k: "Trusted", v: dossier.sourcesUsed.length },
+                { k: "Set aside", v: dossier.sourcesRejected.length },
+                { k: "Open questions", v: dossier.limitations.length },
+              ].map((s) => (
+                <div key={s.k} className="rounded-xl border border-line/60 bg-panel/40 px-4 py-3 text-center sm:text-left">
+                  <div className="text-2xl font-semibold text-white">{s.v}</div>
+                  <div className="mono-label mt-0.5">{s.k}</div>
+                </div>
+              ))}
+            </div>
             <ResearchConsole dossier={dossier} />
           </motion.div>
         )}

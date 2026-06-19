@@ -232,7 +232,7 @@ export default function BriefPage() {
         <SectionTitle
           eyebrow="Decision Delta"
           title="From uncertainty to action"
-          subtitle="What changed by running this decision through Forked Futures. Every figure on the right is a real count of what the system produced — not a claim about your outcome."
+          subtitle="What changed by running this decision through Forked Futures — real counts, not outcome claims."
         />
         <div className="mt-6">
           <DecisionDelta context={simulation.context} branches={branches} />
@@ -244,7 +244,7 @@ export default function BriefPage() {
         <SectionTitle
           eyebrow="Trajectory Atlas"
           title="Reference futures your decision rhymes with"
-          subtitle="Curated role trajectories that overlap with your anchors — analogies to learn from, never predictions, and never a match to a real person."
+          subtitle="Curated role trajectories that rhyme with your anchors — analogies, never predictions or real people."
         />
         <div className="mt-6">
           <TrajectoryAtlas context={simulation.context} />
@@ -256,7 +256,7 @@ export default function BriefPage() {
         <SectionTitle
           eyebrow="Claim Ledger"
           title="Every claim, traceable"
-          subtitle="How to trust this: each key claim mapped to its support, reliability, and what it can't tell us — source-supported vs AI-inferred, made explicit."
+          subtitle="Each key claim mapped to its support, reliability, and limits — source-supported vs AI-inferred."
         />
         <div className="mt-6">
           <ClaimLedger claims={buildClaimLedger(simulation.context, branches)} compact />

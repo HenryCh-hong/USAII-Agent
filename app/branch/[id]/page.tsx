@@ -194,7 +194,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
           <SectionTitle
             eyebrow="Agent review"
             title="How the system reasoned about this branch"
-            subtitle="Forked Futures runs a multi-agent debate, not a single answer. Here is a judge-safe summary of what each agent contributed — never raw chain-of-thought."
+            subtitle="A judge-safe summary of the multi-role debate — not raw chain-of-thought."
           />
           <div className="mt-6">
             <AgentReview review={branch.agentReview} />
@@ -207,7 +207,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         <SectionTitle
           eyebrow="12-month trajectory"
           title="How this path could unfold"
-          subtitle="A plausible month-by-month arc. Each step carries its own uncertainty, surfaced rather than smoothed over."
+          subtitle="A plausible month-by-month arc, with each step's uncertainty shown."
         />
         <div className="mt-6">
           <Trajectory items={branch.twelveMonthTrajectory} accentKey={accentKey} />
@@ -219,7 +219,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         <SectionTitle
           eyebrow="The fine print"
           title="What this path could quietly cost"
-          subtitle="The tradeoffs and foregone options that are easy to miss when a path looks attractive on the surface."
+          subtitle="Tradeoffs and foregone options that are easy to miss."
         />
         <div className="mt-6 grid gap-5 lg:grid-cols-2">
           <Card>
@@ -250,7 +250,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         <SectionTitle
           eyebrow="Assumption ledger"
           title="Every claim, tagged by where it came from"
-          subtitle="The honest core of this branch: what we assume, how confident we are, and exactly how you could test each one."
+          subtitle="What we assume, how confident we are, and how to test each."
         />
         <div className="mt-6">
           <AssumptionLedger assumptions={branch.assumptions} />
@@ -262,7 +262,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         <SectionTitle
           eyebrow="Assumption stress test"
           title="What if an assumption fails?"
-          subtitle="Each assumption stressed qualitatively — how much the branch leans on it, and the cheapest way to firm it up before committing. Sensitivity reflects provenance and confidence, not a probability."
+          subtitle="How hard each assumption leans, and the cheapest way to firm it up. Qualitative, not a probability."
         />
         <div className="mt-6">
           <AssumptionStressTest assumptions={branch.assumptions} />
@@ -274,7 +274,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         <SectionTitle
           eyebrow="Evidence console"
           title="What this scenario is built on"
-          subtitle="The curated and official-source evidence behind the branch, with provenance, plus the aggregate base-rate patterns that frame it — kept at their true coverage level."
+          subtitle="Curated and official-source evidence with provenance, kept at its true coverage level."
         />
         <div className="mt-6">
           <EvidenceCards
@@ -290,7 +290,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
           <SectionTitle
             eyebrow="Evidence graph"
             title="How the evidence connects"
-            subtitle="A local node-and-edge view of why this branch exists: how sources, skills, constraints, risks and frameworks link to the path and the experiment that can test it."
+            subtitle="How sources, skills, risks and frameworks connect to this path."
           />
           <div className="mt-6">
             <EvidenceGraph snapshot={branch.evidenceGraphSnapshot} />
@@ -305,7 +305,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         <SectionTitle
           eyebrow="Premortem"
           title="If this path failed, why might that be?"
-          subtitle="Reasoning backward from an imagined failure — and the kill criteria worth deciding on in advance."
+          subtitle="Reasoning back from an imagined failure, plus kill criteria to set in advance."
         />
         <div className="mt-6">
           <Premortem premortem={branch.premortem} killCriteria={branch.killCriteria} />
@@ -317,7 +317,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         <SectionTitle
           eyebrow="Regret radar"
           title="The regrets this path could surface"
-          subtitle="Different paths risk different kinds of regret. These are surfaced for you to weigh — not scored for you."
+          subtitle="The kinds of regret this path risks — surfaced for you to weigh."
         />
         <div className="mt-6">
           <RegretRadar items={branch.regretRadar} />
@@ -329,7 +329,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         <SectionTitle
           eyebrow="Calibration cockpit"
           title="How confident is this scenario?"
-          subtitle="A qualitative readout — honest levels rather than false precision, with no individual-level prediction."
+          subtitle="Qualitative levels, not false precision — and no individual prediction."
         />
         <div className="mt-6">
           <CalibrationPanel calibration={branch.calibration} />
@@ -348,7 +348,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
           <SectionTitle
             eyebrow="Evaluation"
             title="The system's own self-checks"
-            subtitle="Qualitative signals on how grounded, hedged, and provenance-backed this branch is — shown, not hidden."
+            subtitle="How grounded, hedged, and provenance-backed this branch is."
           />
           <div className="mt-6">
             <EvaluationSignals signals={branch.evaluationSignals} />
@@ -362,7 +362,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
           <SectionTitle
             eyebrow="Reasoning audit trail"
             title="The reasoning, made auditable"
-            subtitle="A structured, judge-safe trail shown in place of raw chain-of-thought — what this rests on, what's uncertain, and what would change the call."
+            subtitle="What this rests on, what's uncertain, and what would change the call — not raw chain-of-thought."
           />
           <div className="mt-6">
             <ReasoningAuditTrail trail={branch.reasoningAuditTrail} />
@@ -376,7 +376,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
           <SectionTitle
             eyebrow="Safety layer"
             title="What the system refused to overclaim"
-            subtitle="The deterministic and over-confident language the Safety agent rewrote before this branch reached you."
+            subtitle="Over-confident language the safety layer rewrote before you saw it."
           />
           <div className="mt-6">
             <RejectedOverclaims items={branch.rejectedOverclaims} />
@@ -391,7 +391,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         <SectionTitle
           eyebrow="7-day experiment"
           title="Replace an assumption with real signal"
-          subtitle="A low-cost week of action to gather evidence before any commitment — with the context that makes it worth running."
+          subtitle="A low-cost week to gather evidence before you commit."
         />
         <div className="mt-6">
           <ExperimentPlan

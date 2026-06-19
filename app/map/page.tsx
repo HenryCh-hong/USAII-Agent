@@ -77,7 +77,7 @@ export default function MapPage() {
         <SectionTitle
           eyebrow="Route select"
           title="Choose a route to enter"
-          subtitle="Each path opens a full chapter — the 9-role agent debate, evidence graph, claim ledger, assumption stress test, and reasoning audit trail. The map is the overview; the reasoning lives inside a route."
+          subtitle="The map is the overview — pick a route to enter its full chapter of reasoning and evidence."
         />
       </Section>
 
