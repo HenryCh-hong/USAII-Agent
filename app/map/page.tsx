@@ -68,7 +68,7 @@ export default function MapPage() {
       {/* The branching visualization */}
       <Section className="pt-12">
         <div className="rounded-3xl border border-line/60 bg-panel/40 p-6 backdrop-blur-xl sm:p-10">
-          <BranchMap branches={branches} />
+          <BranchMap branches={branches} explorerSize={34} />
         </div>
       </Section>
 

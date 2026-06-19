@@ -31,6 +31,7 @@ import { CalibrationPanel } from "@/components/branch/CalibrationPanel";
 import { MockTemplateNotice } from "@/components/shared/MockTemplateNotice";
 import { JumpNav } from "@/components/shared/JumpNav";
 import { FutureRunTimeline } from "@/components/shared/FutureRunTimeline";
+import { PixelTraveler } from "@/components/shared/PixelTraveler";
 import { BranchBottleneckCard } from "@/components/shared/DecisionDna";
 import { buildDecisionDna } from "@/lib/decision/decisionDna";
 import { AgentReview } from "@/components/branch/AgentReview";
@@ -122,6 +123,12 @@ export default function BranchPage({ params }: { params: { id: string } }) {
           <Card glow className={cn("overflow-hidden", accent.glow)}>
             <div className={cn("h-1 w-full bg-gradient-to-r", accent.from, "to-transparent")} />
             <CardBody className="space-y-5 p-6 sm:p-8">
+              <div className="flex items-center gap-2.5">
+                <PixelTraveler size={24} accent={accentKey} />
+                <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-soft">
+                  Route entered · future script
+                </span>
+              </div>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <Badge tone={accentKey}>{branch.track}</Badge>
                 <span className="text-[11px] uppercase tracking-wider text-mute">

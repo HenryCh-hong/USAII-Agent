@@ -190,7 +190,7 @@ export default function LandingPage() {
                 </Badge>
                 <span className="text-[11px] text-mute">Alex · quant vs. startup vs. research</span>
               </div>
-              <BranchMap branches={DEMO_BRANCHES} />
+              <BranchMap branches={DEMO_BRANCHES} explorerSize={22} />
             </div>
           </motion.div>
         </div>

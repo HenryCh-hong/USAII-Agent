@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import type { FutureBranch, Level } from "@/lib/types";
 import { accentClasses, accentForBranch, cn, levelClasses } from "@/lib/utils";
+import { PixelTraveler } from "@/components/shared/PixelTraveler";
 
 /**
  * The Future Map hero: a single decision origin forking into three glowing
@@ -25,7 +26,14 @@ function bezierPoint(t: number, tx: number): { x: number; y: number } {
 
 const MILESTONES = [0.4, 0.66, 0.9];
 
-export function BranchMap({ branches }: { branches: FutureBranch[] }) {
+export function BranchMap({
+  branches,
+  explorerSize = 0,
+}: {
+  branches: FutureBranch[];
+  /** When > 0, a pixel explorer "stands" at the decision fork (route-select cue). */
+  explorerSize?: number;
+}) {
   // Endpoint x-centers (as % of width) aligned to the SVG path targets below.
   const cols = [16.5, 50, 83.5];
   const targets = [165, 500, 835];
@@ -94,10 +102,13 @@ export function BranchMap({ branches }: { branches: FutureBranch[] }) {
           </circle>
         </svg>
 
-        {/* Origin label */}
-        <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+        {/* Origin: a pixel explorer standing at the decision fork + the origin label */}
+        <div className="absolute left-1/2 top-0 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
+          {explorerSize > 0 && (
+            <PixelTraveler size={explorerSize} className="shrink-0" />
+          )}
           <div className="rounded-full border border-brand/40 bg-void/80 px-3 py-1 text-[11px] font-medium text-brand-glow shadow-glow-sm backdrop-blur">
-            Your decision today
+            {explorerSize > 0 ? "You're here · choose a route" : "Your decision today"}
           </div>
         </div>
 

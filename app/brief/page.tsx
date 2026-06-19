@@ -8,7 +8,6 @@ import {
   ArrowLeft,
   Sparkles,
   Compass,
-  Flag,
   Radar,
   HelpCircle,
   FlaskConical,
@@ -31,6 +30,7 @@ import { DecisionDnaPanel, BranchBottlenecks } from "@/components/shared/Decisio
 import { buildDecisionDna } from "@/lib/decision/decisionDna";
 import { FutureRunTimeline } from "@/components/shared/FutureRunTimeline";
 import { FutureRunSummary } from "@/components/shared/FutureRunSummary";
+import { PixelTraveler } from "@/components/shared/PixelTraveler";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -158,24 +158,29 @@ export default function BriefPage() {
         </div>
       </Section>
 
-      {/* Future Run Complete — above-the-fold payoff (sync data, never flashes empty). */}
+      {/* Future Run Complete — the explorer's arrival + the next quest payoff
+          (sync data from the run, so it never flashes empty). */}
       <Section className="pt-6">
-        <Card className="overflow-hidden border-brand/25 bg-brand/[0.05]">
-          <div className="grid gap-4 p-5 sm:p-6 md:grid-cols-[1.3fr_1fr]">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-glow/80">
-                <Flag className="h-3.5 w-3.5" /> Future Run Complete
+        <Card glow className="overflow-hidden border-brand/30 bg-brand/[0.05]">
+          <div className="h-1 w-full bg-gradient-to-r from-brand/60 to-transparent" />
+          <div className="grid gap-5 p-5 sm:p-6 md:grid-cols-[1.2fr_1fr] md:items-center">
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-2.5">
+                <PixelTraveler size={26} />
+                <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-glow/90">
+                  Future Run Complete · you&apos;ve explored all three scripts
+                </span>
               </div>
               <p className="text-base leading-relaxed text-white sm:text-lg">{dna.diagnosis}</p>
               <p className="text-xs leading-relaxed text-mute">
                 A hypothesis to test — not a verdict. The final call stays yours.
               </p>
             </div>
-            <div className="space-y-1.5 rounded-xl border border-line/60 bg-white/[0.02] p-4">
-              <div className="mono-label flex items-center gap-1.5">
+            <div className="space-y-1.5 rounded-xl border border-brand/40 bg-brand/[0.07] p-4 shadow-glow-sm">
+              <div className="mono-label flex items-center gap-1.5 text-brand-glow">
                 <FlaskConical className="h-3 w-3" /> Your next quest
               </div>
-              <p className="text-sm leading-relaxed text-soft/90">{nextQuest}</p>
+              <p className="text-sm font-medium leading-relaxed text-white">{nextQuest}</p>
             </div>
           </div>
         </Card>
