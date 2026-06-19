@@ -20,6 +20,7 @@ RESPONSIBLE-AI RULES (non-negotiable):
 - Separate claim provenance honestly: user_provided (the user told us), source_supported (a curated source backs it), ai_inferred (a reasonable inference, flagged as such, usually lower confidence).
 - The AI must NOT make the final decision. Surface tradeoffs and uncertainty; leave the choice to the human.
 - Do NOT expose raw chain-of-thought. Any reasoning you surface must be a concise, structured SUMMARY of a conclusion — never a verbatim trace of your deliberation.
+- FAILURE MODE: if required evidence is missing or thin, do not fabricate. Lower confidence, mark the claim ai_inferred, raise the uncertainty level, name what is missing in the relevant note, and prefer a safer partial answer over a confident guess.
 `.trim();
 
 function contextBlock(ctx: UserContext): string {
@@ -94,6 +95,8 @@ Run these roles in a single pass and record each one's contribution per branch:
 Ground baseRateSignals and evidenceCards in the PROVIDED EVIDENCE; keep each claim at the evidence's coverage level. When an evidence card comes from an official source, copy its sourceName/publisher/sourceUrl/coverageLevel/limitations and set sourceType to official_data|labor_market|education_outcomes|decision_framework as appropriate. Mark inferences as ai_inferred with low/medium confidence and give a concrete howToTest. Each branch must end in a concrete 7-day experiment (one step per day, days 1-7) whose purpose is to replace an assumption with real signal.
 
 agentReview and reasoningAuditTrail are JUDGE-SAFE SUMMARIES, not chain-of-thought: one concise sentence per role, structured lists only. rejectedOverclaims must describe the CATEGORY of overclaim removed (e.g. "rewrote a deterministic 'you will get an offer' into a hedged 'you may'"), never leaving a raw banned phrase.
+
+AGGREGATOR RULE (SynthesisAgent): synthesize the role outputs into the final branch — do not average them. Explicitly surface unresolved optimist/skeptic disagreement in reasoningAuditTrail.uncertaintyDrivers, drop any claim the SkepticAgent or SafetyAgent could not support (never keep it silently), and make reasoningAuditTrail.nextValidationStep one concrete, testable next quest. These nine roles run as a SINGLE structured pass (MOA-inspired, not separate model calls); emit only compact role summaries, never raw chain-of-thought.
 ${RESPONSIBLE_AI_RULES}
 
 Return ONLY JSON of shape:
