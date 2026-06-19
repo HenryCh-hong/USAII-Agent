@@ -299,3 +299,13 @@ export const briefResponseSchema = z.object({
 export const branchesOnlySchema = z.object({
   branches: z.array(futureBranchSchema).length(3),
 });
+
+/* Stage-2 additive: AI "suggest my fork" from a messy free-text situation.
+ * Standalone — does NOT touch UserContext / branch schemas or any existing route. */
+export const forkSuggestionSchema = z.object({
+  decision: z.string(),
+  options: z.array(z.string()).min(2).max(3),
+  valueConflict: z.string(),
+  question: z.string(),
+});
+export type ForkSuggestion = z.infer<typeof forkSuggestionSchema>;

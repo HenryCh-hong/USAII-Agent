@@ -19,6 +19,8 @@ import {
   branchesOnlySchema,
   decisionBriefSchema,
   clarifyingQuestionSchema,
+  forkSuggestionSchema,
+  type ForkSuggestion,
 } from "../schemas";
 import { z } from "zod";
 import { DOMAIN_HINTS, retrieve, type KnowledgeItem } from "../knowledge";
@@ -31,15 +33,18 @@ import {
 import { generateJSON, generateText, hasApiKey } from "./client";
 import {
   BRIEF_SYSTEM,
+  FORK_SUGGEST_SYSTEM,
   QUESTIONS_SYSTEM,
   SIMULATE_SYSTEM,
   buildBriefUser,
   buildChatSystem,
   buildQuestionsUser,
   buildSimulateUser,
+  buildSuggestForkUser,
 } from "./prompts";
 import {
   buildMockBrief,
+  buildMockFork,
   buildMockQuestions,
   buildMockSimulation,
   mockChatReply,
@@ -270,5 +275,30 @@ export async function runChat(
     return { reply: scrubString(reply.trim()), mocked: false };
   } catch {
     return { reply: mockChatReply(branch, message, history), mocked: true };
+  }
+}
+
+/* ---------------------------- Suggest a fork ------------------------------ */
+
+/**
+ * Stage 2: from a messy free-text situation, suggest ONE plausible decision fork
+ * (decision + 2-3 routes + value conflict + one clarifying question). Optional
+ * live path; mock fallback with no key. Additive — never touches the other
+ * pipeline functions, and the result is just a starting point the user edits.
+ */
+export async function runSuggestFork(
+  situation: string,
+): Promise<{ fork: ForkSuggestion; mocked: boolean }> {
+  if (!hasApiKey()) return { fork: buildMockFork(situation), mocked: true };
+  try {
+    const fork = await generateJSON(
+      forkSuggestionSchema,
+      FORK_SUGGEST_SYSTEM,
+      buildSuggestForkUser(situation),
+      { maxTokens: 800, temperature: 0.6 },
+    );
+    return { fork: safetyScrub(fork), mocked: false };
+  } catch {
+    return { fork: buildMockFork(situation), mocked: true };
   }
 }

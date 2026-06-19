@@ -111,6 +111,9 @@ export function IntakeForm() {
   const [draft, setDraft] = useState<DraftState>(EMPTY_DRAFT);
   const [submitting, setSubmitting] = useState(false);
   const [loadedDemo, setLoadedDemo] = useState(false);
+  const [situation, setSituation] = useState("");
+  const [suggesting, setSuggesting] = useState(false);
+  const [forkNote, setForkNote] = useState<{ valueConflict: string; question: string } | null>(null);
 
   const update = <K extends keyof DraftState>(key: K, value: DraftState[K]) =>
     setDraft((d) => ({ ...d, [key]: value }));
@@ -136,6 +139,36 @@ export function IntakeForm() {
 
   const applyTemplate = (t: { decision: string; options: string[] }) =>
     setDraft((d) => ({ ...d, decision: t.decision, options: [...t.options] }));
+
+  // Stage 2: ask the model (or mock) for one plausible fork from a messy
+  // situation, then prefill the editable decision + routes. Never decides for them.
+  const suggestFork = async () => {
+    if (!situation.trim() || suggesting) return;
+    setSuggesting(true);
+    try {
+      const res = await fetch("/api/suggest-fork", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ situation: situation.trim() }),
+      });
+      const data: { fork?: { decision?: string; options?: string[]; valueConflict?: string; question?: string } } =
+        await res.json();
+      const fork = data?.fork;
+      if (fork) {
+        setDraft((d) => ({
+          ...d,
+          decision: fork.decision ?? d.decision,
+          options:
+            Array.isArray(fork.options) && fork.options.length >= 2 ? [...fork.options] : d.options,
+        }));
+        setForkNote({ valueConflict: fork.valueConflict ?? "", question: fork.question ?? "" });
+      }
+    } catch {
+      /* mock fallback is server-side; nothing to do client-side */
+    } finally {
+      setSuggesting(false);
+    }
+  };
 
   const loadDemo = () => {
     setDraft({
@@ -268,6 +301,58 @@ export function IntakeForm() {
             </button>
           ))}
         </div>
+
+        <div className="flex items-center gap-3 pt-1 text-xs text-mute">
+          <span className="h-px flex-1 bg-line/60" />
+          or describe your situation
+          <span className="h-px flex-1 bg-line/60" />
+        </div>
+        <Textarea
+          value={situation}
+          onChange={setSituation}
+          placeholder="Messy is fine — e.g. 'I'm a junior, unsure whether to keep interviewing, build my side project, or try research next year…'"
+          rows={3}
+        />
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={suggestFork}
+            disabled={!situation.trim() || suggesting}
+          >
+            {suggesting ? (
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                Finding a fork…
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-3.5 w-3.5" />
+                Suggest my fork
+              </>
+            )}
+          </Button>
+          <span className="text-xs text-mute">One possible fork — you can edit it below.</span>
+        </div>
+        {forkNote && (
+          <div className="rounded-xl border border-brand/25 bg-brand/[0.05] p-3.5 text-sm leading-relaxed text-soft/90">
+            <div className="mono-label text-brand-glow/80">One possible fork hiding inside your situation</div>
+            {forkNote.valueConflict && (
+              <p className="mt-1.5">
+                <span className="text-white">Value conflict:</span> {forkNote.valueConflict}
+              </p>
+            )}
+            {forkNote.question && (
+              <p className="mt-1">
+                <span className="text-white">Worth clarifying:</span> {forkNote.question}
+              </p>
+            )}
+            <p className="mt-1.5 text-xs text-mute">
+              Filled the decision + routes below — edit them before running.
+            </p>
+          </div>
+        )}
       </FormGroup>
 
       {/* 1 — The decision */}

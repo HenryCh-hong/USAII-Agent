@@ -17,6 +17,7 @@ import type {
 import { DEMO_BRANCHES } from "./branches";
 import { DEMO_BRIEF } from "./brief";
 import { DEMO_CONTEXT, DEMO_QUESTIONS } from "./demoContext";
+import type { ForkSuggestion } from "../schemas";
 
 export { DEMO_BRANCHES, DEMO_BRIEF, DEMO_CONTEXT, DEMO_QUESTIONS };
 
@@ -27,6 +28,26 @@ export const DEMO_SIMULATION: SimulationResult = {
   generatedNote:
     "Demo simulation for the Alex persona — built from curated evidence and explicit assumptions. These are plausible scenarios, not predictions.",
 };
+
+/**
+ * Stage-2 mock: a plausible default fork for the no-key path. It does not parse
+ * the situation deeply (that is the live model's job) — it returns a sensible,
+ * honest starting fork the user then edits. One possible fork, never the answer.
+ */
+export function buildMockFork(_situation: string): ForkSuggestion {
+  return {
+    decision: "Given where you are now, what should the next year actually produce for you?",
+    options: [
+      "Build visible signal (recruiting / credentials)",
+      "Self-directed building (projects / a startup)",
+      "Go deeper (research / grad school)",
+    ],
+    valueConflict:
+      "Short-term security and a credible signal vs. long-term optionality and depth.",
+    question:
+      "Over the next year, what matters more to you: a credible external signal, or the freedom to explore what energizes you?",
+  };
+}
 
 /** Heuristic: does this context look like our seeded demo persona? */
 function isDemoLike(ctx: UserContext): boolean {
