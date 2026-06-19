@@ -16,6 +16,7 @@ import {
   Plus,
   X,
   Compass,
+  GitFork,
   User,
   ShieldAlert,
   Clock,
@@ -60,6 +61,36 @@ const EMPTY_DRAFT: DraftState = {
   urgency: "exploring",
 };
 
+/** Common forks — prefill the decision + routes, then the user edits freely.
+ * (Stage 2 adds an AI "suggest my fork" from a messy free-text situation.) */
+const FORK_TEMPLATES: { label: string; decision: string; options: string[] }[] = [
+  {
+    label: "Signal · Building · Depth",
+    decision: "Should I focus the next year on building career signal, self-directed building, or academic depth?",
+    options: ["Career signal (recruiting / credentials)", "Self-directed building (projects / startup)", "Academic depth (research / grad school)"],
+  },
+  {
+    label: "Stable · Risky · Exploratory",
+    decision: "Should I take the stable path, the risky path, or an exploratory path?",
+    options: ["Stable path", "Risky path", "Exploratory path"],
+  },
+  {
+    label: "Grad school · Industry · Startup",
+    decision: "Should I head to graduate school, into industry, or start a startup?",
+    options: ["Graduate school", "Industry", "Startup"],
+  },
+  {
+    label: "Prestige · Fit · Learning",
+    decision: "Should I prioritize the prestige opportunity, personal fit, or long-term learning?",
+    options: ["Prestige opportunity", "Personal fit", "Long-term learning"],
+  },
+  {
+    label: "Stay · Pivot · Pause",
+    decision: "Should I stay the course, pivot, or pause?",
+    options: ["Stay the course", "Pivot", "Pause"],
+  },
+];
+
 /** Each non-empty, trimmed line becomes a list item. */
 function linesToItems(text: string): string[] {
   return text
@@ -102,6 +133,9 @@ export function IntakeForm() {
           ? d.options
           : d.options.filter((_, i) => i !== index),
     }));
+
+  const applyTemplate = (t: { decision: string; options: string[] }) =>
+    setDraft((d) => ({ ...d, decision: t.decision, options: [...t.options] }));
 
   const loadDemo = () => {
     setDraft({
@@ -210,6 +244,31 @@ export function IntakeForm() {
           </div>
         </Card>
       </motion.div>
+
+      {/* Guided fork — prefill a common fork, then edit everything below. */}
+      <FormGroup
+        icon={GitFork}
+        eyebrow="Start here"
+        title="Pick a common fork — or write your own below"
+        delay={0.04}
+      >
+        <p className="text-sm leading-relaxed text-mute">
+          Not sure how to frame it? Start from a common fork — it fills in the
+          decision and routes below, and you can edit everything.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {FORK_TEMPLATES.map((t) => (
+            <button
+              key={t.label}
+              type="button"
+              onClick={() => applyTemplate(t)}
+              className="rounded-full border border-line/70 bg-white/[0.03] px-3.5 py-1.5 text-sm text-soft transition-colors hover:border-brand/50 hover:text-white"
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </FormGroup>
 
       {/* 1 — The decision */}
       <FormGroup

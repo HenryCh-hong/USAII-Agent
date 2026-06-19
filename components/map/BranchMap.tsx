@@ -95,8 +95,8 @@ export function BranchMap({
             );
           })}
           {/* origin pulse */}
-          <circle cx="500" cy="26" r="6" fill="#7c8cff" filter="url(#glow)" />
-          <circle cx="500" cy="26" r="12" fill="none" stroke="#7c8cff" strokeWidth="1" opacity="0.4">
+          <circle cx="500" cy="26" r="6" fill="#38e0d0" filter="url(#glow)" />
+          <circle cx="500" cy="26" r="12" fill="none" stroke="#38e0d0" strokeWidth="1" opacity="0.4">
             <animate attributeName="r" values="8;16;8" dur="3s" repeatCount="indefinite" />
             <animate attributeName="opacity" values="0.5;0;0.5" dur="3s" repeatCount="indefinite" />
           </circle>

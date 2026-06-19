@@ -13,10 +13,10 @@ import { cn } from "@/lib/utils";
  */
 
 const ACCENT_HEX = {
-  brand: "#9aa6ff",
-  quant: "#5eead4",
-  startup: "#fca65a",
-  research: "#c084fc",
+  brand: "#6ff0e2",
+  quant: "#38e0d0",
+  startup: "#ff9b50",
+  research: "#7c93b8",
 } as const;
 
 export type TravelerAccent = keyof typeof ACCENT_HEX;

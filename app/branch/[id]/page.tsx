@@ -34,6 +34,7 @@ import { FutureRunTimeline } from "@/components/shared/FutureRunTimeline";
 import { PixelTraveler } from "@/components/shared/PixelTraveler";
 import { BranchBottleneckCard } from "@/components/shared/DecisionDna";
 import { buildDecisionDna } from "@/lib/decision/decisionDna";
+import { buildUnlivedFuture } from "@/lib/decision/unlivedFuture";
 import { AgentReview } from "@/components/branch/AgentReview";
 import { EvidenceGraph } from "@/components/branch/EvidenceGraph";
 import { ReasoningAuditTrail } from "@/components/branch/ReasoningAuditTrail";
@@ -94,6 +95,7 @@ export default function BranchPage({ params }: { params: { id: string } }) {
   const bottleneck = buildDecisionDna(simulation.context, simulation.branches).branchBottlenecks.find(
     (x) => x.branchId === branch.id,
   );
+  const unlived = buildUnlivedFuture(branch);
 
   return (
     <main className="min-h-screen pb-24">
@@ -329,6 +331,36 @@ export default function BranchPage({ params }: { params: { id: string } }) {
         />
         <div className="mt-6">
           <RegretRadar items={branch.regretRadar} />
+        </div>
+      </Section>
+
+      {/* Unlived future — opportunity cost of NOT entering this route */}
+      <Section className="pt-14">
+        <SectionTitle
+          eyebrow="Unlived future"
+          title="What this route teaches that the others won't"
+          subtitle="The opportunity cost of not entering — and a low-cost way to sample it later. What you might miss, not a regret prediction."
+        />
+        <div className="mt-6">
+          <Card>
+            <CardBody className="space-y-3.5">
+              <p className="text-sm leading-relaxed text-soft/90">
+                <span className="text-white">What you might miss:</span> {unlived.teaches}
+              </p>
+              <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-line/60 bg-white/[0.02] px-2.5 py-0.5 text-xs text-mute">
+                Reversibility · <span className="capitalize text-soft">{unlived.reversibility}</span>
+              </span>
+              {unlived.sampleTest && (
+                <div className="rounded-xl border border-line/60 bg-white/[0.02] p-3.5">
+                  <div className="mono-label">Sample it later · a low-cost taste</div>
+                  <p className="mt-1 text-sm leading-relaxed text-soft/90">{unlived.sampleTest}</p>
+                </div>
+              )}
+              <p className="text-xs leading-relaxed text-mute">
+                Opportunity cost, not regret — the choice stays yours.
+              </p>
+            </CardBody>
+          </Card>
         </div>
       </Section>
 

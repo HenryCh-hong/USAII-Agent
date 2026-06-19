@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, AlertTriangle, Swords, Target, FlaskConical } from "lucide-react";
 import type { FutureBranch } from "@/lib/types";
 import type { BranchBottleneck } from "@/lib/decision/decisionDna";
+import { buildUnlivedFuture } from "@/lib/decision/unlivedFuture";
 import { accentClasses, accentForBranch, cn, type BranchAccent } from "@/lib/utils";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -47,6 +48,7 @@ export function PathCard({
   const risk = truncate(branch.regretRadar[0]?.description ?? branch.hiddenTradeoffs[0] ?? "", 90);
   const crux = bottleneck?.bottleneck ?? branch.bottlenecks[0] ?? "";
   const nextQuest = bottleneck?.sevenDayTest ?? branch.sevenDayExperiment[0]?.action ?? "";
+  const mightMiss = truncate(buildUnlivedFuture(branch).teaches, 96);
 
   return (
     <motion.div
@@ -85,6 +87,12 @@ export function PathCard({
             </div>
             <p className="mt-1 text-sm leading-snug text-soft">{nextQuest}</p>
           </div>
+
+          {mightMiss && (
+            <p className="text-xs leading-relaxed text-mute">
+              <span className="text-soft">What you might miss:</span> {mightMiss}
+            </p>
+          )}
 
           <Link
             href={`/branch/${branch.id}`}

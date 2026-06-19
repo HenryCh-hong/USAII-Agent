@@ -28,6 +28,7 @@ import { ClaimLedger } from "@/components/research/ClaimLedger";
 import { buildClaimLedger } from "@/lib/research/claimLedger";
 import { DecisionDnaPanel, BranchBottlenecks } from "@/components/shared/DecisionDna";
 import { buildDecisionDna } from "@/lib/decision/decisionDna";
+import { buildUnlivedFuture } from "@/lib/decision/unlivedFuture";
 import { FutureRunTimeline } from "@/components/shared/FutureRunTimeline";
 import { FutureRunSummary } from "@/components/shared/FutureRunSummary";
 import { PixelTraveler } from "@/components/shared/PixelTraveler";
@@ -467,6 +468,37 @@ export default function BriefPage() {
 
       <Section className="pt-8">
         <ResponsibleAIBanner />
+      </Section>
+
+      {/* Futures you might still sample — unlived futures (low-cost tastes). */}
+      <Section className="pt-10">
+        <SectionTitle
+          eyebrow="Unlived futures"
+          title="Futures you might still sample"
+          subtitle="Even after you choose, these stay partly open — low-cost ways to keep an unlived future alive. Opportunity cost, not regret."
+        />
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {branches.map((b, i) => {
+            const u = buildUnlivedFuture(b);
+            const accent = accentClasses(accentForBranch(b.id, i));
+            return (
+              <Card key={b.id}>
+                <div className="space-y-2.5 p-5">
+                  <div className={cn("text-sm font-semibold", accent.text)}>{b.track}</div>
+                  <p className="text-xs leading-relaxed text-mute">
+                    <span className="text-soft">Might miss:</span> {u.teaches}
+                  </p>
+                  {u.sampleTest && (
+                    <div className="rounded-lg border border-line/60 bg-white/[0.02] p-2.5">
+                      <div className="mono-label">Sample it</div>
+                      <p className="mt-1 text-sm leading-snug text-soft/90">{u.sampleTest}</p>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            );
+          })}
+        </div>
       </Section>
 
       {/* Future run summary. */}
