@@ -154,8 +154,9 @@ export default function BranchPage({ params }: { params: { id: string } }) {
               </div>
 
               <p className="text-xs leading-relaxed text-mute/80">
-                This is a plausible scenario built from your context and explicit
-                assumptions — not a prediction or a recommendation.
+                This is an evidence-grounded future script built from your context
+                and explicit assumptions — a plausible trajectory, not a
+                deterministic prediction.
               </p>
             </CardBody>
           </Card>

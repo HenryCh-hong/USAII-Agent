@@ -11,10 +11,11 @@ Mode) is *optional depth* that backs up the loop — not separate products.
 
 ## Fast path (recommended)
 
-1. **Landing (0:00–0:10).** "Forked Futures is a decision-intelligence cockpit for
-   students facing a major fork. It does not predict your future and it does not
-   choose for you — it runs the decision through evidence, a multi-agent debate,
-   calibration and a safety layer." Click **See the Alex demo**.
+1. **Landing (0:00–0:10).** "Forked Futures uses an LLM to draft evidence-grounded
+   future scripts for a major decision — plausible trajectories from your context
+   and public knowledge, not deterministic predictions. It runs the decision through
+   evidence, a multi-agent debate, calibration and a safety layer." Click **See the
+   Alex demo**.
 
 2. **Future Map (0:10–0:25).** "Three futures as branching timelines, not a card
    list. Each node shows evidence strength, fit, constraint risk and uncertainty —

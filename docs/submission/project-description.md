@@ -10,7 +10,7 @@ Forked Futures is **not a chatbot wrapper and not a prediction engine.** It runs
 major life/career decision through a structured pipeline — evidence retrieval, a
 local evidence graph, scenario generation, an adversarial multi-agent debate,
 qualitative calibration, a safety review, and an auditable reasoning trail — and
-returns three plausible future branches the user can compare and stress-test.
+returns three evidence-grounded future scripts the user can compare and stress-test.
 
 For each branch it shows:
 

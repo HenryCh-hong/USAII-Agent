@@ -148,8 +148,8 @@ export function BranchMap({ branches }: { branches: FutureBranch[] }) {
       </div>
 
       <p className="mt-3 text-center text-[11px] text-mute/80">
-        Branches are plausible rehearsals, not predictions. E·F·C·U = evidence ·
-        fit · constraint-risk · uncertainty.
+        Branches are evidence-grounded future scripts — plausible, not deterministic
+        predictions. E·F·C·U = evidence · fit · constraint-risk · uncertainty.
       </p>
     </div>
   );

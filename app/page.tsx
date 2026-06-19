@@ -126,7 +126,7 @@ export default function LandingPage() {
             <Eyebrow>A playable future simulator</Eyebrow>
 
             <p className="mono-label">
-              Not a prediction · not a recommendation · a structured future rehearsal
+              Evidence-grounded future scripts · plausible, not deterministic · you decide
             </p>
 
             <h1 className="text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -139,8 +139,10 @@ export default function LandingPage() {
 
             <p className="max-w-xl text-base leading-relaxed text-soft/90 sm:text-lg">
               For students and early-career decisions — like quant recruiting vs.
-              a startup vs. grad school — Forked Futures turns overwhelming choices
-              into simulated paths, visible tradeoffs, and first-step experiments.
+              a startup vs. grad school — Forked Futures turns one decision into
+              three evidence-grounded future scripts, drawn from your context plus
+              public knowledge, with the tradeoffs, uncertainty, and one first test
+              laid out.
             </p>
 
             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm font-medium text-soft">
@@ -167,8 +169,9 @@ export default function LandingPage() {
             </p>
 
             <p className="text-xs leading-relaxed text-mute">
-              These are plausible scenarios, not predictions. The system can help
-              you understand a decision — it never makes it for you.
+              These are evidence-grounded future scripts — plausible trajectories,
+              not deterministic predictions. AI drafts the scripts; you choose what
+              to test.
             </p>
           </motion.div>
 
@@ -293,9 +296,9 @@ export default function LandingPage() {
               It does not predict your future. It does not choose for you.
             </h3>
             <p className="max-w-2xl text-sm leading-relaxed text-soft/80">
-              Forked Futures opens the futures you&apos;re choosing between so you
-              can see them clearly — the decision, and what you weigh against what,
-              stays entirely with you.
+              Forked Futures drafts evidence-grounded future scripts from your
+              context and public knowledge so you can see the paths clearly — the
+              decision, and what you weigh against what, stays entirely with you.
             </p>
           </div>
           <ResponsibleAIBanner />

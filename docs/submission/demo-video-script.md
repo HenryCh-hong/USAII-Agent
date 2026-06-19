@@ -22,10 +22,11 @@ building a startup, and preparing for research / grad school.
 **0:00 — Hook (spoken over the landing page).**
 "Every student hits a fork they can't un-pick — and the usual help is either a
 pros/cons list or a confident chatbot answer. A confident answer is exactly the
-wrong tool when the future is uncertain. Forked Futures is a decision-intelligence
-cockpit: it does not forecast your future and it does not choose for you — it helps
-you understand the futures you're choosing between." *(Point to the microcopy: "Not
-a prediction · not a recommendation · a structured future rehearsal.")*
+wrong tool when the future is uncertain. Forked Futures uses an LLM to draft
+evidence-grounded future scripts from your context and public knowledge — plausible
+trajectories, not deterministic predictions. It doesn't forecast or choose for you;
+it shows the paths you're choosing between." *(Point to the microcopy:
+"Evidence-grounded future scripts · plausible, not deterministic · you decide.")*
 
 **0:25 — The problem & why AI (landing "why this needs AI" section).**
 "This isn't a lookup. A rules table needs every input pre-categorised and can only
@@ -37,9 +38,9 @@ Click **See the Alex demo**.
 **0:50 — Future Map (the branching timelines).**
 "Three futures as branching timelines, not a card list. Each node carries
 qualitative calibration — evidence, fit, constraint-risk, uncertainty — never a
-fabricated probability — plus the first experiment to run. Nothing here is a
-prediction. Each future is a **playable path card** — main stat, buff, risk, boss
-fight, and one concrete *next quest* — framed as a rehearsal, not a prophecy." Open
+fabricated probability — plus the first experiment to run. Each future is an
+evidence-grounded **path card** — main stat, buff, risk, boss fight, and one
+concrete *next quest* — a plausible trajectory, not a deterministic prediction." Open
 the **Quant Signal Path**.
 
 **1:05 — Research Console (the autonomous agent).**

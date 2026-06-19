@@ -5,8 +5,8 @@ layers of code and data, not left to a single careful prompt.
 
 ## What the system will not do
 
-- **It does not forecast your future.** Every branch is framed as a plausible
-  scenario, a rehearsal — not a prediction.
+- **It does not forecast your future.** Every branch is an evidence-grounded
+  future script — a plausible trajectory, not a deterministic prediction.
 - **It does not output fabricated probabilities.** Calibration is qualitative only
   (low / medium / high). There are no invented percentages anywhere in the
   user-facing output, and the eval harness scans for them.

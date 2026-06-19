@@ -107,7 +107,7 @@ Open-ended, messy, personal context; novel combinations of options; non-obvious 
 
 ## Responsible AI (structural, not decorative)
 
-- **Scenarios, not predictions.** Hedged language only ("may", "could", "tends to", "based on current assumptions"), enforced by the SafetyAgent + a deterministic language scrub.
+- **Future scripts, not deterministic predictions.** Hedged language only ("may", "could", "tends to", "based on current assumptions"), enforced by the SafetyAgent + a deterministic language scrub.
 - **Claim provenance is a first-class type.** Every assumption is tagged `user_provided` · `source_supported` · `ai_inferred`.
 - **Honest coverage levels.** Labor-market and outcome claims stay at occupation/field/framework level — we never personalize an aggregate statistic into a fake individual probability.
 - **Uncertainty is shown,** with an explicit `dataCoverageNote` on every branch.
