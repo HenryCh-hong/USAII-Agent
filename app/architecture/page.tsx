@@ -142,16 +142,26 @@ const KNOWLEDGE_FILES = [
 
 const HUMAN_FACTORS = ["Values", "Risk tolerance", "Family", "Identity", "Lived experience"];
 
+// The guided-journey flow — the product's main entry path, input -> action.
+const JOURNEY_FLOW = [
+  "Enter one messy situation — no options or clean framing required.",
+  "Answer a short chain of questions, each one led by your last answer.",
+  "See a reveal: the decision, the value conflict, and a few possible (sometimes reframed) paths, each with labeled evidence.",
+  "Open the route map — the paths become a full three-route simulation you can compare.",
+  "Enter one path as “You are here”; the others stay visible as unlived futures.",
+  "Read the brief and run one cheap 7-day test to replace your biggest unknown with real signal.",
+];
+
 // One-screen judge map — the real current pipeline plus the human checkpoint and
 // responsible-AI guardrail, input -> action.
 const AI_SUMMARY: { k: string; v: string }[] = [
-  { k: "Input", v: "a messy, half-formed situation — your decision, values, constraints and fears, in your own words" },
+  { k: "Input", v: "one messy, half-formed situation, in your own words — no options or clean framing required" },
   {
     k: "AI transformation",
-    v: "suggests a fork (a decision + 2–3 routes you edit) → retrieves & ranks public/curated evidence → simulates 3 routes through a 9-role debate → pressure-tests the assumptions → a deterministic safety scrub",
+    v: "a guided question journey (each question led by your last answer) → a path reveal that can reframe your options → 3 routes retrieved, simulated through a 9-role debate, pressure-tested, and run through a deterministic safety scrub",
   },
   { k: "Output", v: "three evidence-grounded future scripts, the routes you didn't enter (unlived futures), and a Decision Brief" },
-  { k: "Human checkpoint", v: "you edit the suggested fork and routes, choose which to enter, and keep the final call — the AI never chooses for you" },
+  { k: "Human checkpoint", v: "you edit the revealed fork and routes, choose which to enter, and keep the final call — the AI never chooses for you" },
   { k: "Responsible-AI guardrail", v: "possible futures, not predictions; no fabricated probabilities; unchosen routes stay visible to fight tunnel vision; mock-first, no private data" },
   { k: "Final action", v: "run one cheap 7-day test to replace your biggest unknown with real signal" },
 ];
@@ -256,6 +266,63 @@ export default function ArchitecturePage() {
           <span className="text-soft">provider-ready</span>, but not yet benchmarked. Nothing here
           requires private data, and the app never identifies real people.
         </p>
+      </Section>
+
+      {/* 1a2) The guided journey — the main entry path */}
+      <Section className="pt-16">
+        <SectionTitle
+          eyebrow="The guided journey"
+          title="A blurry situation becomes a testable fork"
+          subtitle="The main entry point is a route adventure, not a form. You enter one messy situation; the system asks one question at a time, each shaped by your previous answer, then reveals a few possible paths — including reframed ones you never named — before handing off to the route map."
+        />
+        <div className="mt-8 grid gap-4 lg:grid-cols-[1.2fr_1fr]">
+          <Card>
+            <CardBody className="space-y-3">
+              <CardTitle>Input → dynamic questions → reveal → map</CardTitle>
+              <ol className="space-y-2.5">
+                {JOURNEY_FLOW.map((step, i) => (
+                  <li key={step} className="flex gap-3 text-sm leading-relaxed text-soft/85">
+                    <span className="mono-label shrink-0 text-brand-glow/80">{`0${i + 1}`}</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardBody className="space-y-3">
+              <CardTitle>How the journey stays honest</CardTitle>
+              <ul className="space-y-2.5 text-sm leading-relaxed text-soft/85">
+                <li className="flex gap-2.5">
+                  <span className="mt-0.5 text-brand-glow/70">•</span>
+                  <span>
+                    Each question is generated from your situation and{" "}
+                    <span className="text-white">every prior answer</span> — the chain is causal, not
+                    a fixed quiz, so the next node follows from what you just said.
+                  </span>
+                </li>
+                <li className="flex gap-2.5">
+                  <span className="mt-0.5 text-brand-glow/70">•</span>
+                  <span>
+                    It runs on a <span className="text-white">live model</span> when a key is present
+                    and a <span className="text-white">deterministic mock fallback</span> otherwise —
+                    both Zod-validated, so the journey never dead-ends.
+                  </span>
+                </li>
+                <li className="flex gap-2.5">
+                  <span className="mt-0.5 text-brand-glow/70">•</span>
+                  <span>
+                    Every revealed path shows what shaped it, labeled as{" "}
+                    <span className="text-white">user-provided signal</span>,{" "}
+                    <span className="text-white">curated reference</span>, or{" "}
+                    <span className="text-white">AI-inferred assumption</span> — inferences are never
+                    dressed up as citations.
+                  </span>
+                </li>
+              </ul>
+            </CardBody>
+          </Card>
+        </div>
       </Section>
 
       {/* 1b) Rubric map — judge orientation */}
