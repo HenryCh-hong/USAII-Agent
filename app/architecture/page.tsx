@@ -142,15 +142,18 @@ const KNOWLEDGE_FILES = [
 
 const HUMAN_FACTORS = ["Values", "Risk tolerance", "Family", "Identity", "Lived experience"];
 
-// One-screen "what the AI does" summary — input -> transformation -> output -> action.
+// One-screen judge map — the real current pipeline plus the human checkpoint and
+// responsible-AI guardrail, input -> action.
 const AI_SUMMARY: { k: string; v: string }[] = [
-  { k: "Input", v: "a messy life / career decision + your values, constraints and fears" },
+  { k: "Input", v: "a messy, half-formed situation — your decision, values, constraints and fears, in your own words" },
   {
     k: "AI transformation",
-    v: "clarifying questions → evidence retrieval → source ranking → claim ledger → three futures → 9-role agent debate → assumption pressure-tests → safety review",
+    v: "suggests a fork (a decision + 2–3 routes you edit) → retrieves & ranks public/curated evidence → simulates 3 routes through a 9-role debate → pressure-tests the assumptions → a deterministic safety scrub",
   },
-  { k: "Output", v: "three evidence-traced paths + a Decision Brief + a concrete next quest" },
-  { k: "User action", v: "run one 7-day validation test this week while keeping the final decision" },
+  { k: "Output", v: "three evidence-grounded future scripts, the routes you didn't enter (unlived futures), and a Decision Brief" },
+  { k: "Human checkpoint", v: "you edit the suggested fork and routes, choose which to enter, and keep the final call — the AI never chooses for you" },
+  { k: "Responsible-AI guardrail", v: "possible futures, not predictions; no fabricated probabilities; unchosen routes stay visible to fight tunnel vision; mock-first, no private data" },
+  { k: "Final action", v: "run one cheap 7-day test to replace your biggest unknown with real signal" },
 ];
 
 // Why an LLM beats the obvious non-AI tools, named explicitly for judges.
@@ -247,6 +250,12 @@ export default function ArchitecturePage() {
             </CardBody>
           </Card>
         </div>
+        <p className="mt-4 text-xs leading-relaxed text-mute">
+          <span className="text-soft">Mock-first today</span> — the full journey runs with no API key.
+          The live model and web-search providers are implemented and{" "}
+          <span className="text-soft">provider-ready</span>, but not yet benchmarked. Nothing here
+          requires private data, and the app never identifies real people.
+        </p>
       </Section>
 
       {/* 1b) Rubric map — judge orientation */}
