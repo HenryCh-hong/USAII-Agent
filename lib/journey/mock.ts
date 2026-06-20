@@ -22,12 +22,15 @@ import { JOURNEY_TARGET_NODES, emptyJourneyState } from "./types";
 
 type ValueTag = "growth" | "freedom" | "security" | "identity" | "opportunity" | "open";
 
+// Prefix (stem) matching: a leading word-boundary then the stem, with NO trailing
+// boundary — so "secur" matches "security/secure", "opportun" matches "opportunity",
+// etc. A trailing \b would (wrongly) require the stem to be a whole word.
 const VALUE_KEYWORDS: [ValueTag, RegExp][] = [
-  ["freedom", /\b(freedom|ownership|own |autonom|independ|control|build|founder|my own)\b/],
-  ["security", /\b(secur|stable|stability|safe|income|salary|money|steady|certain|reliab)\b/],
-  ["growth", /\b(growth|momentum|fast|acceler|ambit|level up|skill|compound|learn)\b/],
-  ["identity", /\b(identity|meaning|purpose|who i am|fit|alive|energiz|matter|fulfil)\b/],
-  ["opportunity", /\b(opportun|rare|once|window|miss out|upside|bet|big swing|variance)\b/],
+  ["freedom", /\b(freedom|ownership|own|autonom|independ|control|build|founder)/],
+  ["security", /\b(secur|stable|stabil|safe|income|salary|money|steady|certain|reliab)/],
+  ["growth", /\b(growth|momentum|fast|acceler|ambit|level up|skill|compound|learn)/],
+  ["identity", /\b(identity|meaning|purpose|who i am|fit|alive|energiz|matter|fulfil)/],
+  ["opportunity", /\b(opportun|rare|once|window|miss out|upside|bet|big swing|variance)/],
 ];
 
 /** Human phrasing for a value tag, used to make follow-ups visibly causal. */
