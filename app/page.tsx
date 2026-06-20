@@ -156,8 +156,8 @@ export default function LandingPage() {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <LinkButton href="/intake" size="lg">
-                Start a Future Run <ArrowRight className="h-4 w-4" />
+              <LinkButton href="/journey" size="lg">
+                Begin the fork run <ArrowRight className="h-4 w-4" />
               </LinkButton>
               <Button variant="outline" size="lg" onClick={openDemo}>
                 <Play className="h-4 w-4" /> See the Alex demo
@@ -165,7 +165,13 @@ export default function LandingPage() {
             </div>
 
             <p className="text-xs leading-relaxed text-mute">
-              <span className="text-soft">See the Alex demo</span> walks a worked example — Alex, a CS sophomore weighing quant recruiting, a startup, and research.
+              No forms to begin — just the messy version of your situation, then one
+              guided question at a time. <span className="text-soft">See the Alex demo</span>{" "}
+              walks a worked example, or{" "}
+              <Link href="/intake" className="text-soft underline-offset-2 hover:underline">
+                enter a fork you&apos;ve already framed
+              </Link>
+              .
             </p>
 
             <p className="text-xs leading-relaxed text-mute">
@@ -313,16 +319,17 @@ export default function LandingPage() {
               Ready to see what you&apos;re really deciding?
             </div>
             <div className="max-w-xl text-sm text-mute">
-              Walk one decision through intake, clarifying questions, three
-              futures, and a first experiment — in a few minutes.
+              Start from a blurry situation, answer a few guided questions, and
+              watch a few possible futures and a first experiment take shape — in a
+              few minutes.
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-3">
             <Button variant="ghost" size="md" onClick={openDemo}>
               Watch the demo
             </Button>
-            <LinkButton href="/intake" size="md">
-              Start your Future Run <ArrowRight className="h-4 w-4" />
+            <LinkButton href="/journey" size="md">
+              Start your journey <ArrowRight className="h-4 w-4" />
             </LinkButton>
           </div>
         </div>

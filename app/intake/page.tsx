@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { TopNav, ProgressSteps } from "@/components/shared/Nav";
 import { AmbientBackground } from "@/components/shared/AmbientBackground";
 import { Section, SectionTitle } from "@/components/ui/Section";
@@ -15,6 +16,16 @@ export default function IntakePage() {
 
       <Section className="pt-8">
         <ProgressSteps current="intake" />
+      </Section>
+
+      <Section className="pt-6">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-line/60 bg-white/[0.02] px-4 py-3 text-sm text-mute">
+          <span className="font-medium text-soft">Manual mode — for when you already know your fork.</span>
+          <span>Prefer to start from a messy situation?</span>
+          <Link href="/journey" className="text-brand-glow/90 underline-offset-2 hover:underline">
+            Take the guided journey instead
+          </Link>
+        </div>
       </Section>
 
       <Section className="pt-6">
