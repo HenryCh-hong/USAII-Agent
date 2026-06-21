@@ -319,6 +319,17 @@ export default function ArchitecturePage() {
                     dressed up as citations.
                   </span>
                 </li>
+                <li className="flex gap-2.5">
+                  <span className="mt-0.5 text-brand-glow/70">•</span>
+                  <span>
+                    The journey renders as a <span className="text-white">decision tree you walk</span> —
+                    a pixel traveler moves node to node and unchosen options stay visible as greyed
+                    branches. Each revealed path carries an{" "}
+                    <span className="text-white">evidence-fit score</span> (how strongly it matches your
+                    answers and the reference support behind it) — a transparent match score, not a
+                    prediction.
+                  </span>
+                </li>
               </ul>
             </CardBody>
           </Card>
