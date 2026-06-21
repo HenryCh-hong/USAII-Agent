@@ -2,10 +2,11 @@
  * Mock journey — the always-available, keyless path.
  *
  * Deterministic but genuinely dynamic: the next question is keyed off the most
- * recent answer, and the revealed path-set is *selected and reframed* from the
- * accumulated journey signal — so two different journeys surface different
- * questions and different paths, with no API key. Everything is hedged and
- * labeled by honest provenance; nothing here is a prediction or a recommendation.
+ * recent answer, and the reveal builds a full ROUTE UNIVERSE (6–10 distinct
+ * candidates) selected and scored from the accumulated journey signal — so two
+ * different journeys surface different questions and different route portfolios,
+ * with no API key. Everything is hedged and labeled by honest provenance; nothing
+ * here is a prediction or a recommendation.
  */
 import type {
   JourneyNextResponse,
@@ -14,95 +15,14 @@ import type {
   JourneyState,
   QuestionAnswer,
   ReferenceNote,
-  RevealedPath,
 } from "./types";
-import { JOURNEY_TARGET_NODES, emptyJourneyState } from "./types";
+import { JOURNEY_TARGET_NODES } from "./types";
+import { VALUE_PHRASE, classify, deriveState } from "./values";
+import type { ValueTag } from "./values";
+import { buildRouteUniverse, isCareerShaped, primaryRevealedPaths } from "./routeUniverse";
 
-/* ----------------------------- Signal model ------------------------------ */
-
-type ValueTag = "growth" | "freedom" | "security" | "identity" | "opportunity" | "open";
-
-// Prefix (stem) matching: a leading word-boundary then the stem, with NO trailing
-// boundary — so "secur" matches "security/secure", "opportun" matches "opportunity",
-// etc. A trailing \b would (wrongly) require the stem to be a whole word.
-const VALUE_KEYWORDS: [ValueTag, RegExp][] = [
-  ["freedom", /\b(freedom|ownership|own|autonom|independ|control|build|founder)/],
-  ["security", /\b(secur|stable|stabil|safe|income|salary|money|steady|certain|reliab)/],
-  ["growth", /\b(growth|momentum|fast|acceler|ambit|level up|skill|compound|learn)/],
-  ["identity", /\b(identity|meaning|purpose|who i am|fit|alive|energiz|matter|fulfil)/],
-  ["opportunity", /\b(opportun|rare|once|window|miss out|upside|bet|big swing|variance)/],
-];
-
-/** Human phrasing for a value tag, used to make follow-ups visibly causal. */
-const VALUE_PHRASE: Record<ValueTag, string> = {
-  growth: "fast growth and momentum",
-  freedom: "freedom and ownership",
-  security: "security and a clear footing",
-  identity: "identity and meaning",
-  opportunity: "not missing a rare opportunity",
-  open: "clarity about what you actually want",
-};
-
-function classify(text: string): ValueTag {
-  const t = (text || "").toLowerCase();
-  for (const [tag, re] of VALUE_KEYWORDS) if (re.test(t)) return tag;
-  return "open";
-}
-
-/** Fold the whole answer chain into a fresh JourneyState (idempotent). */
-export function deriveState(situation: string, prev: QuestionAnswer[]): JourneyState {
-  const state = emptyJourneyState();
-  const blob = [situation, ...prev.map((p) => p.answer)].join(" \n ").toLowerCase();
-
-  const tags = new Set<ValueTag>();
-  for (const qa of prev) {
-    const tag = classify(qa.selectedOption || qa.answer);
-    if (tag !== "open") tags.add(tag);
-  }
-  for (const tag of tags) {
-    if (!state.discoveredValues.includes(VALUE_PHRASE[tag])) {
-      state.discoveredValues.push(VALUE_PHRASE[tag]);
-    }
-  }
-
-  if (/\b(scared|afraid|fear|worry|worried|hate|stuck|trapped|regret|wrong path|miss)\b/.test(blob)) {
-    state.fears.push("Choosing a path and finding it doesn't fit a year in");
-  }
-  if (/\b(money|income|pay|salary|rent|loan|afford|debt|fund)\b/.test(blob)) {
-    state.constraints.push("Needs a viable financial footing");
-  }
-  const horizon = blob.match(/\b(\d{1,2})\s?(?:months?|years?)\b/);
-  if (horizon) state.timeHorizon = horizon[0];
-
-  // Risk posture inferred from the balance of security vs. opportunity/freedom signals.
-  if (tags.has("opportunity") || tags.has("freedom")) {
-    state.riskTolerance = tags.has("security") ? "mixed — drawn to upside but wants a floor" : "leans toward upside and optionality";
-  } else if (tags.has("security")) {
-    state.riskTolerance = "leans toward protecting a stable footing";
-  }
-
-  if (tags.has("identity")) state.identitySignals.push("Wants the path to feel like a fit, not just a résumé line");
-  if (tags.has("growth")) state.identitySignals.push("Measures a good year by how much they grew");
-
-  // Loose, reframed directions — never commitments.
-  const hints = new Set<string>();
-  if (tags.has("growth") || tags.has("security")) hints.add("Build a credible, legible signal on a structured runway");
-  if (tags.has("freedom")) hints.add("Self-directed building where you own the outcome");
-  if (tags.has("identity")) hints.add("Go deeper on the work that feels alive, even if slower");
-  if (tags.has("opportunity")) hints.add("Take one concentrated, time-boxed swing at the rare window");
-  if (hints.size < 2) hints.add("Keep two doors open in parallel before committing");
-  state.possibleRouteHints = [...hints];
-
-  // Surface the most painful uncertainty as a tag, drawn from explicit answers.
-  for (const qa of prev) {
-    const a = (qa.selectedOption || qa.answer || "").trim();
-    if (qa.prompt.toLowerCase().includes("uncertainty") && a) {
-      state.uncertaintyTags.push(a.toLowerCase().slice(0, 40));
-    }
-  }
-
-  return state;
-}
+// Re-exported for lib/journey/agent.ts, which folds answers into a fresh state.
+export { deriveState } from "./values";
 
 /* ------------------------------ Question bank ----------------------------- */
 
@@ -234,7 +154,10 @@ export function buildMockJourneyNext(
     };
   }
 
-  const prevTag = index > 0 ? classify(previousQuestions[index - 1].selectedOption || previousQuestions[index - 1].answer) : "open";
+  const prevTag =
+    index > 0
+      ? classify(previousQuestions[index - 1].selectedOption || previousQuestions[index - 1].answer)
+      : "open";
   const question = questionForNode(index, prevTag);
 
   return { mocked: true, done: false, question, updatedState };
@@ -276,13 +199,17 @@ function buildReferences(
       "Standard decision-quality practice: name how each path could fail in advance and judge how reversible it is, rather than optimizing a single forecast.",
     usedFor: "Structuring each path's risks and its 7-day test",
   });
-  refs.push({
-    label: "U.S. Bureau of Labor Statistics — Occupational Outlook Handbook",
-    sourceType: "curated_reference",
-    summary:
-      "Public, occupation-level framing of duties, typical demand direction, and the education a field tends to expect — never an individual outcome.",
-    usedFor: "Grounding the career-shaped paths at their true coverage level",
-  });
+  // Occupation-level source — attached only when the decision is actually
+  // occupation-shaped, so it never reads as a per-user lookup that didn't happen.
+  if (isCareerShaped(situation, state)) {
+    refs.push({
+      label: "U.S. Bureau of Labor Statistics — Occupational Outlook Handbook",
+      sourceType: "curated_reference",
+      summary:
+        "Public, occupation-level framing of duties, typical demand direction, and the education a field tends to expect — never an individual outcome.",
+      usedFor: "Grounding the career-shaped paths at their true coverage level",
+    });
+  }
 
   // 3. AI-inferred assumptions — clearly flagged.
   if (state.riskTolerance) {
@@ -306,182 +233,6 @@ function buildReferences(
 
 /* -------------------------------- Reveal ---------------------------------- */
 
-type Archetype = {
-  key: string;
-  idBase: string;
-  scores: Partial<Record<ValueTag, number>>;
-  build: (ctx: { dominant: ValueTag; horizon?: string }) => RevealedPath;
-};
-
-const ARCHETYPES: Archetype[] = [
-  {
-    key: "credible-signal",
-    idBase: "credible-signal",
-    scores: { security: 3, growth: 2, opportunity: 1 },
-    build: () => ({
-      id: "credible-signal-path",
-      title: "Build one credible, legible signal",
-      shortDescription:
-        "Concentrate the near term on a single, demonstrable signal that opens structured doors — trading some breadth for a clear on-ramp.",
-      whatItOptimizesFor: "A legible footing and momentum others can recognize quickly",
-      whatItRisks: "Narrowing early and under-weighting paths that don't show up on a résumé",
-      whatYouMightMiss: "The compounding that comes from owning something end-to-end yourself",
-      sevenDayTest:
-        "Spend 5 focused days producing one small, sharable artifact in the target direction, then show it to two people in that world and note what they push on.",
-      evidenceNotes: [
-        {
-          label: "U.S. Bureau of Labor Statistics — Occupational Outlook Handbook",
-          sourceType: "curated_reference",
-          summary: "Occupation-level framing of how structured fields tend to screen and on-ramp talent.",
-          usedFor: "Shaping what a 'legible signal' looks like here",
-        },
-        {
-          label: "Your stated pull toward a clear footing",
-          sourceType: "user_answer",
-          summary: "You weighted security/legibility highly in your answers.",
-          usedFor: "Why this path is on the board",
-        },
-      ],
-    }),
-  },
-  {
-    key: "independent-builder",
-    idBase: "independent-builder",
-    scores: { freedom: 3, opportunity: 2, growth: 1 },
-    build: () => ({
-      id: "independent-builder-path",
-      title: "Self-directed building you own",
-      shortDescription:
-        "Bias toward making something where you hold the outcome — slower legibility, but the work and the upside are yours.",
-      whatItOptimizesFor: "Ownership, optionality, and learning that compounds across futures",
-      whatItRisks: "Thin external validation and a longer, lonelier feedback loop",
-      whatYouMightMiss: "The fast, structured mentorship a more legible track can provide",
-      sevenDayTest:
-        "Ship the smallest real version of the thing this week and put it in front of five potential users; track whether anyone returns unprompted.",
-      evidenceNotes: [
-        {
-          label: "Your stated pull toward ownership",
-          sourceType: "user_answer",
-          summary: "Freedom/ownership recurred across your answers.",
-          usedFor: "Why this path is on the board",
-        },
-        {
-          label: "Reversibility framing",
-          sourceType: "curated_reference",
-          summary: "Building small and reversibly lets you test the path without committing the year.",
-          usedFor: "Designing the 7-day test",
-        },
-      ],
-    }),
-  },
-  {
-    key: "depth-first",
-    idBase: "depth-first",
-    scores: { identity: 3, growth: 2 },
-    build: () => ({
-      id: "depth-first-path",
-      title: "Go deeper on the work that feels alive",
-      shortDescription:
-        "Follow the thread that energizes you and invest in real depth — accepting slower legibility for a stronger fit and a distinctive edge.",
-      whatItOptimizesFor: "Identity fit and a durable, hard-to-copy depth",
-      whatItRisks: "Slower external payoff and the pull of paths that look more 'sensible' from outside",
-      whatYouMightMiss: "Near-term security and the optionality of staying broad",
-      sevenDayTest:
-        "Spend the week on the most demanding real problem in that area and notice, honestly, whether the hard parts energize or drain you.",
-      evidenceNotes: [
-        {
-          label: "Your stated pull toward meaning/fit",
-          sourceType: "user_answer",
-          summary: "Identity and 'work that feels alive' showed up in your answers.",
-          usedFor: "Why this path is on the board",
-        },
-        {
-          label: "AI-inferred fit hypothesis",
-          sourceType: "ai_inferred",
-          summary: "That depth suits you is an assumption worth testing this week, not a conclusion.",
-          usedFor: "Framing the test honestly",
-        },
-      ],
-    }),
-  },
-  {
-    key: "time-boxed-swing",
-    idBase: "time-boxed-swing",
-    scores: { opportunity: 3, freedom: 1 },
-    build: () => ({
-      id: "time-boxed-swing-path",
-      title: "One time-boxed swing at the rare window",
-      shortDescription:
-        "Take a concentrated, deadline-bound shot at the opportunity that feels rare — with a pre-set point where you stop and reassess.",
-      whatItOptimizesFor: "Upside and resolving 'what if I'd tried' without an open-ended gamble",
-      whatItRisks: "Sinking real time into a window that may be less rare than it feels",
-      whatYouMightMiss: "Steadier compounding on a path you could hold for years",
-      sevenDayTest:
-        "Write the one falsifiable thing that would prove the window is real, then spend the week trying to find that evidence before committing further.",
-      evidenceNotes: [
-        {
-          label: "Your stated fear of missing out",
-          sourceType: "user_answer",
-          summary: "A sense of a closing opportunity recurred in your answers.",
-          usedFor: "Why this path is on the board",
-        },
-        {
-          label: "Premortem framing",
-          sourceType: "curated_reference",
-          summary: "Pre-committing a stop point turns a gamble into a bounded experiment.",
-          usedFor: "Designing the kill-criteria for the swing",
-        },
-      ],
-    }),
-  },
-  {
-    key: "parallel-paths",
-    idBase: "parallel-paths",
-    scores: { open: 3, security: 1, identity: 1 },
-    build: () => ({
-      id: "parallel-paths-path",
-      title: "Keep two doors open, briefly",
-      shortDescription:
-        "Run a short, deliberate parallel test of your two strongest directions before committing — buying information instead of a guess.",
-      whatItOptimizesFor: "Resolving the core uncertainty cheaply before it's expensive",
-      whatItRisks: "Spreading thin and mistaking motion for progress if it drags on",
-      whatYouMightMiss: "The compounding focus that comes from committing fully and early",
-      sevenDayTest:
-        "Give each of your two leading directions one real, comparable task this week, then write down which one you found yourself protecting time for.",
-      evidenceNotes: [
-        {
-          label: "Information-value framing",
-          sourceType: "curated_reference",
-          summary: "When the cost of deciding now is high and a cheap test exists, buying information first tends to pay off.",
-          usedFor: "Justifying a brief parallel test",
-        },
-        {
-          label: "AI-inferred uncertainty",
-          sourceType: "ai_inferred",
-          summary: "Your answers read as still genuinely split — an assumption you can confirm by trying both small.",
-          usedFor: "Why a parallel test is offered",
-        },
-      ],
-    }),
-  },
-];
-
-function dominantTag(state: JourneyState, answers: QuestionAnswer[]): ValueTag {
-  const counts: Record<ValueTag, number> = {
-    growth: 0, freedom: 0, security: 0, identity: 0, opportunity: 0, open: 0,
-  };
-  for (const qa of answers) counts[classify(qa.selectedOption || qa.answer)] += 1;
-  let best: ValueTag = "open";
-  let bestN = -1;
-  for (const tag of Object.keys(counts) as ValueTag[]) {
-    if (tag !== "open" && counts[tag] > bestN) {
-      best = tag;
-      bestN = counts[tag];
-    }
-  }
-  return bestN <= 0 ? "open" : best;
-}
-
 export function buildMockJourneyReveal(
   situation: string,
   answers: QuestionAnswer[],
@@ -491,36 +242,22 @@ export function buildMockJourneyReveal(
     journeyState && journeyState.discoveredValues.length
       ? journeyState
       : deriveState(situation, answers);
-  const dominant = dominantTag(state, answers);
 
-  // Score archetypes against the journey and take the three best — so different
-  // journeys reveal different (reframed) path-sets. Always include a contrast.
-  const scored = ARCHETYPES.map((a) => ({
-    a,
-    score: (a.scores[dominant] ?? 0) + (a.scores.open ?? 0) * (dominant === "open" ? 1 : 0),
-  }));
-  scored.sort((x, y) => y.score - x.score);
-  const chosen = scored.slice(0, 3).map((s) => s.a);
-  // Guarantee a contrasting third path if the top three cluster on one value.
-  if (chosen.length < 3) {
-    for (const a of ARCHETYPES) {
-      if (chosen.length >= 3) break;
-      if (!chosen.includes(a)) chosen.push(a);
-    }
-  }
-
-  const routes = chosen.map((a) => a.build({ dominant, horizon: state.timeHorizon }));
-
-  const valuePhrase = state.discoveredValues[0] ?? VALUE_PHRASE[dominant];
-  const secondPhrase = state.discoveredValues[1] ?? "a steadier footing";
+  const { universe, primarySelection, decision, coreQuestion, valueConflict } = buildRouteUniverse(
+    situation,
+    answers,
+    state,
+  );
 
   return {
     mocked: true,
-    decision:
-      "Over the next chapter, which of these directions do you want to actually try first — knowing you can still revisit the others?",
-    coreQuestion: `Underneath the surface choice, you seem to be deciding how much to weight ${valuePhrase} against ${secondPhrase}.`,
-    valueConflict: `A pull toward ${valuePhrase} set against the comfort of ${secondPhrase} — both real, and not fully satisfiable at once.`,
-    routes,
+    decision,
+    coreQuestion,
+    valueConflict,
+    // The three primary candidates, projected to the small shape the adapter expands.
+    routes: primaryRevealedPaths(universe, primarySelection.primaryRouteIds),
     references: buildReferences(situation, answers, state),
+    universe,
+    primarySelection,
   };
 }

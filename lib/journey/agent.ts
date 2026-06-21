@@ -16,6 +16,7 @@ import {
 } from "./prompts";
 import { journeyNextLLMSchema, journeyRevealLLMSchema } from "./schema";
 import { buildMockJourneyNext, buildMockJourneyReveal, deriveState } from "./mock";
+import { buildRouteUniverse, primaryRevealedPaths } from "./routeUniverse";
 import {
   JOURNEY_MAX_NODES,
   emptyJourneyState,
@@ -70,6 +71,12 @@ export async function runJourneyReveal(
   const state = journeyState ?? emptyJourneyState();
   if (!hasApiKey()) return buildMockJourneyReveal(situation, answers, state);
 
+  // The route universe is always built deterministically (mock-first, keyless-safe)
+  // so the map stays robust and the 6–10 candidates never depend on the model
+  // returning a large, well-formed list. A live model only enriches the framing.
+  const { universe, primarySelection } = buildRouteUniverse(situation, answers, state);
+  const routes = primaryRevealedPaths(universe, primarySelection.primaryRouteIds);
+
   try {
     const out = await generateJSON(
       journeyRevealLLMSchema,
@@ -78,7 +85,17 @@ export async function runJourneyReveal(
       { maxTokens: 3000, temperature: 0.6 },
     );
     const scrubbed = safetyScrub(out);
-    return { mocked: false, ...scrubbed };
+    return {
+      mocked: false,
+      decision: scrubbed.decision,
+      coreQuestion: scrubbed.coreQuestion,
+      valueConflict: scrubbed.valueConflict,
+      references: scrubbed.references,
+      // Adapter + universe come from the deterministic builder, not the model.
+      routes,
+      universe,
+      primarySelection,
+    };
   } catch {
     return buildMockJourneyReveal(situation, answers, state);
   }

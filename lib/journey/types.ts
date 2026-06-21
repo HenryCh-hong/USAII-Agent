@@ -74,6 +74,113 @@ export interface RevealedPath {
   evidenceNotes: ReferenceNote[];
 }
 
+/* --------------------------- Route universe (v3) -------------------------- */
+
+/** Qualitative axis level for the route portfolio — never a probability. */
+export type RouteLevel = "Low" | "Medium" | "High";
+/** Time-horizon band a route plays out over. */
+export type RouteHorizon = "Short" | "Medium" | "Long";
+/** Qualitative confidence band — a match/coverage read, not a forecast. */
+export type RouteConfidence = "Low" | "Medium" | "High";
+
+/** Honest provenance split for what shaped a single route. */
+export interface RouteEvidenceSupport {
+  /** Signals the user actually gave (from their answers + journey state). */
+  userInputs: string[];
+  /** Real, public/framework-level reference framings — never invented stats. */
+  curatedReferences: string[];
+  /** Assumptions the system inferred — flagged, never shown as a citation. */
+  aiInferredAssumptions: string[];
+}
+
+/** Transparent 0–1 components behind a route's evidence-fit score. */
+export interface RouteScoreBreakdown {
+  valueMatch: number;
+  constraintFit: number;
+  routeArchetypeFit: number;
+  curatedEvidenceSupport: number;
+  uncertaintyPenalty: number;
+  inferencePenalty: number;
+}
+
+/** The honest "why it scored this way" companion to the number. */
+export interface RouteScoreRationale {
+  strongestUserSignal: string;
+  strongestReferenceSupport: string;
+  biggestUncertainty: string;
+  aiInferredAssumption: string;
+}
+
+/**
+ * One candidate route in the "Possible Futures Library" — a meaningfully
+ * distinct strategy, carrying full micro-level decision-review data. Generated
+ * deterministically (mock-first) from the journey; the evidence-fit score and
+ * provenance are computed in code, never a prediction. 6–10 of these make up the
+ * route universe; exactly three are marked `isPrimaryRoute` for deep simulation.
+ */
+export interface RouteCandidate {
+  id: string;
+  /** Archetype family, e.g. "Conservative anchor", "Ambitious sprint". */
+  archetype: string;
+  title: string;
+  shortDescription: string;
+
+  /* --- A. Why this route exists --- */
+  coreIdea: string;
+  whyItMakesSense: string;
+  bestFitUser: string;
+  assumptions: string[];
+
+  /* --- B. Tradeoffs --- */
+  gains: string[];
+  givesUp: string[];
+  hiddenTradeoffs: string[];
+  opportunityCost: string;
+
+  /* --- C. Action plan --- */
+  sevenDayActionPlan: string[];
+  thirtyDayActionPlan: string[];
+  ninetyDayDirection: string;
+  lowCostExperiment: string;
+
+  /* --- D. Risks and friction --- */
+  keyRisks: string[];
+  earlyWarningSigns: string[];
+  resourcesNeeded: string[];
+  emotionalFriction: string;
+
+  /* --- E. Evidence and uncertainty --- */
+  confidenceLevel: RouteConfidence;
+  uncertainty: string;
+  evidenceSupport: RouteEvidenceSupport;
+
+  /** First-layer chips: how risky / reversible / over what horizon. */
+  risk: RouteLevel;
+  reversibility: RouteLevel;
+  timeHorizon: RouteHorizon;
+
+  /** Evidence-fit score (0–100). A match score, never a probability of success. */
+  evidenceFitScore: number;
+  /** Qualitative band so the number never reads as odds. */
+  scoreBand: "Strong" | "Moderate" | "Loose";
+  scoreBreakdown: RouteScoreBreakdown;
+  scoreRationale: RouteScoreRationale;
+
+  /** True for the three routes routed into deep simulation (/map). */
+  isPrimaryRoute: boolean;
+}
+
+/** Why a particular three routes were chosen as the primary comparison set. */
+export interface PrimarySelection {
+  primaryRouteIds: string[];
+  /** One honest line per primary route on the role it plays in the contrast. */
+  roleNotes: { id: string; role: string; why: string }[];
+  /** A single "why these three" summary of the comparison set. */
+  summary: string;
+  /** True when the three were auto-selected (user has not overridden). */
+  auto: boolean;
+}
+
 /* ------------------------------- API I/O ---------------------------------- */
 
 export interface JourneyNextRequest {
@@ -101,8 +208,19 @@ export interface JourneyRevealResponse {
   decision: string;
   coreQuestion: string;
   valueConflict: string;
+  /**
+   * The three primary routes, down-projected to the small RevealedPath shape the
+   * deterministic adapter expands into exactly three /map branches. Kept for the
+   * adapter boundary; the rich UI reads `universe` instead.
+   */
   routes: RevealedPath[];
   references: ReferenceNote[];
+
+  /* --- v3 additive: the full route universe + which three are primary --- */
+  /** 6–10 meaningfully distinct route candidates (the Possible Futures Library). */
+  universe?: RouteCandidate[];
+  /** Auto-selected sharpest-comparison set; the user may re-pick on the reveal. */
+  primarySelection?: PrimarySelection;
 }
 
 /** Honest, human-readable labels for the three evidence source types. */
