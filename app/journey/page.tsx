@@ -16,7 +16,7 @@
  */
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Brain,
@@ -262,13 +262,12 @@ export default function JourneyPage() {
         <JourneyTrail phase={phase} nodeNumber={nodeNumber} />
       </Section>
 
-      <AnimatePresence mode="wait">
+      <>
         {phase === "situation" && (
           <motion.div
             key="situation"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
           >
             <Section className="pt-10">
               <SectionTitle
@@ -353,7 +352,6 @@ export default function JourneyPage() {
             key="questions"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
           >
             <Section className="pt-6">
               <ResponsibleAIBanner variant="compact" />
@@ -409,7 +407,6 @@ export default function JourneyPage() {
             key="reveal"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
           >
             {loadingReveal || !reveal ? (
               <Section className="pt-16">
@@ -441,7 +438,7 @@ export default function JourneyPage() {
             )}
           </motion.div>
         )}
-      </AnimatePresence>
+      </>
 
       {!hydrated && null}
     </main>
