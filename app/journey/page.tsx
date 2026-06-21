@@ -428,7 +428,7 @@ export default function JourneyPage() {
               <RevealView
                 reveal={reveal}
                 state={journeyState}
-                walked={nodes.filter((n) => n.status === "answered").length}
+                walked={nodes.filter((n) => n.status === "answered" && n.id !== "origin").length}
                 editDecision={editDecision}
                 setEditDecision={setEditDecision}
                 editTitles={editTitles}
@@ -533,8 +533,8 @@ function RevealView({
             <div className="flex items-center gap-3 rounded-xl border border-brand/25 bg-brand/[0.05] px-4 py-3">
               <PixelTraveler accent="brand" size={20} />
               <div className="text-sm text-soft/90">
-                You walked <span className="text-white">{walked} node{walked === 1 ? "" : "s"}</span> — the path now
-                forks into <span className="text-white">{reveal.routes.length} route gates</span> below.
+                You answered <span className="text-white">{walked} question node{walked === 1 ? "" : "s"}</span> — the
+                path now forks into <span className="text-white">{reveal.routes.length} route gates</span> below.
               </div>
             </div>
             <div className="space-y-2">
