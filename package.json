@@ -12,10 +12,11 @@
     "eval:rag": "tsx scripts/eval-rag-coverage.ts",
     "eval:schema": "tsx scripts/eval-agent-output-schema.ts",
     "eval:journey": "tsx scripts/eval-demo-journey.ts",
+    "eval:branches": "tsx scripts/eval-journey-branches.ts",
     "eval:research": "tsx scripts/eval-research-quality.ts",
     "eval:robustness": "tsx scripts/eval-research-robustness.ts",
     "eval:specificity": "tsx scripts/eval-specificity.ts",
-    "eval": "npm run eval:overclaim && npm run eval:rag && npm run eval:schema && npm run eval:journey && npm run eval:research && npm run eval:robustness && npm run eval:specificity",
+    "eval": "npm run eval:overclaim && npm run eval:rag && npm run eval:schema && npm run eval:journey && npm run eval:branches && npm run eval:research && npm run eval:robustness && npm run eval:specificity",
     "validate": "npm run typecheck && npm run eval && npm run build"
   },
   "dependencies": {

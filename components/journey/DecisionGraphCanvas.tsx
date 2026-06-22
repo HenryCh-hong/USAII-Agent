@@ -18,7 +18,7 @@
  * they are ephemeral. Motion is framer-motion (traveler via shared layoutId; all
  * bobbing respects prefers-reduced-motion via the .traveler-bob CSS rule).
  */
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -27,12 +27,15 @@ import {
   HelpCircle,
   Lightbulb,
   Loader2,
+  Pencil,
   Sparkles,
 } from "lucide-react";
 import { PixelTraveler } from "@/components/shared/PixelTraveler";
 import { cn } from "@/lib/utils";
 import { NODE_W } from "@/lib/journey/graph";
 import type { DecisionGraphNode, DecisionGraphState } from "@/lib/journey/graph";
+import type { BranchOption } from "@/lib/journey/branches";
+import { ROUTE_UNIVERSE_SIZE } from "@/lib/journey/routeUniverse";
 import type { JourneyQuestion } from "@/lib/journey/types";
 
 const HALF_CARD = 44; // vertical half-extent reserved per node, for bounds
@@ -47,17 +50,20 @@ export interface DecisionGraphCanvasProps {
   question: JourneyQuestion | null;
   loadingNext: boolean;
   loadingReveal: boolean;
-  showOptions: boolean;
-  showText: boolean;
-  options: string[];
+  /** Normalized branch gates (always ≥3 answer branches + a "Write my own" gate). */
+  branches: BranchOption[];
   text: string;
   setText: (v: string) => void;
+  /** Pick an answer branch (option/suggested/fallback). */
   onChoose: (option: string) => void;
+  /** Submit the typed custom path. */
   onWalkForward: () => void;
   onSkip: () => void;
   canWalkForward: boolean;
   nodeNumber: number;
   totalNodes: number;
+  /** True when the live node is the last question — fans into a route-universe gate. */
+  isFinalNode: boolean;
 }
 
 export function DecisionGraphCanvas(props: DecisionGraphCanvasProps) {
@@ -67,9 +73,7 @@ export function DecisionGraphCanvas(props: DecisionGraphCanvasProps) {
     question,
     loadingNext,
     loadingReveal,
-    showOptions,
-    showText,
-    options,
+    branches,
     text,
     setText,
     onChoose,
@@ -78,24 +82,39 @@ export function DecisionGraphCanvas(props: DecisionGraphCanvasProps) {
     canWalkForward,
     nodeNumber,
     totalNodes,
+    isFinalNode,
   } = props;
+
+  const textRef = useRef<HTMLTextAreaElement>(null);
+  const [customOpen, setCustomOpen] = useState(false);
 
   const current = graph.nodes.find((n) => n.id === "current") ?? null;
   const showBubble = phase === "questions" && !!question && !loadingNext && !loadingReveal;
 
+  // "Write my own" focuses the (subordinate) custom input but stays a branch gate.
+  function focusCustom() {
+    setCustomOpen(true);
+    requestAnimationFrame(() => textRef.current?.focus());
+  }
+
   // Live answer gates fan out to the right of the current node (ephemeral layout).
+  // INVARIANT: an active node always renders its full branch set (≥3 answers +
+  // "Write my own") — never a dead-end. Gates carry the branch so the custom one
+  // opens the input instead of submitting.
   const gates = useMemo(() => {
-    if (!current || !showBubble || !showOptions) return [];
-    const n = options.length;
+    if (!current || !showBubble || branches.length === 0) return [];
+    const n = branches.length;
     const gateX = current.x + GATE_DX;
-    return options.map((label, i) => ({
-      label,
+    return branches.map((branch, i) => ({
+      branch,
       x: gateX,
       y: current.y + (i - (n - 1) / 2) * GATE_GAP,
     }));
-  }, [current, showBubble, showOptions, options]);
+  }, [current, showBubble, branches]);
 
-  // The fog marker sits just past the live gates (or past the current node).
+  // Past the gates: the final node previews the route universe; earlier nodes
+  // show the fog "path ahead". We never show a vague fog marker on a node whose
+  // card invites "choose a branch" if it is the final fork.
   const fog = useMemo(() => {
     if (phase !== "questions" || !current) return null;
     const baseX = gates.length ? gates[0].x + GATE_W + 70 : current.x + 300;
@@ -116,10 +135,10 @@ export function DecisionGraphCanvas(props: DecisionGraphCanvasProps) {
       consider(node.x, node.y, NODE_W, half);
     }
     for (const g of gates) consider(g.x, g.y, GATE_W, 26);
-    if (fog) consider(fog.x, fog.y, 130, 30);
+    if (fog) consider(fog.x, fog.y, isFinalNode ? 176 : 130, isFinalNode ? 40 : 30);
     const centerY = extent + PAD / 2;
     return { width: maxX + PAD, height: centerY * 2, centerY };
-  }, [graph.nodes, gates, fog, showBubble]);
+  }, [graph.nodes, gates, fog, showBubble, isFinalNode]);
 
   const cx = (node: { x: number }) => node.x + NODE_W / 2;
   const cy = (node: { y: number }) => layout.centerY + node.y;
@@ -240,6 +259,7 @@ export function DecisionGraphCanvas(props: DecisionGraphCanvasProps) {
                   question={question}
                   nodeNumber={nodeNumber}
                   totalNodes={totalNodes}
+                  hasBranches={branches.length > 0}
                 />
               );
             }
@@ -248,30 +268,59 @@ export function DecisionGraphCanvas(props: DecisionGraphCanvasProps) {
             );
           })}
 
-          {/* live gates */}
-          {gates.map((g, i) => (
-            <button
-              key={`gate-${i}`}
-              type="button"
-              onClick={() => onChoose(g.label)}
-              className="group/gate absolute z-20 flex items-center justify-between gap-2 rounded-xl border border-line/70 bg-white/[0.035] px-3.5 py-2.5 text-left text-[14px] font-medium leading-snug text-soft shadow-sm backdrop-blur-sm transition-all hover:-translate-y-px hover:border-brand/60 hover:bg-brand/[0.1] hover:text-white hover:shadow-glow-sm"
-              style={{ left: g.x, top: layout.centerY + g.y, width: GATE_W, transform: "translateY(-50%)" }}
-            >
-              <span className="line-clamp-2">{g.label}</span>
-              <ArrowRight className="h-4 w-4 shrink-0 text-brand-glow/30 transition-colors group-hover/gate:text-brand-glow" />
-            </button>
-          ))}
+          {/* live gates — answer branches + the "Write my own" custom branch */}
+          {gates.map((g, i) => {
+            const b = g.branch;
+            const custom = b.kind === "custom";
+            return (
+              <button
+                key={b.id}
+                type="button"
+                onClick={() => (custom ? focusCustom() : onChoose(b.label))}
+                title={b.shortHint}
+                className={cn(
+                  "group/gate absolute z-20 flex items-center justify-between gap-2 rounded-xl px-3.5 py-2.5 text-left text-[14px] font-medium leading-snug shadow-sm backdrop-blur-sm transition-all hover:-translate-y-px hover:shadow-glow-sm",
+                  custom
+                    ? "border border-dashed border-brand/45 bg-brand/[0.04] text-brand-glow/90 hover:border-brand/70 hover:bg-brand/[0.1] hover:text-white"
+                    : "border border-line/70 bg-white/[0.035] text-soft hover:border-brand/60 hover:bg-brand/[0.1] hover:text-white",
+                  custom && customOpen && "border-brand/70 bg-brand/[0.1] text-white",
+                )}
+                style={{ left: g.x, top: layout.centerY + g.y, width: GATE_W, transform: "translateY(-50%)" }}
+              >
+                <span className="line-clamp-2">{b.label}</span>
+                {custom ? (
+                  <Pencil className="h-3.5 w-3.5 shrink-0 text-brand-glow/40 transition-colors group-hover/gate:text-brand-glow" />
+                ) : (
+                  <ArrowRight className="h-4 w-4 shrink-0 text-brand-glow/30 transition-colors group-hover/gate:text-brand-glow" />
+                )}
+              </button>
+            );
+          })}
 
-          {/* fog marker (questions phase) */}
-          {fog && (
-            <div
-              className="absolute z-10 flex w-[130px] -translate-y-1/2 items-center gap-1.5 rounded-xl border border-dashed border-mute/35 px-3 py-2 text-[11px] italic text-mute/45 blur-[0.3px]"
-              style={{ left: fog.x, top: layout.centerY + fog.y }}
-            >
-              <HelpCircle className="h-3.5 w-3.5 shrink-0" />
-              {loadingNext ? "the path is forming…" : "the path ahead"}
-            </div>
-          )}
+          {/* path ahead — final node previews the route universe; earlier nodes show fog */}
+          {fog &&
+            (isFinalNode ? (
+              <div
+                className="absolute z-10 w-[176px] -translate-y-1/2 rounded-xl border border-brand/40 bg-brand/[0.06] px-3 py-2.5 shadow-glow-sm"
+                style={{ left: fog.x, top: layout.centerY + fog.y }}
+              >
+                <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-brand-glow/85">
+                  <Sparkles className="h-3 w-3" /> Reveal route universe
+                </div>
+                <div className="mt-1 text-[11px] leading-snug text-soft/90">
+                  ~{ROUTE_UNIVERSE_SIZE} possible futures surfaced
+                </div>
+                <div className="text-[10px] text-mute">3 selected for deep simulation</div>
+              </div>
+            ) : (
+              <div
+                className="absolute z-10 flex w-[130px] -translate-y-1/2 items-center gap-1.5 rounded-xl border border-dashed border-mute/35 px-3 py-2 text-[11px] italic text-mute/45 blur-[0.3px]"
+                style={{ left: fog.x, top: layout.centerY + fog.y }}
+              >
+                <HelpCircle className="h-3.5 w-3.5 shrink-0" />
+                {loadingNext ? "the path is forming…" : "the path ahead"}
+              </div>
+            ))}
 
           {/* loading marker on the current node when fetching */}
           {phase === "questions" && current && (loadingNext || loadingReveal) && !showBubble && (
@@ -286,43 +335,58 @@ export function DecisionGraphCanvas(props: DecisionGraphCanvasProps) {
         </div>
       </div>
 
-      {/* controls — type your own path / skip (attached below the rail) */}
+      {/* controls — the branch gates above are the primary interaction; the typed
+          path is deliberately subordinate (it lives as the "Write my own" gate). */}
       {showBubble && question && (
-        <div className="relative mt-1 flex flex-col gap-2 rounded-2xl border border-line/50 bg-void/30 px-3 py-3 sm:flex-row sm:items-center sm:gap-3">
-          <details className="group shrink-0">
-            <summary className="flex cursor-pointer list-none items-center gap-1.5 text-[11px] text-brand-glow/80 transition-colors hover:text-brand-glow">
-              <Lightbulb className="h-3.5 w-3.5" /> Why this question
-            </summary>
-            <p className="mt-1.5 max-w-md rounded-lg border border-brand/20 bg-brand/[0.05] px-3 py-2 text-[11px] leading-relaxed text-soft/90">
-              {question.whyThisQuestion}
-            </p>
-          </details>
-          {showText && (
-            <div className="flex flex-1 items-start gap-2">
-              <textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                rows={1}
-                placeholder={showOptions ? "…or walk your own path in words" : "Answer in your own words…"}
-                className="min-h-[40px] flex-1 resize-y rounded-xl border border-line/70 bg-void/40 px-3 py-2 text-[13px] leading-relaxed text-white placeholder:text-mute/60 transition-colors focus:border-brand/50 focus:outline-none focus:ring-2 focus:ring-brand/30"
-              />
+        <div className="relative mt-1 flex flex-col gap-2 rounded-2xl border border-line/50 bg-void/30 px-3 py-2.5">
+          <div className="flex items-center justify-between gap-3">
+            <details className="group min-w-0">
+              <summary className="flex cursor-pointer list-none items-center gap-1.5 text-[11px] text-brand-glow/80 transition-colors hover:text-brand-glow">
+                <Lightbulb className="h-3.5 w-3.5" /> Why this question
+              </summary>
+              <p className="mt-1.5 max-w-md rounded-lg border border-brand/20 bg-brand/[0.05] px-3 py-2 text-[11px] leading-relaxed text-soft/90">
+                {question.whyThisQuestion}
+              </p>
+            </details>
+            <span className="shrink-0 text-[10.5px] text-mute/70">
+              Pick a branch on the map →{" "}
               <button
                 type="button"
-                onClick={onWalkForward}
-                disabled={!canWalkForward}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-brand/40 bg-brand/10 px-3 py-2 text-[13px] font-medium text-white transition-all hover:bg-brand/20 disabled:opacity-40"
+                onClick={focusCustom}
+                className="text-brand-glow/70 underline-offset-2 transition-colors hover:text-brand-glow hover:underline"
               >
-                Walk <ArrowRight className="h-3.5 w-3.5" />
+                or write your own
               </button>
-            </div>
-          )}
-          <button
-            type="button"
-            onClick={onSkip}
-            className="shrink-0 text-[11px] text-mute transition-colors hover:text-soft"
-          >
-            skip this node
-          </button>
+            </span>
+            <button
+              type="button"
+              onClick={onSkip}
+              className="shrink-0 text-[11px] text-mute transition-colors hover:text-soft"
+            >
+              skip
+            </button>
+          </div>
+          {/* Subordinate custom-answer input — opens when the "Write my own" branch
+              gate (or the link above) is clicked, but always mounted for focus. */}
+          <div className={cn("flex items-start gap-2", customOpen ? "opacity-100" : "opacity-70")}>
+            <textarea
+              ref={textRef}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onFocus={() => setCustomOpen(true)}
+              rows={1}
+              placeholder="…or walk your own path in words"
+              className="min-h-[36px] flex-1 resize-y rounded-lg border border-line/60 bg-void/40 px-3 py-1.5 text-[12.5px] leading-relaxed text-white placeholder:text-mute/55 transition-colors focus:border-brand/50 focus:outline-none focus:ring-2 focus:ring-brand/25"
+            />
+            <button
+              type="button"
+              onClick={onWalkForward}
+              disabled={!canWalkForward}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-brand/40 bg-brand/10 px-3 py-1.5 text-[12.5px] font-medium text-white transition-all hover:bg-brand/20 disabled:opacity-40"
+            >
+              Walk <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -338,6 +402,7 @@ function CurrentNode({
   question,
   nodeNumber,
   totalNodes,
+  hasBranches,
 }: {
   node: DecisionGraphNode;
   left: number;
@@ -345,6 +410,7 @@ function CurrentNode({
   question: JourneyQuestion;
   nodeNumber: number;
   totalNodes: number;
+  hasBranches: boolean;
 }) {
   return (
     <motion.div
@@ -381,7 +447,10 @@ function CurrentNode({
             ))}
           </div>
         )}
-        <div className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-brand-glow/55">choose a branch →</div>
+        {/* Copy guardrail: only invite a branch choice when gates actually exist. */}
+        {hasBranches && (
+          <div className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-brand-glow/55">choose a branch →</div>
+        )}
       </div>
     </motion.div>
   );

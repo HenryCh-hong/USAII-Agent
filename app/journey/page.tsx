@@ -48,6 +48,7 @@ import { buildDecisionGraph } from "@/lib/journey/graph";
 import type { AnsweredStep, RouteFanItem } from "@/lib/journey/graph";
 import { DecisionGraphCanvas } from "@/components/journey/DecisionGraphCanvas";
 import { RouteUniverse } from "@/components/journey/RouteUniverse";
+import { branchGatesFor, normalizeQuestionBranches } from "@/lib/journey/branches";
 import { JOURNEY_TARGET_NODES, emptyJourneyState } from "@/lib/journey/types";
 import type {
   JourneyNextResponse,
@@ -191,8 +192,13 @@ export default function JourneyPage() {
     const nextPrev = [...prev, qa];
     setPrev(nextPrev);
 
-    // Roads not taken are greyed only when the user actually picked a branch.
-    const unchosen = chosen ? (question.options ?? []).filter((o) => o !== chosen) : [];
+    // Roads not taken are greyed only when the user actually picked a branch —
+    // drawn from the normalized branch set shown on the map (minus "Write my own").
+    const unchosen = chosen
+      ? normalizeQuestionBranches(question, journeyState)
+          .map((b) => b.label)
+          .filter((label) => label !== chosen)
+      : [];
     const step: AnsweredStep = {
       stepId,
       topic: question.whatItSeparates?.[0] ?? "Your answer",
@@ -233,14 +239,18 @@ export default function JourneyPage() {
     router.push("/map");
   }
 
-  // A live model could return a "choice"/"mixed" question without options — fall
-  // back to free-text so the node is always answerable.
-  const opts = question?.options ?? [];
-  const showOptions =
-    !!question && (question.type === "choice" || question.type === "mixed") && opts.length > 0;
-  const showText =
-    !!question && (question.type === "short_text" || question.type === "mixed" || !showOptions);
-  const canWalkForward = showText && text.trim().length > 0;
+  // INVARIANT (P0): every active node renders visible branch gates. The branch
+  // normalizer guarantees ≥3 answer branches even when the question arrives with
+  // empty/missing options or is pure free-text, and appends "Write my own" as a
+  // first-class branch — so a node can never collapse into a branchless form.
+  const branches = useMemo(
+    () => (question ? branchGatesFor(question, journeyState) : []),
+    [question, journeyState],
+  );
+  // The custom path is always answerable via the typed textarea.
+  const canWalkForward = text.trim().length > 0;
+  // The current node is the last question when its number meets the target.
+  const isFinalNode = nodeNumber >= JOURNEY_TARGET_NODES;
 
   /* --------------------------------- graph -------------------------------- */
 
@@ -369,9 +379,7 @@ export default function JourneyPage() {
               question={question}
               loadingNext={loadingNext}
               loadingReveal={loadingReveal}
-              showOptions={showOptions}
-              showText={showText}
-              options={opts}
+              branches={branches}
               text={text}
               setText={setText}
               onChoose={(o) => answer({ chosen: o })}
@@ -380,6 +388,7 @@ export default function JourneyPage() {
               canWalkForward={canWalkForward}
               nodeNumber={nodeNumber}
               totalNodes={JOURNEY_TARGET_NODES}
+              isFinalNode={isFinalNode}
             />
           </Section>
 
@@ -541,9 +550,7 @@ function RevealView({
           question={null}
           loadingNext={false}
           loadingReveal={false}
-          showOptions={false}
-          showText={false}
-          options={[]}
+          branches={[]}
           text=""
           setText={() => {}}
           onChoose={() => {}}
@@ -552,6 +559,7 @@ function RevealView({
           canWalkForward={false}
           nodeNumber={0}
           totalNodes={0}
+          isFinalNode={false}
         />
       </Section>
 
