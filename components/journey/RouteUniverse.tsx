@@ -24,6 +24,8 @@ import {
   ChevronDown,
   CircleDot,
   Compass,
+  Database,
+  ExternalLink,
   FlaskConical,
   Gauge,
   GitBranch,
@@ -47,6 +49,11 @@ import type {
   RouteLevel,
   RouteScoreBreakdown,
 } from "@/lib/journey/types";
+import {
+  NO_CURATED_SOURCE_NOTE,
+  SOURCE_TYPE_LABELS,
+  evidenceCardById,
+} from "@/lib/journey/evidence";
 
 const MAX_PRIMARY = 3;
 
@@ -250,6 +257,12 @@ function RouteCard({
             </div>
           </div>
           <MiniBreakdown b={c.scoreBreakdown} />
+          <div className="mt-2 flex items-center gap-1 border-t border-line/40 pt-1.5 text-[10px] text-mute">
+            <Database className="h-3 w-3 text-brand-glow/60" />
+            {c.evidenceCardIds.length > 0
+              ? `Grounded in ${c.evidenceCardIds.length} curated source${c.evidenceCardIds.length === 1 ? "" : "s"} · open review`
+              : "Leans on your answers + flagged assumptions"}
+          </div>
         </div>
 
         {/* 7-day test preview */}
@@ -348,9 +361,20 @@ function MicroReview({ c, featured = false }: { c: RouteCandidate; featured?: bo
           <span className="font-semibold text-brand-glow">{c.evidenceFitScore}/100</span>
           <span className="text-soft">({c.scoreBand})</span>
         </div>
-        <Field label="Biggest uncertainty" body={c.uncertainty} icon={TriangleAlert} tone="warn" />
+
+        {/* What shaped this route — the per-route provenance summary (Part E) */}
+        <div className="space-y-1.5 rounded-lg border border-line/50 bg-void/20 p-2.5">
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-brand-glow/70">What shaped this route</div>
+          <Shaped icon={User2} label="Strongest user signal" body={c.scoreRationale.strongestUserSignal} />
+          <Shaped icon={BookOpen} label="Strongest curated support" body={c.scoreRationale.strongestReferenceSupport} />
+          <Shaped icon={TriangleAlert} label="Biggest uncertainty" body={c.scoreRationale.biggestUncertainty} warn />
+          <Shaped icon={Brain} label="AI-inferred assumption" body={c.scoreRationale.aiInferredAssumption} muted />
+        </div>
+
+        {/* Evidence cards used — honest, structured, with a limitation fallback */}
+        <EvidenceCardsBlock ids={c.evidenceCardIds} />
+
         <Provenance icon={User2} label="What you told us" items={c.evidenceSupport.userInputs} />
-        <Provenance icon={BookOpen} label="Curated references" items={c.evidenceSupport.curatedReferences} />
         <Provenance icon={Brain} label="AI-inferred assumptions" items={c.evidenceSupport.aiInferredAssumptions} muted />
         <ScoreBreakdownBars b={c.scoreBreakdown} />
         <p className="text-[10px] leading-snug text-mute/80">
@@ -524,6 +548,89 @@ function Provenance({
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function Shaped({
+  icon: Icon,
+  label,
+  body,
+  warn,
+  muted,
+}: {
+  icon: typeof Sparkles;
+  label: string;
+  body: string;
+  warn?: boolean;
+  muted?: boolean;
+}) {
+  return (
+    <div className="flex gap-2 text-[11px] leading-relaxed">
+      <Icon className={cn("mt-0.5 h-3 w-3 shrink-0", warn ? "text-startup/80" : muted ? "text-mute/70" : "text-brand-glow/70")} />
+      <div className="min-w-0">
+        <span className="text-mute">{label}: </span>
+        <span className={cn(warn ? "text-startup/90" : muted ? "text-mute" : "text-soft/85")}>{body}</span>
+      </div>
+    </div>
+  );
+}
+
+/** Structured evidence cards a route leans on, with an honest no-source fallback (Part E). */
+function EvidenceCardsBlock({ ids }: { ids: string[] }) {
+  const cards = ids.map(evidenceCardById).filter((c): c is NonNullable<typeof c> => Boolean(c));
+  if (!cards.length) {
+    return (
+      <div className="rounded-lg border border-dashed border-line/60 bg-white/[0.01] p-2.5 text-[11px] leading-relaxed text-mute">
+        <span className="inline-flex items-center gap-1 font-semibold uppercase tracking-wider text-mute/80">
+          <Database className="h-3 w-3" /> Evidence cards used
+        </span>
+        <p className="mt-1">{NO_CURATED_SOURCE_NOTE}</p>
+      </div>
+    );
+  }
+  return (
+    <div className="space-y-1.5">
+      <div className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-brand-glow/70">
+        <Database className="h-3 w-3" /> Evidence cards used ({cards.length})
+      </div>
+      {cards.map((card) => (
+        <div key={card.id} className="rounded-lg border border-line/55 bg-white/[0.02] p-2.5">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <span className="text-[11.5px] font-medium text-white">{card.sourceName}</span>
+              <span className="text-[10px] text-mute"> · {card.publisher}</span>
+            </div>
+            {card.url ? (
+              <a
+                href={card.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 text-mute transition-colors hover:text-brand-glow"
+                aria-label={`Open ${card.sourceName}`}
+              >
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            ) : null}
+          </div>
+          <div className="mt-1 flex flex-wrap gap-1">
+            <span className="rounded border border-line/60 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-mute">
+              {SOURCE_TYPE_LABELS[card.sourceType]}
+            </span>
+            <span className="rounded border border-line/60 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-mute">
+              {card.coverageLevel}-level
+            </span>
+          </div>
+          <div className="mt-1.5 text-[10.5px] leading-snug">
+            <span className="text-brand-glow/70">Supports: </span>
+            <span className="text-soft/85">{card.whatItCanSupport[0]}</span>
+          </div>
+          <div className="text-[10.5px] leading-snug">
+            <span className="text-startup/70">Cannot: </span>
+            <span className="text-mute">{card.whatItCannotSupport[0]}</span>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

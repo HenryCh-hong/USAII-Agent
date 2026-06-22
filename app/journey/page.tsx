@@ -17,6 +17,7 @@
  * gracefully, with or without an API key.
  */
 import { useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -589,7 +590,10 @@ function RevealView({
         <p className="mb-4 max-w-2xl text-xs leading-relaxed text-mute">
           Each route is a meaningfully different strategy. The{" "}
           <span className="text-soft">evidence-fit score</span> shows how strongly a route matches your answers and the
-          reference support behind it — <span className="text-soft">not a prediction</span>.
+          reference support behind it — <span className="text-soft">not a prediction</span>.{" "}
+          <Link href="/evidence" className="text-brand-glow/80 underline-offset-2 hover:underline">
+            See how the evidence base works →
+          </Link>
         </p>
         {reveal.primarySelection && (
           <RouteUniverse

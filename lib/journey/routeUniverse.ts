@@ -2,18 +2,20 @@
  * Route universe — the "Possible Futures Library".
  *
  * Real decisions rarely have exactly three choices. This module turns the
- * journey into a PORTFOLIO of 6–10 meaningfully distinct route candidates, each
- * carrying full micro-level decision-review data (PART 4/6), then selects three
- * as the sharpest comparison set for deep simulation. Everything is deterministic
- * and mock-first (no API key, no live web): archetype templates are SELECTED,
- * SCORED, and lightly framed against the user's inferred journey signal.
+ * journey into a PORTFOLIO of meaningfully distinct route candidates (8 surfaced
+ * from a library of 10 archetypes), each carrying deep, concrete micro-level
+ * decision-review data (PART 4/6), then selects three as the sharpest comparison
+ * set for deep simulation. Everything is
+ * deterministic and mock-first (no API key, no live web): archetype templates are
+ * SELECTED, SCORED, and lightly framed against the user's inferred journey signal.
  *
  * Honesty is structural:
  *  - The evidence-fit score is a transparent MATCH score (PART 7) computed in
  *    code — never a probability of success, never a forecast.
- *  - Every evidence item is split by provenance: user inputs, curated/reference
- *    framings, and clearly-flagged AI-inferred assumptions (PART 8). An inference
- *    is never presented as a citation.
+ *  - Each route links to the curated journey evidence base (lib/journey/evidence)
+ *    by id; occupation/career DATA cards are dropped for non-career decisions, and
+ *    a route with no applicable curated source says so honestly. AI-inferred
+ *    assumptions are flagged, never shown as a citation (PART 8).
  *
  * The three primary routes are down-projected to the small RevealedPath shape the
  * deterministic adapter (lib/journey/adapter) expands into exactly three /map
@@ -34,6 +36,7 @@ import type {
 } from "./types";
 import { VALUE_PHRASE, dominantTag, rankTags } from "./values";
 import type { ValueTag } from "./values";
+import { evidenceCardsForIds } from "./evidence";
 
 /* ----------------------------- Archetype model ---------------------------- */
 
@@ -67,8 +70,9 @@ interface Archetype {
 
   confidence: RouteConfidence;
   uncertainty: string;
-  curatedReferences: string[];
   aiInferredAssumptions: string[];
+  /** Ids into lib/journey/evidence (gated to the journey at build time). */
+  evidenceCardIds: string[];
 
   /* axes that drive diversity, scoring, and primary selection */
   risk: RouteLevel;
@@ -87,69 +91,67 @@ const ARCHETYPES: Archetype[] = [
     archetype: "Conservative anchor",
     title: "Anchor on a stable, legible footing first",
     shortDescription:
-      "Move deliberately: lock in one stable, recognizable footing before expanding, so later moves are made from strength rather than pressure.",
+      "Lock in one stable, recognizable footing before expanding, so later bets are made from strength rather than pressure.",
     optimizesFor: "a stable, legible footing others can recognize quickly",
     coreIdea:
-      "Reduce downside first. Secure a footing — an offer, a credential, a runway — that makes every later bet optional rather than forced.",
+      "Reduce downside before chasing upside: secure one footing — an offer, a credential, three months of runway — that makes every later move optional instead of forced.",
     whyItMakesSense:
-      "When a stable footing recurs in your answers, protecting it tends to lower the cost of every other path, because you stop deciding from scarcity.",
+      "When a clear footing recurs in your answers, securing it tends to lower the cost of every other path, because you stop deciding from scarcity and start deciding from choice.",
     bestFitUser:
-      "Someone who values a clear footing and would rather expand from a secure base than gamble the base itself.",
+      "Someone who decides worse under financial or status pressure and would rather expand from a secure base than gamble the base itself.",
     assumptions: [
-      "A stable footing is available to you within this window.",
-      "Moving deliberately now does not quietly foreclose a rare opportunity.",
+      "A stable footing is actually reachable for you inside this window (an offer, an admit, a runway).",
+      "Moving deliberately now does not quietly close a genuinely time-limited door.",
+      "The footing you'd secure is one you'd still respect in a year, not just the easiest to grab.",
     ],
     gains: [
-      "A floor under your finances and your attention",
+      "A financial and attention floor that steadies later decisions",
       "Room to take real risks later without panic",
-      "A legible signal others read quickly",
+      "A signal others read quickly, opening structured doors",
     ],
     givesUp: [
-      "Some near-term upside and optionality",
-      "The compounding edge of an early, concentrated bet",
+      "Near-term upside and optionality on a bolder track",
+      "The compounding edge of committing early while a window is open",
     ],
     hiddenTradeoffs: [
-      "Stability can quietly harden into staying put past the point it still serves you",
+      "Stability can quietly harden into staying put past the point it still serves you, because leaving a comfortable floor feels like a loss",
     ],
     opportunityCost:
-      "The asymmetric upside of committing early to a bolder, less legible path while the window is open.",
+      "The asymmetric upside of committing early to a bolder, less legible path while it is still wide open.",
     sevenDayActionPlan: [
-      "Name the single footing that would most lower your background stress.",
-      "List the two or three concrete steps that secure it.",
-      "Take the first reversible step toward it this week.",
+      "Write down the single footing whose absence is creating the most background stress (money, an offer, a credential).",
+      "List the 2–3 concrete actions that would secure it, with a date on each.",
+      "Take the first reversible action this week — apply, ask, or bank one month of runway.",
     ],
     thirtyDayActionPlan: [
-      "Secure or substantially de-risk that footing.",
-      "Write the explicit condition under which you would expand beyond it.",
+      "Secure or visibly de-risk that footing (signed offer, confirmed admit, runway in the account).",
+      "Write the explicit condition — a date or a milestone — that triggers your first expansion beyond it.",
     ],
     ninetyDayDirection:
-      "Operate from the secured base and begin one small, deliberate expansion once the floor is genuinely solid.",
+      "Operate from the secured base and start one small, deliberate expansion once the floor is genuinely solid — not before.",
     lowCostExperiment:
-      "Spend a week acting as if the stable footing were already chosen, and notice whether you feel steadier or quietly boxed in.",
+      "Spend one week acting as if the footing were already chosen — turn down one competing option in your head and notice whether you feel steadier or quietly boxed in.",
     keyRisks: [
-      "Narrowing too early and treating safety as the only goal",
-      "Mistaking comfort for a finished decision",
+      "Narrowing too early and treating safety as the whole goal rather than the base",
+      "Mistaking the comfort of a secured floor for a finished decision",
     ],
     earlyWarningSigns: [
-      "You keep deferring the expansion step you wrote down",
-      "The footing feels less like a base and more like a ceiling",
+      "Two weeks pass and you keep deferring the expansion step you dated",
+      "The footing starts to feel less like a base and more like a ceiling you defend",
     ],
     resourcesNeeded: [
-      "A clear read on which footing is actually available",
-      "A small time buffer to secure it without rushing",
+      "A clear read on which footing is genuinely available to you now",
+      "A small time buffer to secure it without rushing into the wrong one",
     ],
     emotionalFriction:
-      "The quiet worry that playing it safe is its own kind of risk — that steadiness costs you a window you cannot reopen.",
+      "The quiet worry that playing it safe is its own risk — that steadiness costs you a window you cannot reopen later.",
     confidence: "Medium",
     uncertainty:
-      "Whether the footing you would secure is the one that actually frees you, or just the one that is easiest to reach.",
-    curatedReferences: [
-      "Reversibility / option-value framing",
-      "U.S. Bureau of Labor Statistics — Occupational Outlook Handbook (occupation-level)",
-    ],
+      "Whether the footing you'd secure is the one that actually frees you, or just the one that is easiest to reach.",
     aiInferredAssumptions: [
-      "That a stable footing reduces, rather than delays, your core tension — an assumption to confirm.",
+      "That a stable footing reduces, rather than postpones, your core tension — confirm by checking whether the pressure you feel is about money/status or about direction.",
     ],
+    evidenceCardIds: ["bls-ooh", "two-way-doors", "outside-view"],
     risk: "Low",
     reversibility: "High",
     timeHorizon: "Medium",
@@ -162,69 +164,67 @@ const ARCHETYPES: Archetype[] = [
     archetype: "Balanced portfolio",
     title: "Run a legible main track plus one real side bet",
     shortDescription:
-      "Hold a recognizable main track for stability while running one genuine side bet, so you build a floor and an option at the same time.",
+      "Hold a recognizable main track for stability while running one genuine side bet, so you build a floor and a higher-upside option at the same time.",
     optimizesFor: "a floor and an option held at once",
     coreIdea:
-      "Split your energy on purpose: a legible main track carries the floor, while a single real side bet keeps a higher-upside door open.",
+      "Split your week on purpose: a legible main track carries the floor and most of your hours, while one real, protected side bet keeps a higher-upside door open and feeding you signal.",
     whyItMakesSense:
-      "When your answers read as genuinely split, a deliberate split tends to buy information about both directions before you have to commit to either.",
+      "When your answers read as genuinely split, a deliberate split buys information about both directions before you have to commit to either — and a first-destination snapshot shows 'not landed yet' is common, not failure.",
     bestFitUser:
-      "Someone who can protect focus on two fronts and would rather learn from both directions than guess between them.",
+      "Someone with the bandwidth to protect focus on two fronts who learns more from doing a little of both than from deliberating between them.",
     assumptions: [
-      "You have enough bandwidth to run a main track and one side bet without doing both poorly.",
-      "The side bet is real enough to teach you something, not a hobby in disguise.",
+      "You have enough protected weekly hours to run a main track and one side bet without doing both poorly.",
+      "The side bet is concrete enough to produce a result, not a hobby that absorbs time without teaching anything.",
+      "The two tracks don't cannibalize the same scarce resource (the same deadline week, the same energy).",
     ],
     gains: [
       "A stable floor while a higher-upside option stays open",
-      "Real signal from both directions before committing",
-      "A natural hedge if one track stalls",
+      "Real signal from both directions before committing to one",
+      "A natural hedge if either track stalls",
     ],
     givesUp: [
       "The depth that comes from full concentration on one path",
-      "Some speed on each front",
+      "Some speed on each front and a clean, single story to tell",
     ],
     hiddenTradeoffs: [
-      "Two half-commitments can feel like motion while quietly avoiding the harder choice",
+      "Two half-commitments can feel like momentum while quietly letting you avoid the harder choice of which one you actually want",
     ],
     opportunityCost:
       "The compounding focus of going all-in on the single track that energizes you most.",
     sevenDayActionPlan: [
-      "Name the main track and the one side bet worth real hours.",
-      "Block protected time for each so neither bleaks into the other.",
-      "Define what a strong week looks like on both.",
+      "Name the main track (the floor) and the one side bet worth real hours.",
+      "Block specific calendar time for each — e.g. weekday evenings for the bet — so neither bleeds into the other.",
+      "Define what one strong week looks like on both, in a single sentence each.",
     ],
     thirtyDayActionPlan: [
-      "Ship one concrete result on each track.",
-      "Compare which one you protected time for when the week got tight.",
+      "Ship one concrete, visible result on each track (a delivered milestone; a shipped side-bet artifact).",
+      "At day 30, note which track you protected time for when the week got tight — that pull is data.",
     ],
     ninetyDayDirection:
-      "Let the track you instinctively defended earn more of your time, and taper the other rather than dropping it abruptly.",
+      "Let the track you instinctively defended earn more of your hours, and taper the other deliberately rather than dropping it abruptly.",
     lowCostExperiment:
-      "For one week, log which track you reach for first when you have a free hour — the pull is data about where your commitment already lives.",
+      "For one week, log which track you reach for first in a free hour and which you skip when tired; the asymmetry tells you where your real commitment already lives.",
     keyRisks: [
-      "Spreading thin and progressing slowly on both fronts",
-      "Using the split to postpone a decision you have already half-made",
+      "Spreading thin and making only shallow progress on both fronts",
+      "Using the split to postpone a decision you have, underneath, already half-made",
     ],
     earlyWarningSigns: [
-      "Both tracks keep slipping their protected time",
-      "You feel busy but cannot point to real progress on either",
+      "Both tracks keep losing their protected calendar time to whatever is loudest",
+      "You feel busy across the week but cannot point to one real result on either",
     ],
     resourcesNeeded: [
-      "Enough weekly hours to give each track a real shot",
-      "A simple way to track progress on both",
+      "Enough genuinely free weekly hours to give each track a real shot",
+      "A dead-simple way to track one result per track per month",
     ],
     emotionalFriction:
       "The discomfort of not fully committing — the nagging sense that holding two doors open is the same as deciding nothing.",
     confidence: "Medium",
     uncertainty:
-      "Whether you have the bandwidth for two real tracks, or whether the split quietly halves both.",
-    curatedReferences: [
-      "Barbell / floor-and-upside risk framing",
-      "Information-value (value-of-information) framing",
-    ],
+      "Whether you truly have the bandwidth for two real tracks, or whether the split quietly halves the quality of both.",
     aiInferredAssumptions: [
-      "That your answers are still genuinely split rather than already leaning — confirm by watching where your hours go.",
+      "That your answers are still genuinely split rather than already leaning — confirm by watching where your free hours actually go for a week.",
     ],
+    evidenceCardIds: ["barbell", "value-of-information", "nace-first-destination"],
     risk: "Medium",
     reversibility: "High",
     timeHorizon: "Medium",
@@ -240,66 +240,64 @@ const ARCHETYPES: Archetype[] = [
       "Pick the track with the most upside and pour concentrated effort into it for a defined push, trading breadth for depth and momentum.",
     optimizesFor: "momentum and depth on a single high-upside track",
     coreIdea:
-      "Stop hedging for a defined window. Put your best hours into the one track with the steepest upside and let focus compound.",
+      "Stop hedging for a fixed window (say 8–12 weeks). Put your best hours into the one track with the steepest upside and let focus compound into something a hedge never produces.",
     whyItMakesSense:
-      "When growth and momentum dominate your answers, concentration tends to compound faster than a spread bet — depth is hard to fake and hard to copy.",
+      "When growth and momentum dominate your answers, concentration compounds faster than a spread bet — but the outside view warns it usually takes longer than the inside view expects, so bound it.",
     bestFitUser:
-      "Someone with a clear favorite who is held back more by hedging than by the path itself.",
+      "Someone with a clear favorite who is held back more by hedging and second-guessing than by the track itself.",
     assumptions: [
-      "One track genuinely has more upside for you than the others.",
-      "You can protect a concentrated block of effort without burning out.",
+      "One track genuinely has more upside for you than the others — not just more noise around it.",
+      "You can protect a concentrated block of effort for the window without burning out.",
+      "The window's payoff is worth the breadth you set down to get it.",
     ],
     gains: [
-      "Compounding depth and visible momentum",
-      "A sharper, more distinctive signal",
-      "Faster, clearer feedback on whether the track is right",
+      "Compounding depth and visible momentum a hedge can't match",
+      "A sharper, more distinctive signal in that one direction",
+      "Faster, clearer feedback on whether the track is actually right for you",
     ],
     givesUp: [
       "The safety of a hedge if the track disappoints",
-      "Breadth across other directions",
+      "Breadth and optionality across other directions",
     ],
     hiddenTradeoffs: [
-      "Concentrated effort raises the cost of being wrong about which track to concentrate on",
+      "Concentrated effort raises the cost of being wrong about which track to concentrate on — and a sunk sprint is hard to abandon honestly",
     ],
     opportunityCost:
-      "The optionality and floor you would keep by spreading your effort more cautiously.",
+      "The optionality and floor you'd keep by spreading effort more cautiously across several tracks.",
     sevenDayActionPlan: [
-      "Commit to one track out loud and set the length of the push.",
-      "Clear two competing obligations off your week.",
-      "Produce one real artifact on the chosen track.",
+      "Commit to one track out loud to someone, and set the exact length of the push.",
+      "Clear two competing obligations off the next four weeks so the block is real.",
+      "Ship one concrete artifact on the chosen track this week, however rough.",
     ],
     thirtyDayActionPlan: [
-      "Stack four weeks of focused output and show it to people in that world.",
-      "Note where the work energizes you and where it grinds.",
+      "Stack four weeks of focused output and put it in front of 3–5 people who work in that world.",
+      "Track, honestly, where the work energizes you and where it grinds you down.",
     ],
     ninetyDayDirection:
-      "Reassess at the end of the push with real output in hand, and decide whether to extend, pivot, or bank the momentum.",
+      "At the end of the push, reassess with real output in hand and decide deliberately whether to extend, pivot, or bank the momentum and diversify.",
     lowCostExperiment:
-      "Run a single concentrated week on the track and measure output and energy against a normal hedged week.",
+      "Run a single concentrated week on the track — no hedging — and compare your output and your energy at the end against a normal split week.",
     keyRisks: [
-      "Concentrating on the wrong track and feeling the cost sharply",
-      "Burnout from an unsustainable pace",
+      "Concentrating on the wrong track and feeling the full cost of it",
+      "Burning out from a pace you set in optimism and can't sustain",
     ],
     earlyWarningSigns: [
-      "Output rises but energy keeps falling week over week",
-      "You are defending the choice to others more than enjoying the work",
+      "Output rises week over week but your energy keeps falling",
+      "You catch yourself defending the choice to others more than enjoying the work",
     ],
     resourcesNeeded: [
-      "A protected block of focused time",
-      "One or two people in that world who will react honestly to your output",
+      "A protected block of focused time, defended against everything non-essential",
+      "1–2 people in that world who will react honestly to your output, not politely",
     ],
     emotionalFriction:
-      "The exposure of going all-in — without a hedge, a disappointing result lands directly and personally.",
+      "The exposure of going all-in — without a hedge, a disappointing result lands directly and personally, with no soft landing.",
     confidence: "Medium",
     uncertainty:
-      "Whether the track you would concentrate on is genuinely your highest-upside one, or just the loudest right now.",
-    curatedReferences: [
-      "Deliberate-practice / skill-compounding framing",
-      "Decision-science premortem framing",
-    ],
+      "Whether the track you'd concentrate on is genuinely your highest-upside one, or just the loudest in your head right now.",
     aiInferredAssumptions: [
-      "That concentration suits your temperament more than hedging does — an assumption worth testing for a week.",
+      "That concentration suits your temperament more than hedging does — an assumption a single focused week is designed to test.",
     ],
+    evidenceCardIds: ["deliberate-practice", "outside-view", "onet"],
     risk: "High",
     reversibility: "Medium",
     timeHorizon: "Medium",
@@ -312,69 +310,67 @@ const ARCHETYPES: Archetype[] = [
     archetype: "Reversible experiment",
     title: "Run a reversible 30-day parallel experiment",
     shortDescription:
-      "Before committing, run a tightly time-boxed, fully reversible experiment across your two strongest directions and let the results, not the guess, decide.",
+      "Before committing, give your two strongest directions a real, comparable task for a fixed, fully reversible window and let the results — not the guess — decide.",
     optimizesFor: "resolving the core uncertainty cheaply before it gets expensive",
     coreIdea:
-      "Buy information instead of buying certainty. Give each leading direction a real, comparable task for a fixed window, then read the signal.",
+      "Buy information instead of buying certainty: design one small, comparable task per direction, run both inside 30 days, and pre-commit what a pass looks like before you start.",
     whyItMakesSense:
-      "When deciding now is costly and a cheap test exists, a reversible probe tends to replace one big guess with two small pieces of real evidence.",
+      "When deciding now is costly and a cheap test exists, a reversible probe replaces one big guess with two small pieces of real evidence — and customer-discovery framing keeps the test about behavior, not flattery.",
     bestFitUser:
-      "Someone stuck between two strong directions who learns more by doing a little of each than by deliberating further.",
+      "Someone stuck between two strong directions who learns far more from doing a little of each than from another week of deliberation.",
     assumptions: [
       "A small, comparable test of each direction is genuinely possible in 30 days.",
-      "A short trial produces signal that generalizes, rather than noise.",
+      "A short trial produces signal that generalizes, rather than noise from one good or bad day.",
+      "You'll honor the pre-committed pass/fail line instead of moving it afterward.",
     ],
     gains: [
-      "Real evidence about each direction at low cost",
-      "A bounded, fully reversible commitment",
-      "A decision made on signal rather than a guess",
+      "Real, behavior-based evidence about each direction at low cost",
+      "A bounded, fully reversible commitment with a clean exit",
+      "A decision finally made on signal rather than on a guess",
     ],
     givesUp: [
       "A month of fully concentrated progress on one path",
-      "The clarity that comes from committing outright",
+      "The momentum that comes from committing outright",
     ],
     hiddenTradeoffs: [
-      "A test designed loosely can confirm whatever you already wanted to believe",
+      "A test designed loosely confirms whatever you already wanted to believe — the discipline is in the falsifiable line, not the activity",
     ],
     opportunityCost:
-      "The head start you would have by committing now to the direction you already lean toward.",
+      "The head start you'd have by committing now to the direction you already lean toward.",
     sevenDayActionPlan: [
-      "Write the one falsifiable thing each direction has to show you.",
-      "Design a small, comparable task for each.",
-      "Start the first task and timestamp it.",
+      "For each direction, write the one falsifiable thing it must show you (e.g. 'two of five target users ask for a follow-up').",
+      "Design a small, comparable task for each that fits inside a week of evenings.",
+      "Start the first task and timestamp it so the 30-day clock is real.",
     ],
     thirtyDayActionPlan: [
-      "Run both tasks to completion under the same effort budget.",
-      "Score each against the falsifiable thing you wrote, not against your mood.",
+      "Run both tasks to completion under the same effort budget, no favoritism.",
+      "Score each against the falsifiable line you wrote — not against your mood that day.",
     ],
     ninetyDayDirection:
-      "Commit to whichever direction the evidence favored and fold the runner-up into a smaller ongoing bet or set it down.",
+      "Commit to whichever direction the evidence favored and fold the runner-up into a smaller ongoing bet, or set it down cleanly.",
     lowCostExperiment:
-      "Give each of your two leading directions one real, comparable task this week and note which one you protected time for.",
+      "This week, give each of your two leading directions one real, comparable task — for an entrepreneurial one, interview 5 target users and build a single landing page; if no one asks for a follow-up, that route's demand assumption weakens.",
     keyRisks: [
-      "Designing the test to confirm a foregone conclusion",
-      "Letting the experiment drift into open-ended avoidance",
+      "Designing the test to confirm a conclusion you'd already reached",
+      "Letting the 30-day experiment quietly drift into open-ended avoidance",
     ],
     earlyWarningSigns: [
-      "The 30-day window keeps quietly extending",
-      "You are collecting activity rather than answering the question you wrote down",
+      "The 30-day window keeps extending 'just one more week'",
+      "You're collecting activity and busywork rather than answering the question you wrote down",
     ],
     resourcesNeeded: [
-      "A falsifiable question for each direction",
-      "A fixed end date and a way to score the result",
+      "A falsifiable pass/fail question for each direction",
+      "A fixed end date and a way to score the result honestly",
     ],
     emotionalFriction:
-      "The restlessness of deliberately not committing yet — running a test can feel like stalling, even when it is the cheaper way to learn.",
+      "The restlessness of deliberately not committing yet — running a test can feel like stalling, even when it's the cheaper way to learn.",
     confidence: "Medium",
     uncertainty:
-      "Whether a 30-day probe is long enough to produce signal that holds, or just a snapshot.",
-    curatedReferences: [
-      "Information-value (value-of-information) framing",
-      "Minimum-viable-test (build-measure-learn) framing",
-    ],
+      "Whether a 30-day probe is long enough to produce signal that holds, or just a snapshot of a single month.",
     aiInferredAssumptions: [
-      "That your two directions are testable at small scale — confirm before you design the probe.",
+      "That both directions are testable at small scale — confirm this before you design the probe, not after.",
     ],
+    evidenceCardIds: ["value-of-information", "customer-development", "mom-test"],
     risk: "Low",
     reversibility: "High",
     timeHorizon: "Short",
@@ -387,69 +383,67 @@ const ARCHETYPES: Archetype[] = [
     archetype: "Fallback floor",
     title: "Build a portable floor under every path",
     shortDescription:
-      "Invest first in portable skills and a financial buffer that protect you no matter which direction you take, lowering the stakes of the real choice.",
+      "Invest first in portable skills and a financial buffer that protect you whichever direction you take, lowering the stakes of the real choice.",
     optimizesFor: "a portable floor that survives whichever path you choose",
     coreIdea:
-      "De-risk the person, not just the path. Build skills and a buffer that travel with you, so any later choice is made from safety rather than fear.",
+      "De-risk the person, not just the path: build one transferable skill and a defined buffer (e.g. three months of expenses) that travel with you, so any later choice is made from safety rather than fear.",
     whyItMakesSense:
-      "When fear of a wrong turn weighs on your answers, a portable floor tends to shrink that fear directly, because the downside of being wrong gets smaller.",
+      "When fear of a wrong turn weighs on your answers, a portable floor shrinks that fear directly — barbell framing pairs a protected base with a freer upside bet on top.",
     bestFitUser:
-      "Someone whose hesitation comes more from exposure than from confusion about direction.",
+      "Someone whose hesitation comes more from exposure and 'what if it goes wrong' than from genuine confusion about direction.",
     assumptions: [
-      "The skills and buffer you build genuinely transfer across your options.",
-      "Building the floor does not become a way to delay the real choice indefinitely.",
+      "The skill and buffer you build genuinely transfer across the options you're weighing.",
+      "Building the floor doesn't become a permanent reason to delay the real choice.",
+      "Three-ish months of buffer is enough to change how you decide, not just how you feel.",
     ],
     gains: [
       "A safety margin that lowers the stakes of every path",
-      "Skills that compound regardless of direction",
-      "Calmer, less fear-driven decision-making later",
+      "A skill that compounds regardless of which direction you take",
+      "Calmer, less fear-driven decisions later",
     ],
     givesUp: [
-      "Time that could go straight into a chosen direction",
-      "The urgency that sometimes forces a clearer decision",
+      "Time that could go straight into a chosen direction now",
+      "The urgency that sometimes forces a clearer, faster decision",
     ],
     hiddenTradeoffs: [
-      "A floor can become a comfortable place to hide from the harder commitment",
+      "A floor can become a comfortable place to hide from the harder commitment, dressed up as prudence",
     ],
     opportunityCost:
       "Momentum on a specific path you might have built while you were reinforcing the floor.",
     sevenDayActionPlan: [
-      "Name the one portable skill that strengthens every option you are weighing.",
-      "Name the buffer that would most lower your sense of exposure.",
-      "Take one concrete step toward each.",
+      "Name the one portable skill that strengthens every option you're weighing.",
+      "Name the buffer (a savings number, a fallback offer) that would most lower your sense of exposure.",
+      "Take one concrete step toward each — a first lesson; a transfer to savings.",
     ],
     thirtyDayActionPlan: [
-      "Make visible progress on the portable skill.",
-      "Set a target for the buffer and a date to reassess.",
+      "Make visible progress on the portable skill (a finished course module, a small built thing).",
+      "Set a target number for the buffer and a date to make the real directional choice.",
     ],
     ninetyDayDirection:
-      "With the floor in place, make the real directional choice deliberately — from safety, not from scarcity.",
+      "With the floor in place, make the real directional choice deliberately — from safety, not from scarcity — and let the floor support a bolder upside bet.",
     lowCostExperiment:
-      "Spend a week building only the portable skill and notice whether the broader decision feels less frightening afterward.",
+      "Spend one week building only the portable skill and banking the buffer step; then notice whether the broader decision actually feels less frightening, or exactly the same.",
     keyRisks: [
-      "Treating the floor as the destination instead of the base",
-      "Indefinitely postponing the directional choice",
+      "Treating the floor as the destination instead of the launch pad",
+      "Postponing the directional choice indefinitely behind 'just a bit more buffer'",
     ],
     earlyWarningSigns: [
-      "The floor keeps growing but the real choice never arrives",
-      "You feel safe but no closer to a direction",
+      "The buffer keeps growing but the real choice never gets a date",
+      "You feel safer but no closer to a direction",
     ],
     resourcesNeeded: [
-      "A clear view of which skills are genuinely portable",
-      "A modest, defined savings or time buffer",
+      "A clear view of which skills are genuinely portable across your options",
+      "A modest, defined savings or fallback buffer and the discipline to cap it",
     ],
     emotionalFriction:
-      "The pull to keep reinforcing the floor because it feels productive, even once it has stopped reducing real risk.",
+      "The pull to keep reinforcing the floor because it feels productive, even once it has stopped reducing any real risk.",
     confidence: "Medium",
     uncertainty:
-      "Whether the floor you build actually transfers across your options, or only to one of them.",
-    curatedReferences: [
-      "Barbell / floor-and-upside risk framing",
-      "Deliberate-practice / skill-compounding framing",
-    ],
+      "Whether the floor you build actually transfers across your options, or really only serves one of them.",
     aiInferredAssumptions: [
-      "That your hesitation is driven by exposure rather than direction — an assumption to check against your own answers.",
+      "That your hesitation is driven by exposure rather than direction — check this against your own answers before over-investing in the floor.",
     ],
+    evidenceCardIds: ["barbell", "deliberate-practice", "acs-pums"],
     risk: "Low",
     reversibility: "High",
     timeHorizon: "Medium",
@@ -462,51 +456,52 @@ const ARCHETYPES: Archetype[] = [
     archetype: "Short-term test",
     title: "Run one cheap probe on the most painful unknown",
     shortDescription:
-      "Isolate the single uncertainty that hurts most and resolve it with one fast, cheap probe this week, rather than carrying it through every other path.",
+      "Isolate the single uncertainty that hurts most and resolve it with one fast, cheap probe this week, instead of carrying it through every other path.",
     optimizesFor: "resolving the single most painful unknown fast",
     coreIdea:
-      "Find the one assumption that, if wrong, sinks the most paths — and buy a small piece of real signal on it before anything else.",
+      "Find the one assumption that, if wrong, sinks the most paths — then buy a small piece of real signal on it before doing anything else, with a pass/fail line set in advance.",
     whyItMakesSense:
-      "A single binding uncertainty often blocks several routes at once; testing it first tends to unlock more of the map per hour than broad deliberation.",
+      "A single binding uncertainty often blocks several routes at once, so a pre-mortem on it and one cheap value-of-information test unlocks more of the map per hour than broad deliberation.",
     bestFitUser:
-      "Someone who can feel which unknown is doing the most damage and wants to lance it quickly.",
+      "Someone who can feel which unknown is doing the most damage and wants to lance it quickly rather than circle it.",
     assumptions: [
-      "One uncertainty is genuinely more binding than the rest.",
-      "A small probe can move your belief about it, not just describe it.",
+      "One uncertainty is genuinely more binding than the rest right now.",
+      "A small probe can actually move your belief about it, not merely describe it.",
+      "You can name a result in advance that would change your mind.",
     ],
     gains: [
       "A fast answer to the question blocking the most paths",
-      "A very low cost to run it",
-      "Clearer footing for every later decision",
+      "A very low cost to run it — an afternoon, not a quarter",
+      "Clearer footing under every later decision",
     ],
     givesUp: [
       "The breadth of testing several things at once",
-      "Any false comfort the unknown was providing",
+      "Any false comfort the unexamined unknown was quietly providing",
     ],
     hiddenTradeoffs: [
-      "Resolving one unknown can surface a harder one you were not ready to face",
+      "Resolving one unknown can surface a harder one underneath that you weren't ready to face",
     ],
     opportunityCost:
       "The reassurance of leaving a painful question comfortably unexamined a little longer.",
     sevenDayActionPlan: [
-      "Name the single uncertainty that blocks the most paths.",
-      "Design the cheapest test that could change your mind about it.",
-      "Run it before the week ends.",
+      "Name the single uncertainty that, if it broke the wrong way, would sink the most paths.",
+      "Design the cheapest test that could genuinely change your mind about it, and write the pass/fail line.",
+      "Run it before the week ends — one conversation, one trial, one real data point.",
     ],
     thirtyDayActionPlan: [
       "Act on what the probe told you about the binding unknown.",
-      "Pick the next most painful uncertainty and repeat the move.",
+      "Pick the next most painful uncertainty and repeat the same one-week move.",
     ],
     ninetyDayDirection:
-      "Carry a habit of testing the most binding unknown first, so the map keeps clearing rather than staying fogged.",
+      "Carry the habit of testing the most binding unknown first, so the map keeps clearing instead of staying fogged.",
     lowCostExperiment:
-      "Spend one afternoon getting a single real data point on the unknown that worries you most, then notice how much of the decision shifts.",
+      "Spend one afternoon getting a single real data point on the unknown that worries you most — one honest conversation or one small trial — then notice how much of the decision actually shifts.",
     keyRisks: [
-      "Testing a comfortable question instead of the binding one",
-      "Over-reading a single small result",
+      "Testing a comfortable question instead of the genuinely binding one",
+      "Over-reading a single small result as if it settled everything",
     ],
     earlyWarningSigns: [
-      "You keep refining the test instead of running it",
+      "You keep refining the test design instead of running it",
       "The probe answered something easy and left the hard part untouched",
     ],
     resourcesNeeded: [
@@ -514,17 +509,14 @@ const ARCHETYPES: Archetype[] = [
       "An afternoon and a way to get one real data point",
     ],
     emotionalFriction:
-      "The flinch of pointing a test straight at the thing you have been avoiding looking at.",
+      "The flinch of pointing a test straight at the thing you've been carefully avoiding looking at.",
     confidence: "Medium",
     uncertainty:
-      "Whether the unknown that feels most painful is the one that is actually most binding.",
-    curatedReferences: [
-      "Information-value (value-of-information) framing",
-      "Decision-science premortem framing",
-    ],
+      "Whether the unknown that feels most painful is the one that is actually most binding on the decision.",
     aiInferredAssumptions: [
-      "That a single unknown dominates the decision — confirm by checking how many paths it really blocks.",
+      "That a single unknown dominates the decision — confirm by checking how many of your paths it really blocks.",
     ],
+    evidenceCardIds: ["value-of-information", "premortem"],
     risk: "Low",
     reversibility: "High",
     timeHorizon: "Short",
@@ -537,21 +529,22 @@ const ARCHETYPES: Archetype[] = [
     archetype: "Long-term transformation",
     title: "Commit to a multi-year depth build",
     shortDescription:
-      "Choose the direction worth years, not months, and start compounding deliberate depth now — accepting slow early payoff for a hard-to-copy edge later.",
+      "Choose the direction worth years rather than months and start compounding deliberate depth now — accepting slow early payoff for a hard-to-copy edge later.",
     optimizesFor: "a durable, hard-to-copy depth that compounds over years",
     coreIdea:
-      "Play a longer game on purpose. Pick the direction you would still respect in several years and invest in depth that others cannot shortcut.",
+      "Play a longer game on purpose: pick the direction you'd still respect in several years and invest in depth — through deliberate practice on its hardest sub-skill — that others can't shortcut.",
     whyItMakesSense:
-      "When identity and meaning run through your answers, a long compounding build tends to fit better than a quick win — depth is where distinctiveness accrues.",
+      "When identity and meaning run through your answers, a long compounding build fits better than a quick win, and a multi-year cohort view is more honest than a six-month snapshot about how these paths unfold.",
     bestFitUser:
-      "Someone with a direction that feels like them and the patience to let it compound past the slow early stretch.",
+      "Someone with a direction that feels like them and the patience to push through the slow, illegible early stretch.",
     assumptions: [
-      "The direction still fits you years from now, not just today.",
-      "You can tolerate a long stretch of slow, illegible early payoff.",
+      "The direction still fits the person you'll be in a few years, not only today.",
+      "You can tolerate a long stretch of slow, externally-invisible early payoff.",
+      "The depth you build stays valuable as the field changes around it.",
     ],
     gains: [
-      "A distinctive, durable edge that is hard to copy",
-      "Work that compounds rather than resets",
+      "A distinctive, durable edge that's hard to copy",
+      "Work that compounds across years instead of resetting",
       "Deep alignment between the path and who you are",
     ],
     givesUp: [
@@ -559,47 +552,44 @@ const ARCHETYPES: Archetype[] = [
       "The flexibility of staying broad and uncommitted",
     ],
     hiddenTradeoffs: [
-      "A long commitment made for identity reasons is the hardest to re-examine honestly later",
+      "A long commitment made for identity reasons is the hardest to re-examine honestly later, because questioning it feels like questioning yourself",
     ],
     opportunityCost:
       "The faster, more legible wins available on a shorter, more conventional track.",
     sevenDayActionPlan: [
-      "Name the direction you would still respect spending years on.",
-      "Identify the deep skill at its core that compounds.",
-      "Put real hours into the hardest part of that skill this week.",
+      "Name the direction you'd still respect spending several years on.",
+      "Identify the one deep sub-skill at its core that compounds and is hard to fake.",
+      "Put real hours into the hardest part of that sub-skill this week, not the comfortable part.",
     ],
     thirtyDayActionPlan: [
-      "Build a sustainable weekly rhythm of deep work on the core skill.",
-      "Set a checkpoint to re-confirm the direction still fits you.",
+      "Build a sustainable weekly rhythm of deep work on the core skill (protected, feedback-rich blocks).",
+      "Set a 90-day checkpoint to honestly re-confirm the direction still fits you.",
     ],
     ninetyDayDirection:
-      "Establish the long build as a durable habit, with honest checkpoints that let you re-examine the commitment rather than defend it.",
+      "Establish the long build as a durable habit, with scheduled checkpoints that genuinely let you re-examine the commitment rather than just defend it.",
     lowCostExperiment:
-      "Spend a week on the most demanding real problem in that direction and notice, honestly, whether the hard parts energize or drain you.",
+      "Spend one week on the most demanding real problem in that direction and notice, honestly, whether the hard parts absorb you or drain you — that reaction is your best early fit signal.",
     keyRisks: [
-      "Committing years to a direction chosen by an old version of you",
-      "Mistaking sunk cost for genuine fit as time passes",
+      "Committing years to a direction chosen by an older version of you",
+      "Mistaking accumulated sunk cost for genuine fit as time passes",
     ],
     earlyWarningSigns: [
       "The hard parts consistently drain rather than absorb you",
-      "You defend the path by its cost so far rather than its pull",
+      "You defend the path by how much you've already invested, not by its pull",
     ],
     resourcesNeeded: [
-      "A sustainable long-term rhythm and patience for slow payoff",
-      "Honest checkpoints to re-examine fit over time",
+      "A sustainable long-term rhythm and patience for slow, invisible early payoff",
+      "Honest checkpoints — and someone who will tell you the truth at them",
     ],
     emotionalFriction:
       "The loneliness of a slow, illegible early stretch while more conventional paths show visible wins around you.",
     confidence: "Low",
     uncertainty:
       "Whether the direction that fits you now will still fit the person you become over several years.",
-    curatedReferences: [
-      "Deliberate-practice / skill-compounding framing",
-      "U.S. Bureau of Labor Statistics — Occupational Outlook Handbook (occupation-level)",
-    ],
     aiInferredAssumptions: [
-      "That present identity-fit predicts future fit — a meaningful assumption to revisit at each checkpoint.",
+      "That present identity-fit predicts future fit — a meaningful assumption to revisit honestly at every checkpoint.",
     ],
+    evidenceCardIds: ["deliberate-practice", "nces-bb", "college-scorecard"],
     risk: "Medium",
     reversibility: "Low",
     timeHorizon: "Long",
@@ -615,18 +605,19 @@ const ARCHETYPES: Archetype[] = [
       "Make a concentrated bet on the opportunity that feels rare — but bound it with a pre-set stop, turning an open-ended gamble into a bounded one.",
     optimizesFor: "asymmetric upside on a rare window, with a hard stop",
     coreIdea:
-      "Pursue the rare opportunity hard, but decide the exit before you start, so the downside is capped while the upside stays open.",
+      "Pursue the rare opportunity hard, but decide the exit before you start: a written stop date or condition that caps the downside while leaving the upside open.",
     whyItMakesSense:
-      "When a closing window dominates your answers, a bounded bet tends to resolve the 'what if I had tried' question without the open-ended exposure of an unbounded one.",
+      "When a closing window dominates your answers, a bounded bet answers the 'what if I'd tried' question without open-ended exposure — and a pre-mortem plus regret-minimization make the stop honest rather than ornamental.",
     bestFitUser:
-      "Someone facing a genuinely time-limited opportunity who can commit hard and still honor a pre-set stop.",
+      "Someone facing a genuinely time-limited opportunity who can commit hard and still honor a stop they set while calm.",
     assumptions: [
-      "The window is genuinely rare and time-limited, not a feeling of scarcity.",
-      "You can hold to a stop point once you are emotionally invested.",
+      "The window is genuinely rare and time-limited, not a feeling of scarcity dressed as a deadline.",
+      "You can hold to a stop point once you're emotionally and financially invested.",
+      "You have, or can build, a buffer that survives the bet not paying off.",
     ],
     gains: [
       "Exposure to a large, asymmetric upside",
-      "A clear answer to the 'what if I had tried' question",
+      "A clear, final answer to the 'what if I had tried' question",
       "A capped downside, because the exit is set in advance",
     ],
     givesUp: [
@@ -634,47 +625,44 @@ const ARCHETYPES: Archetype[] = [
       "Some stability during the bet itself",
     ],
     hiddenTradeoffs: [
-      "A pre-set stop is easy to write and hard to honor once you are emotionally committed",
+      "A pre-set stop is easy to write and hard to honor once you're emotionally committed — the bet quietly rewrites its own exit",
     ],
     opportunityCost:
       "The reliable progress of a calmer path you set aside to take the swing.",
     sevenDayActionPlan: [
-      "Write the one falsifiable signal that would prove the window is real.",
-      "Set the stop point — the date or condition where you walk away — before committing.",
+      "Write the one falsifiable signal that would prove the window is real (a customer-discovery interview result, a concrete commitment from someone).",
+      "Set the stop — the exact date or condition where you walk away — and tell one person, before committing.",
       "Take the first concrete step toward the bet.",
     ],
     thirtyDayActionPlan: [
-      "Pursue the opportunity at full effort while watching for the falsifiable signal.",
-      "Check honestly against the stop you set, without moving it.",
+      "Pursue the opportunity at full effort while watching for the falsifiable signal you named.",
+      "Check honestly against the stop you set, without quietly moving it.",
     ],
     ninetyDayDirection:
-      "Either the signal confirmed the window and you lean further in, or the stop triggered and you exit cleanly with the question answered.",
+      "Either the signal confirmed the window and you lean further in, or the stop triggered and you exit cleanly — with the question answered either way.",
     lowCostExperiment:
-      "Spend the week trying to find the single piece of evidence that the window is real before committing any further to it.",
+      "Spend this week trying to find the single piece of evidence that the window is real — five honest interviews about past behavior, not opinions — before committing any further to it.",
     keyRisks: [
-      "Sinking real time into a window that was less rare than it felt",
-      "Quietly moving the stop point once you are invested",
+      "Sinking real time into a window that turns out less rare than it felt",
+      "Quietly moving the stop point once you're invested",
     ],
     earlyWarningSigns: [
       "You find reasons to push the stop date back",
-      "The evidence for the window stays a feeling rather than a fact",
+      "The evidence for the window stays a feeling rather than becoming a fact",
     ],
     resourcesNeeded: [
       "A buffer that survives the bet not paying off",
-      "A pre-committed, written stop point",
+      "A pre-committed, written stop point — and a person who'll hold you to it",
     ],
     emotionalFriction:
       "The high stakes of a public swing, and the discipline it takes to honor a stop you set while calm but reach while invested.",
     confidence: "Low",
     uncertainty:
-      "Whether the window is genuinely rare and closing, or a sense of scarcity dressed as a deadline.",
-    curatedReferences: [
-      "Decision-science premortem framing",
-      "Barbell / floor-and-upside risk framing",
-    ],
+      "Whether the window is genuinely rare and closing, or a sense of scarcity that will look very different in a year.",
     aiInferredAssumptions: [
-      "That the opportunity is genuinely time-limited — the assumption most worth falsifying before you commit.",
+      "That the opportunity is genuinely time-limited — the single assumption most worth trying to falsify before you commit.",
     ],
+    evidenceCardIds: ["premortem", "regret-min", "barbell", "customer-development"],
     risk: "High",
     reversibility: "Low",
     timeHorizon: "Medium",
@@ -690,14 +678,15 @@ const ARCHETYPES: Archetype[] = [
       "Rather than choosing between two strengths, combine them into a single differentiated signal that few others can credibly claim.",
     optimizesFor: "a differentiated signal at the intersection of two strengths",
     coreIdea:
-      "Treat the choice as a false binary. Build at the intersection of your two strengths, where the combination itself is the edge.",
+      "Treat the choice as a false binary: build at the intersection of your two strengths, where the combination itself — not either skill alone — is the edge and the less-crowded position.",
     whyItMakesSense:
-      "When two directions both pull at you, the overlap is often less crowded than either alone — a hybrid tends to convert a hard choice into a distinctive position.",
+      "When two directions both pull at you, the overlap is often less crowded than either alone; checking that real roles draw on both strengths keeps the hybrid from being merely novel.",
     bestFitUser:
       "Someone torn between two directions that could reinforce rather than cancel each other.",
     assumptions: [
-      "Your two strengths genuinely combine into something more than their sum.",
-      "There is a real audience or use for the combination, not just novelty.",
+      "Your two strengths genuinely combine into something more than their sum, not just two résumé lines.",
+      "There's a real audience or use for the combination, not only novelty.",
+      "You're competent enough in both that the blend reads as depth, not dabbling.",
     ],
     gains: [
       "A distinctive position few others can credibly claim",
@@ -709,33 +698,33 @@ const ARCHETYPES: Archetype[] = [
       "Some depth in each strength taken alone",
     ],
     hiddenTradeoffs: [
-      "A combination can read as unfocused to people who only value one of the two strengths",
+      "A combination can read as unfocused to people who only value one of the two strengths — you trade legibility for distinctiveness",
     ],
     opportunityCost:
       "The straightforward legibility of going deep on one recognizable track.",
     sevenDayActionPlan: [
       "Name the two strengths and the specific point where they intersect.",
-      "Sketch one concrete thing that lives at that intersection.",
-      "Make a rough first version of it.",
+      "Sketch one concrete thing that lives at that intersection and nowhere else.",
+      "Make a rough first version of it this week.",
     ],
     thirtyDayActionPlan: [
-      "Build a small, real artifact that only the combination makes possible.",
-      "Show it to people in each world and note who immediately gets it.",
+      "Build one small, real artifact that only the combination makes possible.",
+      "Show it to people in each world and note who immediately gets it without explanation.",
     ],
     ninetyDayDirection:
-      "Sharpen the hybrid into a position you can describe in one line, and double down where the combination clearly lands.",
+      "Sharpen the hybrid into a position you can state in one line, and double down where the combination clearly lands with real people.",
     lowCostExperiment:
-      "Make one small thing this week that only the intersection of your two strengths could produce, and watch whose attention it catches.",
+      "Make one small thing this week that only the intersection of your two strengths could produce, show it to five people across both worlds, and watch whose attention it actually catches.",
     keyRisks: [
       "Building something that reads as unfocused rather than distinctive",
-      "Combining for novelty when there is no real demand for the mix",
+      "Combining for novelty when there's no real demand for the mix",
     ],
     earlyWarningSigns: [
       "People consistently ask you to pick one of the two instead",
       "The combination interests you but not anyone you show it to",
     ],
     resourcesNeeded: [
-      "Genuine competence in both strengths, not just interest",
+      "Genuine competence in both strengths, not just interest in them",
       "A small audience in each world to react to the combination",
     ],
     emotionalFriction:
@@ -743,13 +732,10 @@ const ARCHETYPES: Archetype[] = [
     confidence: "Medium",
     uncertainty:
       "Whether the intersection of your two strengths has real pull, or is mainly interesting to you.",
-    curatedReferences: [
-      "Deliberate-practice / skill-compounding framing",
-      "Minimum-viable-test (build-measure-learn) framing",
-    ],
     aiInferredAssumptions: [
-      "That your two strengths are complementary rather than competing for the same hours — an assumption to test with a real artifact.",
+      "That your two strengths are complementary rather than competing for the same hours — test it with one real artifact before betting on it.",
     ],
+    evidenceCardIds: ["onet", "deliberate-practice", "customer-development"],
     risk: "Medium",
     reversibility: "Medium",
     timeHorizon: "Medium",
@@ -765,17 +751,18 @@ const ARCHETYPES: Archetype[] = [
       "Instead of switching, stay where you are and aggressively fix the single thing that makes the current path feel wrong before deciding to leave it.",
     optimizesFor: "a fair test of the current path before leaving it",
     coreIdea:
-      "Separate the path from its friction. Remove the one drag that is coloring everything, then judge the current path on its real merits.",
+      "Separate the path from its friction: remove the one drag that's coloring everything, then judge the current path on its real merits with the noise gone.",
     whyItMakesSense:
-      "Restlessness is sometimes about a fixable irritant rather than the path itself; clearing it first tends to reveal whether the urge to leave is real.",
+      "Restlessness is sometimes about a fixable irritant rather than the path itself; this is a two-way door, so clearing the drag first costs almost nothing and reveals whether the urge to leave is real.",
     bestFitUser:
-      "Someone tempted to switch who has not yet separated a genuine misfit from a specific, fixable frustration.",
+      "Someone tempted to switch who hasn't yet separated a genuine misfit from a specific, fixable frustration.",
     assumptions: [
       "A single dominant drag is coloring how you feel about the whole path.",
-      "That drag is actually fixable from where you stand.",
+      "That drag is actually fixable from where you stand, by a lever you control.",
+      "A month with it gone is long enough to re-rate the path fairly.",
     ],
     gains: [
-      "A fair test of the current path with the noise removed",
+      "A fair test of the current path with the loudest noise removed",
       "Very low cost and almost fully reversible",
       "Clarity on whether the urge to leave is real or situational",
     ],
@@ -784,47 +771,44 @@ const ARCHETYPES: Archetype[] = [
       "Time, if the path turns out to be a genuine misfit anyway",
     ],
     hiddenTradeoffs: [
-      "Optimizing in place can become a reason to stay somewhere you have already outgrown",
+      "Optimizing in place can become a sophisticated reason to stay somewhere you've already outgrown",
     ],
     opportunityCost:
       "The momentum and learning of committing to a genuine change now rather than later.",
     sevenDayActionPlan: [
-      "Name the single biggest drag on your current path.",
-      "Identify the most direct lever you control to reduce it.",
-      "Pull that lever once this week.",
+      "Name the single biggest drag on your current path — the one that colors the rest.",
+      "Identify the most direct lever you actually control to reduce it.",
+      "Pull that lever once this week (a conversation, a boundary, a changed routine).",
     ],
     thirtyDayActionPlan: [
       "Remove or sharply reduce the main drag.",
-      "Re-rate the path now that the loudest friction is gone.",
+      "Re-rate the path now that the loudest friction is gone, against how you felt before.",
     ],
     ninetyDayDirection:
-      "If the optimized path now feels right, deepen it; if it still feels wrong with the drag gone, treat that as strong evidence to leave.",
+      "If the optimized path now feels right, deepen it; if it still feels wrong with the drag gone, treat that as strong, regret-minimizing evidence to leave.",
     lowCostExperiment:
-      "Spend a week with the single biggest irritant removed and notice whether the whole path feels different or the same.",
+      "Spend one week with the single biggest irritant removed — delegate it, mute it, or renegotiate it — and notice whether the whole path feels different or exactly the same.",
     keyRisks: [
       "Using optimization to avoid a change you already know you need",
-      "Fixing a symptom while the real misfit stays",
+      "Fixing a visible symptom while the real misfit stays underneath",
     ],
     earlyWarningSigns: [
       "The drag is gone but the restlessness remains",
-      "You keep finding new irritants to fix instead of deciding",
+      "You keep finding new small irritants to fix instead of deciding",
     ],
     resourcesNeeded: [
-      "Honesty about whether the drag is the real issue",
-      "One lever you actually control",
+      "Honesty about whether the drag is the real issue or a stand-in",
+      "One lever you genuinely control",
     ],
     emotionalFriction:
       "The suspicion that staying and optimizing is just a comfortable way to avoid a harder, cleaner break.",
     confidence: "Medium",
     uncertainty:
       "Whether your restlessness comes from one fixable drag or from a deeper misfit with the path itself.",
-    curatedReferences: [
-      "Reversibility / option-value framing",
-      "Decision-science premortem framing",
-    ],
     aiInferredAssumptions: [
-      "That a single fixable drag explains your restlessness — an assumption that the week-long test is designed to check.",
+      "That a single fixable drag explains your restlessness — the week-long test is designed precisely to check this.",
     ],
+    evidenceCardIds: ["two-way-doors", "premortem", "regret-min"],
     risk: "Low",
     reversibility: "High",
     timeHorizon: "Short",
@@ -833,6 +817,20 @@ const ARCHETYPES: Archetype[] = [
     valueAffinity: { security: 2, identity: 2, open: 1 },
   },
 ];
+
+/* ----------------------------- Career gating ------------------------------ */
+
+// Tight, occupation-specific keywords — gate occupation-level evidence cards so
+// they only attach when the user's OWN words frame an occupation/career decision,
+// never a "should I move cities" / "should I end this relationship" one. Only the
+// raw situation is tested (not system-generated state, which leans career-ish).
+const CAREER_RE =
+  /\b(job|jobs|career|careers|intern|internship|recruit|quant|startup|start-up|founder|co-?founder|research|researcher|grad school|graduate school|graduat|master'?s|masters|phd|ph\.?d|mba|degree|majoring|major in|employer|employment|salary|wage|promotion|industry|academia|academic|profession|hiring|apprentic|bootcamp|residency|tenure|engineer|developer|analyst|consulting|medical school|law school)\b/i;
+
+/** Whether the user's own words frame an occupation/career decision (drives provenance honesty). */
+export function isCareerShaped(situation: string, _state?: JourneyState): boolean {
+  return CAREER_RE.test(situation || "");
+}
 
 /* --------------------------------- Scoring -------------------------------- */
 
@@ -859,36 +857,9 @@ function overlap(a: string[], b: string[]): number {
 
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 
-// Tight, occupation-specific keywords — gate occupation-level references (e.g. BLS)
-// so they only attach when the user's OWN words frame an occupation/career decision,
-// never to a "should I move cities" / "should I end this relationship" one. Only the
-// raw situation is tested (not system-generated state, which leans career-ish), and
-// generic terms like "work" / "role" / "offer" are deliberately excluded.
-const CAREER_RE =
-  /\b(job|jobs|career|careers|intern|internship|recruit|quant|startup|start-up|founder|co-?founder|research|researcher|grad school|graduate school|graduat|master'?s|masters|phd|ph\.?d|mba|degree|majoring|major in|employer|employment|salary|wage|promotion|industry|academia|academic|profession|hiring|apprentic|bootcamp|residency|tenure|engineer|developer|analyst|consulting|medical school|law school)\b/i;
-const OCCUPATION_REF_RE = /Bureau of Labor Statistics|Occupational Outlook/i;
-
-/** Whether the user's own words frame an occupation/career decision (drives provenance honesty). */
-export function isCareerShaped(situation: string, _state?: JourneyState): boolean {
-  return CAREER_RE.test(situation || "");
-}
-
-/**
- * The curated references actually honest to show for this journey. Occupation-level
- * sources are dropped when the decision is not occupation-shaped — they were never
- * looked up for the user, so they must not appear as per-user reference support.
- */
-function curatedFor(arch: Archetype, careerShaped: boolean): string[] {
-  const refs = careerShaped
-    ? arch.curatedReferences
-    : arch.curatedReferences.filter((r) => !OCCUPATION_REF_RE.test(r));
-  return refs.length ? refs : ["Decision-science premortem framing"];
-}
-
 /** Affinity of an archetype to the ranked value tags (0–1). */
 function archetypeFit(arch: Archetype, ranked: ValueTag[]): number {
   if (!ranked.length) {
-    // Open journey — favour the flexible, low-commitment archetypes.
     return clamp((arch.valueAffinity.open ?? 0) / 3, 0.3, 0.85);
   }
   const d0 = ranked[0];
@@ -905,9 +876,13 @@ interface Scored {
   relevance: number;
 }
 
-function scoreArchetype(arch: Archetype, state: JourneyState, ranked: ValueTag[], curated: string[]): Scored {
+function scoreArchetype(
+  arch: Archetype,
+  state: JourneyState,
+  ranked: ValueTag[],
+  curatedCount: number,
+): Scored {
   const userInputCount = userInputsFor(state).length;
-
   const routeArchetypeFit = archetypeFit(arch, ranked);
 
   const stateValueTokens = tokens(
@@ -925,16 +900,12 @@ function scoreArchetype(arch: Archetype, state: JourneyState, ranked: ValueTag[]
   const riskDrag = state.constraints.length && arch.risk === "High" ? 0.12 : 0;
   const constraintFit = clamp(revBase - threat * 0.4 - riskDrag, 0.2, 1);
 
-  const curatedEvidenceSupport = clamp(
-    0.2 + curated.length * 0.3 + userInputCount * 0.08,
-    0,
-    1,
-  );
+  const curatedEvidenceSupport = clamp(0.2 + curatedCount * 0.3 + userInputCount * 0.08, 0, 1);
 
   const uncertaintyPenalty = clamp(
     (arch.confidence === "Low" ? 0.4 : arch.confidence === "Medium" ? 0.2 : 0.08) +
       (state.uncertaintyTags.length ? 0.08 : 0) +
-      (curated.length === 0 ? 0.2 : 0),
+      (curatedCount === 0 ? 0.2 : 0),
     0,
     1,
   );
@@ -985,12 +956,14 @@ function rationaleFor(
   arch: Archetype,
   state: JourneyState,
   userInputs: string[],
-  curated: string[],
+  curatedReferences: string[],
 ): RouteScoreRationale {
   return {
     strongestUserSignal:
       state.discoveredValues[0] ? `You weighted ${state.discoveredValues[0]}` : userInputs[0],
-    strongestReferenceSupport: curated[0] ?? "Decision-science framing",
+    strongestReferenceSupport:
+      curatedReferences[0] ??
+      "No curated source applies directly — this route leans on your answers and flagged assumptions",
     biggestUncertainty: arch.uncertainty,
     aiInferredAssumption:
       arch.aiInferredAssumptions[0] ?? "No hard assumption flagged — this is a reasonable read of your answers.",
@@ -1006,8 +979,10 @@ function buildCandidate(
   careerShaped: boolean,
 ): RouteCandidate {
   const userInputs = userInputsFor(state);
-  const curated = curatedFor(arch, careerShaped);
-  const sc = scoreArchetype(arch, state, ranked, curated);
+  // Resolve + gate the curated evidence cards this route actually leans on.
+  const cards = evidenceCardsForIds(arch.evidenceCardIds, careerShaped);
+  const curatedReferences = cards.map((c) => c.sourceName);
+  const sc = scoreArchetype(arch, state, ranked, cards.length);
   return {
     id: arch.id,
     archetype: arch.archetype,
@@ -1033,25 +1008,29 @@ function buildCandidate(
     uncertainty: arch.uncertainty,
     evidenceSupport: {
       userInputs,
-      curatedReferences: curated,
+      curatedReferences,
       aiInferredAssumptions: arch.aiInferredAssumptions,
     },
+    evidenceCardIds: cards.map((c) => c.id),
     risk: arch.risk,
     reversibility: arch.reversibility,
     timeHorizon: arch.timeHorizon,
     evidenceFitScore: sc.score,
     scoreBand: sc.band,
     scoreBreakdown: sc.breakdown,
-    scoreRationale: rationaleFor(arch, state, userInputs, curated),
+    scoreRationale: rationaleFor(arch, state, userInputs, curatedReferences),
     isPrimaryRoute: false,
   };
 }
 
 /* ------------------------------ Universe build ---------------------------- */
 
-/** Archetypes that guarantee genuine contrast in every universe. */
+/** Archetypes that guarantee genuine contrast in every universe (always surfaced). */
 const SPINE_IDS = ["conservative-anchor", "ambitious-sprint", "experimental-probe", "hybrid-signal"];
-const UNIVERSE_TARGET = 8; // within the 6–10 band
+/** How many candidates the route universe surfaces — kept stable for the demo. */
+const UNIVERSE_TARGET = 8;
+/** Number of route candidates the universe surfaces (8 from a library of 10). */
+export const ROUTE_UNIVERSE_SIZE = UNIVERSE_TARGET;
 
 export interface RouteUniverse {
   universe: RouteCandidate[];
@@ -1062,8 +1041,9 @@ export interface RouteUniverse {
 }
 
 /**
- * Build the full route universe (6–10 distinct candidates) for a journey, choose
- * the three sharpest-contrast primary routes, and frame the underlying fork.
+ * Build the route universe (8 distinct candidates surfaced from the 10-archetype
+ * library), choose the three sharpest-contrast primary routes, and frame the
+ * underlying fork.
  */
 export function buildRouteUniverse(
   situation: string,
@@ -1074,28 +1054,22 @@ export function buildRouteUniverse(
   const dominant = dominantTag(state, answers);
   const careerShaped = isCareerShaped(situation, state);
 
-  const all = ARCHETYPES.map((a) => ({
-    arch: a,
-    scored: scoreArchetype(a, state, ranked, curatedFor(a, careerShaped)),
-  }));
-
-  // Portfolio: the contrast spine + the most relevant remaining archetypes.
-  const spine = all.filter((x) => SPINE_IDS.includes(x.arch.id));
+  // Build every candidate, then surface a stable-size portfolio: the contrast
+  // spine is always present (so the three primary roles can always be filled),
+  // filled out with the most relevant remaining archetypes, and ordered by
+  // evidence-fit so the strongest matches for this journey read first.
+  const all = ARCHETYPES.map((a) => buildCandidate(a, state, ranked, careerShaped));
+  const target = clamp(UNIVERSE_TARGET, 6, ARCHETYPES.length);
+  const spine = all.filter((c) => SPINE_IDS.includes(c.id));
   const rest = all
-    .filter((x) => !SPINE_IDS.includes(x.arch.id))
-    .sort((a, b) => b.scored.relevance - a.scored.relevance);
-
-  const target = clamp(UNIVERSE_TARGET, 6, Math.min(10, ARCHETYPES.length));
-  const chosenArchs = [...spine.map((x) => x.arch)];
-  for (const x of rest) {
-    if (chosenArchs.length >= target) break;
-    chosenArchs.push(x.arch);
-  }
-
-  // Order the universe by evidence-fit so the strongest matches read first.
-  const universe = chosenArchs
-    .map((a) => buildCandidate(a, state, ranked, careerShaped))
+    .filter((c) => !SPINE_IDS.includes(c.id))
     .sort((a, b) => b.evidenceFitScore - a.evidenceFitScore);
+  const chosen = [...spine];
+  for (const c of rest) {
+    if (chosen.length >= target) break;
+    chosen.push(c);
+  }
+  const universe = chosen.sort((a, b) => b.evidenceFitScore - a.evidenceFitScore);
 
   const primarySelection = selectPrimaryRoutes(universe);
   for (const c of universe) c.isPrimaryRoute = primarySelection.primaryRouteIds.includes(c.id);
@@ -1125,7 +1099,6 @@ const fitOf = (c: RouteCandidate) => c.evidenceFitScore;
  * breaks ties by evidence-fit.
  */
 export function selectPrimaryRoutes(universe: RouteCandidate[], userPicked?: string[]): PrimarySelection {
-  // If the user has explicitly chosen, honour it (capped at three).
   if (userPicked && userPicked.length) {
     const ids = userPicked.filter((id) => universe.some((c) => c.id === id)).slice(0, 3);
     return {
@@ -1147,7 +1120,6 @@ export function selectPrimaryRoutes(universe: RouteCandidate[], userPicked?: str
   const chosen: { c: RouteCandidate; role: string; why: string }[] = [];
   const used = new Set<string>();
 
-  // 1) Steadier / lower-risk anchor.
   const safe =
     pick((c) => c.risk === "Low" && c.reversibility === "High", used) ??
     pick((c) => c.risk === "Low", used) ??
@@ -1157,7 +1129,6 @@ export function selectPrimaryRoutes(universe: RouteCandidate[], userPicked?: str
     used.add(safe.id);
   }
 
-  // 2) Higher-upside / more ambitious.
   const bold =
     pick((c) => c.risk === "High", used) ??
     pick((c) => c.timeHorizon === "Long", used) ??
@@ -1167,7 +1138,6 @@ export function selectPrimaryRoutes(universe: RouteCandidate[], userPicked?: str
     used.add(bold.id);
   }
 
-  // 3) Reversible / hybrid middle path.
   const bridge =
     pick((c) => c.id === "hybrid-signal", used) ??
     pick((c) => c.reversibility === "High" && c.risk !== "Low", used) ??
@@ -1185,7 +1155,6 @@ export function selectPrimaryRoutes(universe: RouteCandidate[], userPicked?: str
     used.add(bridge.id);
   }
 
-  // Backfill defensively if any archetype slot came up empty.
   for (const c of byFit) {
     if (chosen.length >= 3) break;
     if (!used.has(c.id)) {

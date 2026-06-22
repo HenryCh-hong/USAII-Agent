@@ -520,6 +520,11 @@ export default function ArchitecturePage() {
             </div>
           </CockpitPanel>
         </div>
+        <div className="mt-4">
+          <LinkButton href="/evidence" variant="subtle" size="md">
+            <Database className="h-4 w-4" /> Open the Evidence Base <ArrowRight className="h-4 w-4" />
+          </LinkButton>
+        </div>
       </Section>
 
       {/* 5b2) Autonomous research transparency */}

@@ -154,6 +154,11 @@ export interface RouteCandidate {
   uncertainty: string;
   evidenceSupport: RouteEvidenceSupport;
 
+  /** Ids into the curated journey evidence base (lib/journey/evidence) that this
+   * route leans on — already gated to the journey (occupation data dropped for
+   * non-career decisions). Empty when no curated source applies directly. */
+  evidenceCardIds: string[];
+
   /** First-layer chips: how risky / reversible / over what horizon. */
   risk: RouteLevel;
   reversibility: RouteLevel;
